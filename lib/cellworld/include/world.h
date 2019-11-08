@@ -1,0 +1,29 @@
+#pragma once
+#include <core.h>
+#include <ge211.h>
+namespace cellworld{
+
+    struct Cell{
+        Cell();
+        Cell(uint32_t, Coordinates, ge211::Basic_position<double>, std::vector<uint32_t>, bool);
+        uint32_t index;
+        Coordinates coordinates;
+        ge211::Basic_position<double> location{0,0};
+        std::vector<uint32_t> connections;
+        bool occluded;
+    };
+    
+    struct World{
+        bool add(const Cell);
+        bool load(const std::string);
+        bool save(const std::string) const ;
+        double distance(const Cell&, const Cell&)  const;
+        double distance(const Cell&, const Cell&, const Cell&)  const;
+        uint32_t size() const;
+        int32_t find(const Coordinates&) const;
+        Cell &operator[](const uint32_t& );
+        Cell &operator[](const Coordinates&);
+    private:
+        std::vector<Cell> cells;
+    };
+}  
