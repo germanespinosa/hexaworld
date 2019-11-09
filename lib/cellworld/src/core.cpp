@@ -22,7 +22,7 @@ Coordinates Coordinates::operator +(const Coordinates c) const{
 }
 
 Coordinates Coordinates::operator -(const Coordinates c) const{
-    return { (int8_t)(c.x - x), (int8_t)(c.y - y) };
+    return { (int8_t)(x - c.x), (int8_t)(y - c.y) };
 }
 
 Coordinates Coordinates::operator -() const{

@@ -68,3 +68,5 @@ install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(EXPORT CellworldConfig
         DESTINATION ${CMAKE_INSTALL_DATADIR}/cmake/Cellworld)
 export(TARGETS cellworld FILE CellworldConfig.cmake)
+
+include(CMakeTests.txt)

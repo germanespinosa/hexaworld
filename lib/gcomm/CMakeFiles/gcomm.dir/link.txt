@@ -1,0 +1,2 @@
+/usr/bin/ar qc libgcomm.a  CMakeFiles/gcomm.dir/src/gcomm.cpp.o CMakeFiles/gcomm.dir/src/gsocketconnector.cpp.o CMakeFiles/gcomm.dir/src/gmemconnector.cpp.o
+/usr/bin/ranlib libgcomm.a
