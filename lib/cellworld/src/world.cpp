@@ -9,9 +9,23 @@ using namespace std;
 using namespace cellworld;
 using namespace ge211;
 
-Cell::Cell (uint32_t index, Coordinates coordinates, Basic_position<double> location, std::vector<uint32_t> connections, bool occluded)
+bool Cell::operator == (const Cell& c) const {
+    if (connections.size() != c.connections.size() ||
+         id != c.id ||
+         coordinates != c.coordinates ||
+         location != c.location ||
+         occluded != c.occluded){
+        return false;
+    }
+    for (unsigned int i=0; i <connections.size() ; i++)
+        if (connections[i] != c.connections[i]) return false;
+    return true;
+}
+    
+
+Cell::Cell (uint32_t id, Coordinates coordinates, Basic_position<double> location, std::vector<uint32_t> connections, bool occluded)
 {
-    this->index = index;
+    this->id = id;
     this->location = location;
     this->coordinates = coordinates;
     this->connections = connections;
@@ -19,7 +33,7 @@ Cell::Cell (uint32_t index, Coordinates coordinates, Basic_position<double> loca
 }
 
 Cell::Cell(){
-    this->index = 0;
+    this->id = 0;
     this->location = {0,0};
     this->coordinates = {0,0};
     this->connections = {};
@@ -29,7 +43,7 @@ Cell::Cell(){
 
 
 bool World::add(const Cell cell){
-    if (cells.size() != cell.index) return false;
+    if (cells.size() != cell.id) return false;
     cells.push_back(cell);
     return true;
 }
@@ -42,7 +56,7 @@ bool World::load(const std::string filepath){
         istringstream ss(line);
         int16_t cx,cy;
         Cell cell;
-        ss >> cell.index;
+        ss >> cell.id;
         ss >> cx;
         ss >> cy;
         ss >> cell.location.x;
@@ -75,7 +89,6 @@ bool World::save(const std::string filepath) const{
        }
        ofile << std::endl;
     }
-    ofile << "-1";
     return true;
 }
 uint32_t World::size() const{
@@ -88,8 +101,8 @@ int32_t World::find (const Coordinates& coordinates) const{
     return -1;
 }
 
-Cell &World::operator[](const uint32_t& index){
-    return cells[index];
+Cell &World::operator[](const uint32_t& id){
+    return cells[id];
 }
 
 Cell &World::operator[](const Coordinates& coordinates){

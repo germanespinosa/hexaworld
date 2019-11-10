@@ -31,7 +31,7 @@ namespace cellworld {
         return l;
     }
     bool Visibility::is_visible(const Cell& c0, const Cell& c1) const{
-        return _visibility[_visibility_index(c0.index,c1.index)] == Visible::Visible;
+        return _visibility[_visibility_index(c0.id,c1.id)] == Visible::Visible;
     }
 
     uint32_t Visibility::_visibility_index(const uint32_t s, const uint32_t  d) const{
@@ -46,7 +46,7 @@ namespace cellworld {
     vector<Cell> Visibility::visible_cells (const Cell& c) const{
         vector<Cell> r;
         for (unsigned int i=0;i<_world.size();i++)
-            if ((c.index!=i) && (_visibility[_visibility_index(c.index,i)] == Visible::Visible)) r.push_back(_world[i]);
+            if ((c.id!=i) && (_visibility[_visibility_index(c.id,i)] == Visible::Visible)) r.push_back(_world[i]);
         return r;
     }
 
@@ -59,7 +59,7 @@ namespace cellworld {
         }
         vector<Cell> l = line(_world[s],_world[d]);
         for (unsigned int ii = 0; ii < l.size() ; ii++){
-            if (!_get_visibility(s,l[ii].index)){ 
+            if (!_get_visibility(s,l[ii].id)){ 
                 _set_visibility(s,d,Visible::Not_visible);
                 return false;
             };

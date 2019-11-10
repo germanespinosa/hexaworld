@@ -2,18 +2,24 @@
 #include <core.h>
 
 namespace cellworld{
+     struct Agent_data{
+        uint32_t id;
+        uint32_t iteration;
+        Coordinates coordinates;
+        uint8_t status;
+    };
      struct State{
         uint32_t iteration;
-//        std::vector<Agent> agents;
+        std::vector<Agent_data> agents;
     };
     struct Action{
         uint32_t iteration;
         Coordinates action;
     };
     struct Agent{
-         void update_state(State);
-         bool get_action();
+         virtual void update_state(State);
+         virtual bool get_action() ;
          Action last_action;
-         Coordinates coordinates;
+         Agent_data data;
     };
-} 
+}  

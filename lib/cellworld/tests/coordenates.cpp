@@ -1,6 +1,5 @@
 #include<catch.h>
 #include<cellworld.h>
-#include<core.h>
 
 using namespace cellworld;
 

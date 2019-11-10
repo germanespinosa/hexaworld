@@ -10,7 +10,7 @@ using namespace cellworld;
 Controller::Controller (World &world, std::vector<Agent> &agents, const ge211::Dimensions scene_dimensions ) : 
     _model(world, agents),
     _scene_dimensions(scene_dimensions), 
-    _view(world, agents, scene_dimensions)
+    _view(world, scene_dimensions)
     {}
 
 void Controller::on_frame(double dt)
@@ -37,5 +37,5 @@ Dimensions Controller::initial_window_dimensions() const
 
 void Controller::draw(Sprite_set& sprites)
 {
-    _view.draw(sprites, to_string(get_frame_rate()));
+    _view.draw(sprites, _model.get_agents_data(), to_string(get_frame_rate()));
 }

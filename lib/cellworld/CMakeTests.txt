@@ -11,10 +11,10 @@ add_executable(${PROJECT_NAME}_tests ${${PROJECT_NAME}_tests_glob})
 
 set_target_properties(${PROJECT_NAME}_tests
     PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "tests/bin")
+    RUNTIME_OUTPUT_DIRECTORY "bin/tests")
 target_link_libraries(${PROJECT_NAME}_tests catch)
 target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME})
 
 add_custom_command(TARGET ${PROJECT_NAME}_tests
     POST_BUILD
-    COMMAND tests/bin/${PROJECT_NAME}_tests -s)
+    COMMAND bin/tests/${PROJECT_NAME}_tests ) # -s)

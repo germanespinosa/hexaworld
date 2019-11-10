@@ -5,9 +5,8 @@ using namespace ge211;
 using namespace std;
 using namespace cellworld;
 
-View::View(World &world, std::vector<Agent> &agents, Dimensions scene_dimensions):
+View::View(World &world, Dimensions scene_dimensions):
     _world(world) , 
-    _agents(agents),
     _scene_dimensions(scene_dimensions)
 {
     double sx,sy,lx,ly;
@@ -26,6 +25,7 @@ View::View(World &world, std::vector<Agent> &agents, Dimensions scene_dimensions
     _ratio = rx<ry?rx:ry;
     _cell_sprites.emplace_back((int)_ratio/2-1, Color{255,255,255,255});
     _cell_sprites.emplace_back((int)_ratio/2-1, Color{63, 63, 63, 255});
+    _cell_sprites.emplace_back((int)_ratio/2-1, Color{255, 0, 0, 255});
 
 }
 
@@ -37,7 +37,7 @@ Basic_position<int> View::_screen_location (const Basic_position<double> &locati
     };
 }
 
-void View::draw(Sprite_set& sprites, string text)
+void View::draw(Sprite_set& sprites, vector<Agent_data> agents, string text)
 {
     fps.reconfigure(Text_sprite::Builder(sans) << text);
     sprites.add_sprite(fps, {10, 10});
@@ -46,8 +46,7 @@ void View::draw(Sprite_set& sprites, string text)
         Cell &cell = _world[i];
         sprites.add_sprite(_cell_sprites[(int)cell.occluded], _screen_location(cell.location));
     }
-    for (unsigned int i =0 ; i< _agents.size(); i++) {
-        Cell &cell = _world[_agents[i].coordinates];
-        sprites.add_sprite(_agent_sprites[i], _screen_location(cell.location));
+    for (unsigned int i =0 ; i< agents.size(); i++) {
+        sprites.add_sprite(_cell_sprites[2], _screen_location(_world[agents[i].coordinates].location));
     }
 }
