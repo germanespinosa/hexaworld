@@ -78,21 +78,44 @@ clean: lib/gcomm/clean
 # Directory level rules for directory lib/cellworld
 
 # Recursive "all" directory target.
+lib/cellworld/all: lib/cellworld/CMakeFiles/cellworld_tests.dir/all
 lib/cellworld/all: lib/cellworld/CMakeFiles/cellworld.dir/all
 lib/cellworld/all: lib/cellworld/lib/ge211/all
+lib/cellworld/all: lib/cellworld/lib/catch/all
 
 .PHONY : lib/cellworld/all
 
 # Recursive "preinstall" directory target.
 lib/cellworld/preinstall: lib/cellworld/lib/ge211/preinstall
+lib/cellworld/preinstall: lib/cellworld/lib/catch/preinstall
 
 .PHONY : lib/cellworld/preinstall
 
 # Recursive "clean" directory target.
+lib/cellworld/clean: lib/cellworld/CMakeFiles/cellworld_tests.dir/clean
 lib/cellworld/clean: lib/cellworld/CMakeFiles/cellworld.dir/clean
 lib/cellworld/clean: lib/cellworld/lib/ge211/clean
+lib/cellworld/clean: lib/cellworld/lib/catch/clean
 
 .PHONY : lib/cellworld/clean
+
+#=============================================================================
+# Directory level rules for directory lib/cellworld/lib/catch
+
+# Recursive "all" directory target.
+lib/cellworld/lib/catch/all: lib/cellworld/lib/catch/CMakeFiles/catch.dir/all
+
+.PHONY : lib/cellworld/lib/catch/all
+
+# Recursive "preinstall" directory target.
+lib/cellworld/lib/catch/preinstall:
+
+.PHONY : lib/cellworld/lib/catch/preinstall
+
+# Recursive "clean" directory target.
+lib/cellworld/lib/catch/clean: lib/cellworld/lib/catch/CMakeFiles/catch.dir/clean
+
+.PHONY : lib/cellworld/lib/catch/clean
 
 #=============================================================================
 # Directory level rules for directory lib/cellworld/lib/ge211
@@ -154,11 +177,11 @@ lib/gcomm/clean: lib/gcomm/CMakeFiles/gcomm.dir/clean
 # Target rules for target CMakeFiles/hexamap.dir
 
 # All Build rule for target.
-CMakeFiles/hexamap.dir/all: lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/all
 CMakeFiles/hexamap.dir/all: lib/cellworld/CMakeFiles/cellworld.dir/all
+CMakeFiles/hexamap.dir/all: lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/all
 	$(MAKE) -f CMakeFiles/hexamap.dir/build.make CMakeFiles/hexamap.dir/depend
 	$(MAKE) -f CMakeFiles/hexamap.dir/build.make CMakeFiles/hexamap.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/cs211/hexaworld/CMakeFiles --progress-num=27,28 "Built target hexamap"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/cs211/hexaworld/CMakeFiles --progress-num=33,34 "Built target hexamap"
 .PHONY : CMakeFiles/hexamap.dir/all
 
 # Build rule for subdir invocation for target.
@@ -182,11 +205,11 @@ CMakeFiles/hexamap.dir/clean:
 # Target rules for target CMakeFiles/show.dir
 
 # All Build rule for target.
-CMakeFiles/show.dir/all: lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/all
 CMakeFiles/show.dir/all: lib/cellworld/CMakeFiles/cellworld.dir/all
+CMakeFiles/show.dir/all: lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/all
 	$(MAKE) -f CMakeFiles/show.dir/build.make CMakeFiles/show.dir/depend
 	$(MAKE) -f CMakeFiles/show.dir/build.make CMakeFiles/show.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/cs211/hexaworld/CMakeFiles --progress-num=29,30 "Built target show"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/cs211/hexaworld/CMakeFiles --progress-num=35,36 "Built target show"
 .PHONY : CMakeFiles/show.dir/all
 
 # Build rule for subdir invocation for target.
@@ -207,13 +230,42 @@ CMakeFiles/show.dir/clean:
 .PHONY : CMakeFiles/show.dir/clean
 
 #=============================================================================
+# Target rules for target lib/cellworld/CMakeFiles/cellworld_tests.dir
+
+# All Build rule for target.
+lib/cellworld/CMakeFiles/cellworld_tests.dir/all: lib/cellworld/CMakeFiles/cellworld.dir/all
+lib/cellworld/CMakeFiles/cellworld_tests.dir/all: lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/all
+lib/cellworld/CMakeFiles/cellworld_tests.dir/all: lib/cellworld/lib/catch/CMakeFiles/catch.dir/all
+	$(MAKE) -f lib/cellworld/CMakeFiles/cellworld_tests.dir/build.make lib/cellworld/CMakeFiles/cellworld_tests.dir/depend
+	$(MAKE) -f lib/cellworld/CMakeFiles/cellworld_tests.dir/build.make lib/cellworld/CMakeFiles/cellworld_tests.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/cs211/hexaworld/CMakeFiles --progress-num=11,12,13,14 "Built target cellworld_tests"
+.PHONY : lib/cellworld/CMakeFiles/cellworld_tests.dir/all
+
+# Build rule for subdir invocation for target.
+lib/cellworld/CMakeFiles/cellworld_tests.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/cs211/hexaworld/CMakeFiles 28
+	$(MAKE) -f CMakeFiles/Makefile2 lib/cellworld/CMakeFiles/cellworld_tests.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/cs211/hexaworld/CMakeFiles 0
+.PHONY : lib/cellworld/CMakeFiles/cellworld_tests.dir/rule
+
+# Convenience name for target.
+cellworld_tests: lib/cellworld/CMakeFiles/cellworld_tests.dir/rule
+
+.PHONY : cellworld_tests
+
+# clean rule for target.
+lib/cellworld/CMakeFiles/cellworld_tests.dir/clean:
+	$(MAKE) -f lib/cellworld/CMakeFiles/cellworld_tests.dir/build.make lib/cellworld/CMakeFiles/cellworld_tests.dir/clean
+.PHONY : lib/cellworld/CMakeFiles/cellworld_tests.dir/clean
+
+#=============================================================================
 # Target rules for target lib/cellworld/CMakeFiles/cellworld.dir
 
 # All Build rule for target.
 lib/cellworld/CMakeFiles/cellworld.dir/all: lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/all
 	$(MAKE) -f lib/cellworld/CMakeFiles/cellworld.dir/build.make lib/cellworld/CMakeFiles/cellworld.dir/depend
 	$(MAKE) -f lib/cellworld/CMakeFiles/cellworld.dir/build.make lib/cellworld/CMakeFiles/cellworld.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/cs211/hexaworld/CMakeFiles --progress-num=1,2,3,4,5,6,7,8 "Built target cellworld"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/cs211/hexaworld/CMakeFiles --progress-num=3,4,5,6,7,8,9,10 "Built target cellworld"
 .PHONY : lib/cellworld/CMakeFiles/cellworld.dir/all
 
 # Build rule for subdir invocation for target.
@@ -240,7 +292,7 @@ lib/cellworld/CMakeFiles/cellworld.dir/clean:
 lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/all:
 	$(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/depend
 	$(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/cs211/hexaworld/CMakeFiles --progress-num=13,14,15,16,17,18,19,20,21,22,23,24,25,26 "Built target ge211"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/cs211/hexaworld/CMakeFiles --progress-num=19,20,21,22,23,24,25,26,27,28,29,30,31,32 "Built target ge211"
 .PHONY : lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/all
 
 # Build rule for subdir invocation for target.
@@ -261,13 +313,40 @@ lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/clean:
 .PHONY : lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/clean
 
 #=============================================================================
+# Target rules for target lib/cellworld/lib/catch/CMakeFiles/catch.dir
+
+# All Build rule for target.
+lib/cellworld/lib/catch/CMakeFiles/catch.dir/all:
+	$(MAKE) -f lib/cellworld/lib/catch/CMakeFiles/catch.dir/build.make lib/cellworld/lib/catch/CMakeFiles/catch.dir/depend
+	$(MAKE) -f lib/cellworld/lib/catch/CMakeFiles/catch.dir/build.make lib/cellworld/lib/catch/CMakeFiles/catch.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/cs211/hexaworld/CMakeFiles --progress-num=1,2 "Built target catch"
+.PHONY : lib/cellworld/lib/catch/CMakeFiles/catch.dir/all
+
+# Build rule for subdir invocation for target.
+lib/cellworld/lib/catch/CMakeFiles/catch.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/cs211/hexaworld/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 lib/cellworld/lib/catch/CMakeFiles/catch.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/cs211/hexaworld/CMakeFiles 0
+.PHONY : lib/cellworld/lib/catch/CMakeFiles/catch.dir/rule
+
+# Convenience name for target.
+catch: lib/cellworld/lib/catch/CMakeFiles/catch.dir/rule
+
+.PHONY : catch
+
+# clean rule for target.
+lib/cellworld/lib/catch/CMakeFiles/catch.dir/clean:
+	$(MAKE) -f lib/cellworld/lib/catch/CMakeFiles/catch.dir/build.make lib/cellworld/lib/catch/CMakeFiles/catch.dir/clean
+.PHONY : lib/cellworld/lib/catch/CMakeFiles/catch.dir/clean
+
+#=============================================================================
 # Target rules for target lib/gcomm/CMakeFiles/gcomm.dir
 
 # All Build rule for target.
 lib/gcomm/CMakeFiles/gcomm.dir/all:
 	$(MAKE) -f lib/gcomm/CMakeFiles/gcomm.dir/build.make lib/gcomm/CMakeFiles/gcomm.dir/depend
 	$(MAKE) -f lib/gcomm/CMakeFiles/gcomm.dir/build.make lib/gcomm/CMakeFiles/gcomm.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/cs211/hexaworld/CMakeFiles --progress-num=9,10,11,12 "Built target gcomm"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/cs211/hexaworld/CMakeFiles --progress-num=15,16,17,18 "Built target gcomm"
 .PHONY : lib/gcomm/CMakeFiles/gcomm.dir/all
 
 # Build rule for subdir invocation for target.

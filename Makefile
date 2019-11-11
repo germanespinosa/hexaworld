@@ -183,6 +183,19 @@ show/fast:
 .PHONY : show/fast
 
 #=============================================================================
+# Target rules for targets named cellworld_tests
+
+# Build rule for target.
+cellworld_tests: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 cellworld_tests
+.PHONY : cellworld_tests
+
+# fast build rule for target.
+cellworld_tests/fast:
+	$(MAKE) -f lib/cellworld/CMakeFiles/cellworld_tests.dir/build.make lib/cellworld/CMakeFiles/cellworld_tests.dir/build
+.PHONY : cellworld_tests/fast
+
+#=============================================================================
 # Target rules for targets named cellworld
 
 # Build rule for target.
@@ -207,6 +220,19 @@ ge211: cmake_check_build_system
 ge211/fast:
 	$(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build
 .PHONY : ge211/fast
+
+#=============================================================================
+# Target rules for targets named catch
+
+# Build rule for target.
+catch: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 catch
+.PHONY : catch
+
+# fast build rule for target.
+catch/fast:
+	$(MAKE) -f lib/cellworld/lib/catch/CMakeFiles/catch.dir/build.make lib/cellworld/lib/catch/CMakeFiles/catch.dir/build
+.PHONY : catch/fast
 
 #=============================================================================
 # Target rules for targets named gcomm
@@ -289,8 +315,10 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... show"
 	@echo "... list_install_components"
+	@echo "... cellworld_tests"
 	@echo "... cellworld"
 	@echo "... ge211"
+	@echo "... catch"
 	@echo "... gcomm"
 	@echo "... src/hexamap.o"
 	@echo "... src/hexamap.i"

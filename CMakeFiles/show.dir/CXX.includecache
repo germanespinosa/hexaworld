@@ -153,6 +153,8 @@ core.h
 -
 
 lib/cellworld/include/cellworld.h
+core.h
+-
 model.h
 -
 view.h

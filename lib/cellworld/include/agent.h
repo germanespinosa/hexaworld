@@ -3,10 +3,11 @@
 
 namespace cellworld{
      struct Agent_data{
-        uint32_t id;
-        uint32_t iteration;
-        Coordinates coordinates;
-        uint8_t status;
+        uint32_t id = 0;
+        uint32_t iteration = 0;
+        Coordinates coordinates {0,0};
+        uint8_t status = 0;
+        uint8_t color = 0;
     };
      struct State{
         uint32_t iteration;
@@ -17,9 +18,9 @@ namespace cellworld{
         Coordinates action;
     };
     struct Agent{
-         virtual void update_state(State);
-         virtual bool get_action() ;
-         Action last_action;
+         virtual void update_state(State) = 0;
+         virtual bool get_action() = 0; 
+         Action action;
          Agent_data data;
     };
 }  

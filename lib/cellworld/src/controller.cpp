@@ -7,7 +7,7 @@ using namespace ge211;
 using namespace std;
 using namespace cellworld;
 
-Controller::Controller (World &world, std::vector<Agent> &agents, const ge211::Dimensions scene_dimensions ) : 
+Controller::Controller (World &world, std::vector<Agent*> &agents, const ge211::Dimensions scene_dimensions ) : 
     _model(world, agents),
     _scene_dimensions(scene_dimensions), 
     _view(world, scene_dimensions)

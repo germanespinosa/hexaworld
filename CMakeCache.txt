@@ -283,6 +283,12 @@ SDL2_TTF_INCLUDE_DIR:PATH=/usr/include/SDL2
 SDL2_TTF_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libSDL2_ttf.so
 
 //Value Computed by CMake
+catch_BINARY_DIR:STATIC=/home/cs211/hexaworld/lib/cellworld/lib/catch
+
+//Value Computed by CMake
+catch_SOURCE_DIR:STATIC=/home/cs211/hexaworld/lib/cellworld/lib/catch
+
+//Value Computed by CMake
 cellworld_BINARY_DIR:STATIC=/home/cs211/hexaworld/lib/cellworld
 
 //Value Computed by CMake
@@ -441,7 +447,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=5
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=6
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

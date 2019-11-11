@@ -23,10 +23,23 @@ View::View(World &world, Dimensions scene_dimensions):
     double rx = (_scene_dimensions.width - 100) / (lx - sx);
     double ry = (_scene_dimensions.height - 100) / (ly - sy);
     _ratio = rx<ry?rx:ry;
-    _cell_sprites.emplace_back((int)_ratio/2-1, Color{255,255,255,255});
-    _cell_sprites.emplace_back((int)_ratio/2-1, Color{63, 63, 63, 255});
-    _cell_sprites.emplace_back((int)_ratio/2-1, Color{255, 0, 0, 255});
-
+    _cell_size = (int)_ratio/2-1;
+    _cell_sprites.emplace_back(_cell_size, Color{0,0,0}); //0
+    _cell_sprites.emplace_back(_cell_size, Color{255,255,255}); //1
+    _cell_sprites.emplace_back(_cell_size, Color{255,0,0}); //2
+    _cell_sprites.emplace_back(_cell_size, Color{0,255,0}); //3
+    _cell_sprites.emplace_back(_cell_size, Color{0,0,255}); //4
+    _cell_sprites.emplace_back(_cell_size, Color{255,255,0}); //5
+    _cell_sprites.emplace_back(_cell_size, Color{0,255,255}); //6
+    _cell_sprites.emplace_back(_cell_size, Color{255,0,255}); //7
+    _cell_sprites.emplace_back(_cell_size, Color{192,192,192}); //8
+    _cell_sprites.emplace_back(_cell_size, Color{128,128,128}); //9
+    _cell_sprites.emplace_back(_cell_size, Color{128,0,0}); //10
+    _cell_sprites.emplace_back(_cell_size, Color{128,128,0}); //11
+    _cell_sprites.emplace_back(_cell_size, Color{0,128,0}); //12
+    _cell_sprites.emplace_back(_cell_size, Color{128,0,128}); //13
+    _cell_sprites.emplace_back(_cell_size, Color{0,128,128}); //14
+    _cell_sprites.emplace_back(_cell_size, Color{0,0,128}); //15
 }
 
 Basic_position<int> View::_screen_location (const Basic_position<double> &location)
@@ -44,9 +57,14 @@ void View::draw(Sprite_set& sprites, vector<Agent_data> agents, string text)
     
     for (unsigned int i =0 ; i< _world.size(); i++) {
         Cell &cell = _world[i];
-        sprites.add_sprite(_cell_sprites[(int)cell.occluded], _screen_location(cell.location));
+        if (cell.occluded){
+            sprites.add_sprite(_cell_sprites[9], _screen_location(cell.location),0);
+        } else{
+            sprites.add_sprite(_cell_sprites[1], _screen_location(cell.location),0);
+        }
     }
+    cout << "showing agent " << agents.size() << endl;
     for (unsigned int i =0 ; i< agents.size(); i++) {
-        sprites.add_sprite(_cell_sprites[2], _screen_location(_world[agents[i].coordinates].location));
+        sprites.add_sprite(_cell_sprites[agents[i].color], _screen_location(_world[agents[i].coordinates].location),1);
     }
 }

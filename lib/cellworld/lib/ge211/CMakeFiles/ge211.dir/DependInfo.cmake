@@ -27,11 +27,11 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "src"
-  "include"
-  "lib/ge211/include"
+  "lib/cellworld/src"
+  "lib/cellworld/include"
+  "lib/cellworld/lib/ge211/include"
   "/usr/include/SDL2"
-  "lib/ge211/3rdparty/utf8-cpp/include"
+  "lib/cellworld/lib/ge211/3rdparty/utf8-cpp/include"
   )
 
 # Targets to which this target links.

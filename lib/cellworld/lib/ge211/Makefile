@@ -48,10 +48,10 @@ RM = /usr/local/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/cs211/hexaworld/lib/cellworld
+CMAKE_SOURCE_DIR = /home/cs211/hexaworld
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/cs211/hexaworld/lib/cellworld
+CMAKE_BINARY_DIR = /home/cs211/hexaworld
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -67,6 +67,40 @@ install/strip/fast: preinstall/fast
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
 	/usr/local/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
 .PHONY : install/strip/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/local/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
+
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/local/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/local/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/local/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
 
 # Special rule for the target list_install_components
 list_install_components:
@@ -90,61 +124,16 @@ install/local/fast: preinstall/fast
 	/usr/local/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
 .PHONY : install/local/fast
 
-# Special rule for the target test
-test:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
-	/usr/local/bin/ctest --force-new-ctest-process $(ARGS)
-.PHONY : test
-
-# Special rule for the target test
-test/fast: test
-
-.PHONY : test/fast
-
-# Special rule for the target install
-install: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/usr/local/bin/cmake -P cmake_install.cmake
-.PHONY : install
-
-# Special rule for the target install
-install/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/usr/local/bin/cmake -P cmake_install.cmake
-.PHONY : install/fast
-
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/local/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/local/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # The main all target
 all: cmake_check_build_system
-	cd /home/cs211/hexaworld/lib/cellworld && $(CMAKE_COMMAND) -E cmake_progress_start /home/cs211/hexaworld/lib/cellworld/CMakeFiles /home/cs211/hexaworld/lib/cellworld/lib/ge211/CMakeFiles/progress.marks
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f CMakeFiles/Makefile2 lib/ge211/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/cs211/hexaworld/lib/cellworld/CMakeFiles 0
+	cd /home/cs211/hexaworld && $(CMAKE_COMMAND) -E cmake_progress_start /home/cs211/hexaworld/CMakeFiles /home/cs211/hexaworld/lib/cellworld/lib/ge211/CMakeFiles/progress.marks
+	cd /home/cs211/hexaworld && $(MAKE) -f CMakeFiles/Makefile2 lib/cellworld/lib/ge211/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/cs211/hexaworld/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f CMakeFiles/Makefile2 lib/ge211/clean
+	cd /home/cs211/hexaworld && $(MAKE) -f CMakeFiles/Makefile2 lib/cellworld/lib/ge211/clean
 .PHONY : clean
 
 # The main clean target
@@ -154,32 +143,32 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f CMakeFiles/Makefile2 lib/ge211/preinstall
+	cd /home/cs211/hexaworld && $(MAKE) -f CMakeFiles/Makefile2 lib/cellworld/lib/ge211/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f CMakeFiles/Makefile2 lib/ge211/preinstall
+	cd /home/cs211/hexaworld && $(MAKE) -f CMakeFiles/Makefile2 lib/cellworld/lib/ge211/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/cs211/hexaworld/lib/cellworld && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/cs211/hexaworld && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
-lib/ge211/CMakeFiles/ge211.dir/rule:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f CMakeFiles/Makefile2 lib/ge211/CMakeFiles/ge211.dir/rule
-.PHONY : lib/ge211/CMakeFiles/ge211.dir/rule
+lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/rule:
+	cd /home/cs211/hexaworld && $(MAKE) -f CMakeFiles/Makefile2 lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/rule
+.PHONY : lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/rule
 
 # Convenience name for target.
-ge211: lib/ge211/CMakeFiles/ge211.dir/rule
+ge211: lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/rule
 
 .PHONY : ge211
 
 # fast build rule for target.
 ge211/fast:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/build
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build
 .PHONY : ge211/fast
 
 src/ge211_audio.o: src/ge211_audio.cpp.o
@@ -188,7 +177,7 @@ src/ge211_audio.o: src/ge211_audio.cpp.o
 
 # target to build an object file
 src/ge211_audio.cpp.o:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_audio.cpp.o
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_audio.cpp.o
 .PHONY : src/ge211_audio.cpp.o
 
 src/ge211_audio.i: src/ge211_audio.cpp.i
@@ -197,7 +186,7 @@ src/ge211_audio.i: src/ge211_audio.cpp.i
 
 # target to preprocess a source file
 src/ge211_audio.cpp.i:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_audio.cpp.i
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_audio.cpp.i
 .PHONY : src/ge211_audio.cpp.i
 
 src/ge211_audio.s: src/ge211_audio.cpp.s
@@ -206,7 +195,7 @@ src/ge211_audio.s: src/ge211_audio.cpp.s
 
 # target to generate assembly for a file
 src/ge211_audio.cpp.s:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_audio.cpp.s
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_audio.cpp.s
 .PHONY : src/ge211_audio.cpp.s
 
 src/ge211_base.o: src/ge211_base.cpp.o
@@ -215,7 +204,7 @@ src/ge211_base.o: src/ge211_base.cpp.o
 
 # target to build an object file
 src/ge211_base.cpp.o:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_base.cpp.o
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_base.cpp.o
 .PHONY : src/ge211_base.cpp.o
 
 src/ge211_base.i: src/ge211_base.cpp.i
@@ -224,7 +213,7 @@ src/ge211_base.i: src/ge211_base.cpp.i
 
 # target to preprocess a source file
 src/ge211_base.cpp.i:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_base.cpp.i
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_base.cpp.i
 .PHONY : src/ge211_base.cpp.i
 
 src/ge211_base.s: src/ge211_base.cpp.s
@@ -233,7 +222,7 @@ src/ge211_base.s: src/ge211_base.cpp.s
 
 # target to generate assembly for a file
 src/ge211_base.cpp.s:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_base.cpp.s
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_base.cpp.s
 .PHONY : src/ge211_base.cpp.s
 
 src/ge211_color.o: src/ge211_color.cpp.o
@@ -242,7 +231,7 @@ src/ge211_color.o: src/ge211_color.cpp.o
 
 # target to build an object file
 src/ge211_color.cpp.o:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_color.cpp.o
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_color.cpp.o
 .PHONY : src/ge211_color.cpp.o
 
 src/ge211_color.i: src/ge211_color.cpp.i
@@ -251,7 +240,7 @@ src/ge211_color.i: src/ge211_color.cpp.i
 
 # target to preprocess a source file
 src/ge211_color.cpp.i:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_color.cpp.i
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_color.cpp.i
 .PHONY : src/ge211_color.cpp.i
 
 src/ge211_color.s: src/ge211_color.cpp.s
@@ -260,7 +249,7 @@ src/ge211_color.s: src/ge211_color.cpp.s
 
 # target to generate assembly for a file
 src/ge211_color.cpp.s:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_color.cpp.s
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_color.cpp.s
 .PHONY : src/ge211_color.cpp.s
 
 src/ge211_engine.o: src/ge211_engine.cpp.o
@@ -269,7 +258,7 @@ src/ge211_engine.o: src/ge211_engine.cpp.o
 
 # target to build an object file
 src/ge211_engine.cpp.o:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_engine.cpp.o
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_engine.cpp.o
 .PHONY : src/ge211_engine.cpp.o
 
 src/ge211_engine.i: src/ge211_engine.cpp.i
@@ -278,7 +267,7 @@ src/ge211_engine.i: src/ge211_engine.cpp.i
 
 # target to preprocess a source file
 src/ge211_engine.cpp.i:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_engine.cpp.i
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_engine.cpp.i
 .PHONY : src/ge211_engine.cpp.i
 
 src/ge211_engine.s: src/ge211_engine.cpp.s
@@ -287,7 +276,7 @@ src/ge211_engine.s: src/ge211_engine.cpp.s
 
 # target to generate assembly for a file
 src/ge211_engine.cpp.s:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_engine.cpp.s
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_engine.cpp.s
 .PHONY : src/ge211_engine.cpp.s
 
 src/ge211_error.o: src/ge211_error.cpp.o
@@ -296,7 +285,7 @@ src/ge211_error.o: src/ge211_error.cpp.o
 
 # target to build an object file
 src/ge211_error.cpp.o:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_error.cpp.o
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_error.cpp.o
 .PHONY : src/ge211_error.cpp.o
 
 src/ge211_error.i: src/ge211_error.cpp.i
@@ -305,7 +294,7 @@ src/ge211_error.i: src/ge211_error.cpp.i
 
 # target to preprocess a source file
 src/ge211_error.cpp.i:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_error.cpp.i
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_error.cpp.i
 .PHONY : src/ge211_error.cpp.i
 
 src/ge211_error.s: src/ge211_error.cpp.s
@@ -314,7 +303,7 @@ src/ge211_error.s: src/ge211_error.cpp.s
 
 # target to generate assembly for a file
 src/ge211_error.cpp.s:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_error.cpp.s
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_error.cpp.s
 .PHONY : src/ge211_error.cpp.s
 
 src/ge211_event.o: src/ge211_event.cpp.o
@@ -323,7 +312,7 @@ src/ge211_event.o: src/ge211_event.cpp.o
 
 # target to build an object file
 src/ge211_event.cpp.o:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_event.cpp.o
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_event.cpp.o
 .PHONY : src/ge211_event.cpp.o
 
 src/ge211_event.i: src/ge211_event.cpp.i
@@ -332,7 +321,7 @@ src/ge211_event.i: src/ge211_event.cpp.i
 
 # target to preprocess a source file
 src/ge211_event.cpp.i:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_event.cpp.i
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_event.cpp.i
 .PHONY : src/ge211_event.cpp.i
 
 src/ge211_event.s: src/ge211_event.cpp.s
@@ -341,7 +330,7 @@ src/ge211_event.s: src/ge211_event.cpp.s
 
 # target to generate assembly for a file
 src/ge211_event.cpp.s:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_event.cpp.s
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_event.cpp.s
 .PHONY : src/ge211_event.cpp.s
 
 src/ge211_geometry.o: src/ge211_geometry.cpp.o
@@ -350,7 +339,7 @@ src/ge211_geometry.o: src/ge211_geometry.cpp.o
 
 # target to build an object file
 src/ge211_geometry.cpp.o:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_geometry.cpp.o
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_geometry.cpp.o
 .PHONY : src/ge211_geometry.cpp.o
 
 src/ge211_geometry.i: src/ge211_geometry.cpp.i
@@ -359,7 +348,7 @@ src/ge211_geometry.i: src/ge211_geometry.cpp.i
 
 # target to preprocess a source file
 src/ge211_geometry.cpp.i:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_geometry.cpp.i
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_geometry.cpp.i
 .PHONY : src/ge211_geometry.cpp.i
 
 src/ge211_geometry.s: src/ge211_geometry.cpp.s
@@ -368,7 +357,7 @@ src/ge211_geometry.s: src/ge211_geometry.cpp.s
 
 # target to generate assembly for a file
 src/ge211_geometry.cpp.s:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_geometry.cpp.s
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_geometry.cpp.s
 .PHONY : src/ge211_geometry.cpp.s
 
 src/ge211_random.o: src/ge211_random.cpp.o
@@ -377,7 +366,7 @@ src/ge211_random.o: src/ge211_random.cpp.o
 
 # target to build an object file
 src/ge211_random.cpp.o:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_random.cpp.o
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_random.cpp.o
 .PHONY : src/ge211_random.cpp.o
 
 src/ge211_random.i: src/ge211_random.cpp.i
@@ -386,7 +375,7 @@ src/ge211_random.i: src/ge211_random.cpp.i
 
 # target to preprocess a source file
 src/ge211_random.cpp.i:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_random.cpp.i
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_random.cpp.i
 .PHONY : src/ge211_random.cpp.i
 
 src/ge211_random.s: src/ge211_random.cpp.s
@@ -395,7 +384,7 @@ src/ge211_random.s: src/ge211_random.cpp.s
 
 # target to generate assembly for a file
 src/ge211_random.cpp.s:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_random.cpp.s
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_random.cpp.s
 .PHONY : src/ge211_random.cpp.s
 
 src/ge211_render.o: src/ge211_render.cpp.o
@@ -404,7 +393,7 @@ src/ge211_render.o: src/ge211_render.cpp.o
 
 # target to build an object file
 src/ge211_render.cpp.o:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_render.cpp.o
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_render.cpp.o
 .PHONY : src/ge211_render.cpp.o
 
 src/ge211_render.i: src/ge211_render.cpp.i
@@ -413,7 +402,7 @@ src/ge211_render.i: src/ge211_render.cpp.i
 
 # target to preprocess a source file
 src/ge211_render.cpp.i:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_render.cpp.i
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_render.cpp.i
 .PHONY : src/ge211_render.cpp.i
 
 src/ge211_render.s: src/ge211_render.cpp.s
@@ -422,7 +411,7 @@ src/ge211_render.s: src/ge211_render.cpp.s
 
 # target to generate assembly for a file
 src/ge211_render.cpp.s:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_render.cpp.s
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_render.cpp.s
 .PHONY : src/ge211_render.cpp.s
 
 src/ge211_resource.o: src/ge211_resource.cpp.o
@@ -431,7 +420,7 @@ src/ge211_resource.o: src/ge211_resource.cpp.o
 
 # target to build an object file
 src/ge211_resource.cpp.o:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_resource.cpp.o
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_resource.cpp.o
 .PHONY : src/ge211_resource.cpp.o
 
 src/ge211_resource.i: src/ge211_resource.cpp.i
@@ -440,7 +429,7 @@ src/ge211_resource.i: src/ge211_resource.cpp.i
 
 # target to preprocess a source file
 src/ge211_resource.cpp.i:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_resource.cpp.i
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_resource.cpp.i
 .PHONY : src/ge211_resource.cpp.i
 
 src/ge211_resource.s: src/ge211_resource.cpp.s
@@ -449,7 +438,7 @@ src/ge211_resource.s: src/ge211_resource.cpp.s
 
 # target to generate assembly for a file
 src/ge211_resource.cpp.s:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_resource.cpp.s
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_resource.cpp.s
 .PHONY : src/ge211_resource.cpp.s
 
 src/ge211_session.o: src/ge211_session.cpp.o
@@ -458,7 +447,7 @@ src/ge211_session.o: src/ge211_session.cpp.o
 
 # target to build an object file
 src/ge211_session.cpp.o:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_session.cpp.o
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_session.cpp.o
 .PHONY : src/ge211_session.cpp.o
 
 src/ge211_session.i: src/ge211_session.cpp.i
@@ -467,7 +456,7 @@ src/ge211_session.i: src/ge211_session.cpp.i
 
 # target to preprocess a source file
 src/ge211_session.cpp.i:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_session.cpp.i
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_session.cpp.i
 .PHONY : src/ge211_session.cpp.i
 
 src/ge211_session.s: src/ge211_session.cpp.s
@@ -476,7 +465,7 @@ src/ge211_session.s: src/ge211_session.cpp.s
 
 # target to generate assembly for a file
 src/ge211_session.cpp.s:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_session.cpp.s
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_session.cpp.s
 .PHONY : src/ge211_session.cpp.s
 
 src/ge211_sprites.o: src/ge211_sprites.cpp.o
@@ -485,7 +474,7 @@ src/ge211_sprites.o: src/ge211_sprites.cpp.o
 
 # target to build an object file
 src/ge211_sprites.cpp.o:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_sprites.cpp.o
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_sprites.cpp.o
 .PHONY : src/ge211_sprites.cpp.o
 
 src/ge211_sprites.i: src/ge211_sprites.cpp.i
@@ -494,7 +483,7 @@ src/ge211_sprites.i: src/ge211_sprites.cpp.i
 
 # target to preprocess a source file
 src/ge211_sprites.cpp.i:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_sprites.cpp.i
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_sprites.cpp.i
 .PHONY : src/ge211_sprites.cpp.i
 
 src/ge211_sprites.s: src/ge211_sprites.cpp.s
@@ -503,7 +492,7 @@ src/ge211_sprites.s: src/ge211_sprites.cpp.s
 
 # target to generate assembly for a file
 src/ge211_sprites.cpp.s:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_sprites.cpp.s
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_sprites.cpp.s
 .PHONY : src/ge211_sprites.cpp.s
 
 src/ge211_window.o: src/ge211_window.cpp.o
@@ -512,7 +501,7 @@ src/ge211_window.o: src/ge211_window.cpp.o
 
 # target to build an object file
 src/ge211_window.cpp.o:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_window.cpp.o
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_window.cpp.o
 .PHONY : src/ge211_window.cpp.o
 
 src/ge211_window.i: src/ge211_window.cpp.i
@@ -521,7 +510,7 @@ src/ge211_window.i: src/ge211_window.cpp.i
 
 # target to preprocess a source file
 src/ge211_window.cpp.i:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_window.cpp.i
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_window.cpp.i
 .PHONY : src/ge211_window.cpp.i
 
 src/ge211_window.s: src/ge211_window.cpp.s
@@ -530,7 +519,7 @@ src/ge211_window.s: src/ge211_window.cpp.s
 
 # target to generate assembly for a file
 src/ge211_window.cpp.s:
-	cd /home/cs211/hexaworld/lib/cellworld && $(MAKE) -f lib/ge211/CMakeFiles/ge211.dir/build.make lib/ge211/CMakeFiles/ge211.dir/src/ge211_window.cpp.s
+	cd /home/cs211/hexaworld && $(MAKE) -f lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/build.make lib/cellworld/lib/ge211/CMakeFiles/ge211.dir/src/ge211_window.cpp.s
 .PHONY : src/ge211_window.cpp.s
 
 # Help Target
@@ -540,13 +529,12 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... install/strip"
-	@echo "... list_install_components"
-	@echo "... install/local"
-	@echo "... test"
-	@echo "... ge211"
-	@echo "... install"
 	@echo "... edit_cache"
+	@echo "... install"
 	@echo "... rebuild_cache"
+	@echo "... list_install_components"
+	@echo "... ge211"
+	@echo "... install/local"
 	@echo "... src/ge211_audio.o"
 	@echo "... src/ge211_audio.i"
 	@echo "... src/ge211_audio.s"
@@ -597,6 +585,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/cs211/hexaworld/lib/cellworld && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/cs211/hexaworld && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

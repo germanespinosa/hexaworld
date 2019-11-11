@@ -18,6 +18,7 @@ namespace cellworld{
         ge211::Text_sprite fps;
         const ge211::Dimensions _scene_dimensions ;
         double _get_ratio();
-        double _ratio=0;
+        double _ratio;
+        int _cell_size;
     };
 }

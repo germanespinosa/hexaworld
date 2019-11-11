@@ -7,13 +7,13 @@
 namespace cellworld{
     struct Model
     {
-        Model( World &world, std::vector<Agent>&);
+        Model( World &world, std::vector<Agent*>&);
         World &world;
         bool update();
         std::vector<Agent_data> get_agents_data();
         private:
         uint32_t _iteration;
-        std::vector<Agent> &_agents;
+        std::vector<Agent*> &_agents;
         void _epoch (std::vector<Action>);
     };
 } 
