@@ -22,6 +22,7 @@ namespace cellworld{
         double distance(const Cell&, const Cell&, const Cell&)  const;
         uint32_t size() const;
         int32_t find(const Coordinates&) const;
+        void connect(std::vector<Coordinates>);
         Cell &operator[](const uint32_t& );
         Cell &operator[](const Coordinates&);
     private:

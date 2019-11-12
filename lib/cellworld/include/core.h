@@ -2,6 +2,24 @@
 #include <ge211.h>
 
 namespace cellworld{
+    enum Color{
+        Black,
+        White,
+        Red,
+        Lime,
+        Blue,
+        Yellow,
+        Cyan,
+        Magenta,
+        Silver,
+        Gray,
+        Maroon,
+        Olive,
+        Green,
+        Purple,
+        Teal,
+        Navy
+    };
     struct Coordinates{
         int8_t x,y;
         

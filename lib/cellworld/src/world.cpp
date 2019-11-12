@@ -41,6 +41,16 @@ Cell::Cell(){
    
 }
 
+void World::connect(vector<Coordinates> connections){
+    for (unsigned int i = 0; i < cells.size(); i++){
+        for (unsigned int c =0; c < connections.size();c++){
+            int cc = find(cells[i].coordinates+connections[c]);
+            if (cc>=0){
+                if (!cells[cc].occluded) cells[i].connections.push_back(cc);
+            }
+        }
+    }
+}
 
 bool World::add(const Cell cell){
     if (cells.size() != cell.id) return false;
@@ -96,9 +106,19 @@ uint32_t World::size() const{
 }
 
 int32_t World::find (const Coordinates& coordinates) const{
-    for (unsigned int i=0; i<cells.size(); i++)
-        if (cells[i].coordinates==coordinates) return i;
-    return -1;
+    static int32_t *map=NULL;
+    if (map == NULL){
+        map = (int32_t *) malloc(256*256* sizeof(int32_t));
+        for (unsigned int i=0; i<256*256; i++) map[i] = -1;
+        for (unsigned int i=0; i<cells.size(); i++) {
+            int m=(cells[i].coordinates.x+128)*256 + (cells[i].coordinates.y+128);
+            map[m] = i;
+        }
+    }
+/*    for (unsigned int i=0; i<cells.size(); i++)
+        if (cells[i].coordinates==coordinates) return i;*/
+    int mi=(coordinates.x+128)*256 + (coordinates.y+128);
+    return map[mi];
 }
 
 Cell &World::operator[](const uint32_t& id){

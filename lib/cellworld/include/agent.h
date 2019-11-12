@@ -7,7 +7,7 @@ namespace cellworld{
         uint32_t iteration = 0;
         Coordinates coordinates {0,0};
         uint8_t status = 0;
-        uint8_t color = 0;
+        Color color = Black;
     };
      struct State{
         uint32_t iteration;
