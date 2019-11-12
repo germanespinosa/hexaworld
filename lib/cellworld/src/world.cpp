@@ -23,12 +23,13 @@ bool Cell::operator == (const Cell& c) const {
 }
     
 
-Cell::Cell (uint32_t id, Coordinates coordinates, Basic_position<double> location, std::vector<uint32_t> connections, bool occluded)
+Cell::Cell (uint32_t id, Coordinates coordinates, Basic_position<double> location, std::vector<uint32_t> connections, double value, bool occluded)
 {
     this->id = id;
     this->location = location;
     this->coordinates = coordinates;
     this->connections = connections;
+    this->value = value;
     this->occluded=occluded;
 }
 
@@ -71,6 +72,7 @@ bool World::load(const std::string filepath){
         ss >> cy;
         ss >> cell.location.x;
         ss >> cell.location.y;
+        ss >> cell.value;
         ss >> cell.occluded;
         cell.coordinates.x = cx;
         cell.coordinates.y = cy;
@@ -93,6 +95,7 @@ bool World::save(const std::string filepath) const{
         << (int16_t)cells[i].coordinates.y << " "
         << cells[i].location.x << " "
         << cells[i].location.y << " "
+        << cells[i].value << " "
         << cells[i].occluded ;
        for (unsigned int c=0;c<cells[i].connections.size();c++){
            ofile << " " << cells[i].connections[c];

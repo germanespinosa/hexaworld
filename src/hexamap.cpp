@@ -75,7 +75,7 @@ int main (int argc, char *args[]) {
         for ( int8_t x = -20 ; x <= 40; x++ ){
             Coordinates coordinates{x,y};
             if (is_valid(coordinates))
-                world.add({(uint32_t)world.size(), coordinates, get_location(coordinates), {}, false });
+                world.add({(uint32_t)world.size(), coordinates, get_location(coordinates), {}, 0, false });
         }
     }
     //set occlussions

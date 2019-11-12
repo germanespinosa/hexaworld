@@ -43,17 +43,12 @@ struct Test_Agent : Agent {
     void update_state(State state) override{
         action.iteration = state.iteration;
         acum[world[data.coordinates].id]++;
+        world[data.coordinates].value++;
         if (state.iteration % 1000000 == 0){
             struct timeval tn;
             gettimeofday(&tn, NULL);
             cout << "iteration: " << state.iteration << " time: "<< diff_ms(tn,tp) << endl;
             tp = tn;
-        }
-        if (state.iteration>=1000000000){
-            for (unsigned int i=0;i<world.size();i++)
-                cout << (int)world[i].coordinates.x << " "<< (int)world[i].coordinates.y << " " << world[i].occluded << " " << acum[i] << endl;
-            exit(0);
-
         }
     }
     bool get_action() override{
@@ -70,14 +65,17 @@ int main(int argc, char *args[]){
     if ( argc > 1 ) w = get_parameter(args[1]);
     if ( argc > 2 ) h = get_parameter(args[2]);
     World world;
-    world.load("output.dat");
+    world.load("heatmap.dat");
     Test_Agent a(world);
     vector<Agent*> va;
     va.push_back(&a);
 
-    //Controller c(world,va, {w, h});
-    //c.run();
-    Model m(world,va);
-    while(true) m.update();
+    Controller c(world,va, {w, h});
+    c.run();
+    /*Model m(world,va);
+    for (uint32_t i = 0; i< 1000000000;i++){
+        m.update();
+    }*/
+    world.save("heatmap.dat");
 
 }

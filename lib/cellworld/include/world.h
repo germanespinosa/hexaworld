@@ -5,11 +5,12 @@ namespace cellworld{
 
     struct Cell{
         Cell();
-        Cell(uint32_t, Coordinates, ge211::Basic_position<double>, std::vector<uint32_t>, bool);
+        Cell(uint32_t, Coordinates, ge211::Basic_position<double>, std::vector<uint32_t>, double , bool);
         uint32_t id;
         Coordinates coordinates;
         ge211::Basic_position<double> location{0,0};
         std::vector<uint32_t> connections;
+        double value;
         bool occluded;
         bool operator == (const Cell&) const;
     };
