@@ -3,7 +3,7 @@
 
 namespace cellworld{
     struct Visibility{
-        Visibility( World&);
+        Visibility( World& );
         std::vector<Cell> line (const Cell&, const Cell&) const;
         std::vector<Cell> visible_cells (const Cell&) const;
         bool is_visible(const Cell&, const Cell&) const;

@@ -66,10 +66,10 @@ int main(int argc, char *args[]){
     if ( argc > 2 ) h = get_parameter(args[2]);
     World world;
     world.load("heatmap.dat");
+    Visibility vi(world);
     Test_Agent a(world);
     vector<Agent*> va;
     va.push_back(&a);
-
     Controller c(world,va, {w, h});
     c.run();
     /*Model m(world,va);
