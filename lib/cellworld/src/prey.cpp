@@ -1,4 +1,4 @@
-#include "../include/predator.h"
+#include "../include/prey.h"
 #include <stdlib.h>
 
 //
@@ -8,7 +8,7 @@
 using namespace cellworld;
 using namespace std;
 
-Predator::Predator(World &w, Visibility &v, uint32_t prey_id) : world(w), visibility(v), prey_id(prey_id){
+Prey::Prey(World &w, Visibility &v, uint32_t predator_id) : world(w), visibility(v), predator_id(predator_id){
     data.id = 0;
     data.color = Green;
     data.status= 1;
@@ -19,14 +19,14 @@ Predator::Predator(World &w, Visibility &v, uint32_t prey_id) : world(w), visibi
     action.action = {2,0};
 }
 
-void Predator::update_state(State state){
+void Prey::update_state(State state){
     action.iteration = state.iteration;
 
     bool prey_visible = false;
     Cell &predator_cell  =world[data.coordinates];
     auto conns = world[data.coordinates].connections;
-    if (state.agents.size()>prey_id) {
-        Cell &prey_cell = world[state.agents[prey_id].coordinates];
+    if (state.agents.size()>predator_id) {
+        Cell &prey_cell = world[state.agents[predator_id].coordinates];
         if (visibility.is_visible(predator_cell, prey_cell)){
             action.action = predator_cell.coordinates - data.coordinates;
             double min_dist = world.distance(predator_cell,prey_cell);
@@ -45,7 +45,7 @@ void Predator::update_state(State state){
     action.action = world[conns[r]].coordinates - data.coordinates;
 }
 
-bool Predator::get_action(){
+bool Prey::get_action(){
     return true;
 }
 

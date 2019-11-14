@@ -11,7 +11,7 @@ include_directories(include)
 add_executable( hexamap src/hexamap.cpp)
 target_link_libraries(hexamap cellworld)
 
-add_executable( show src/show.cpp src/predator.cpp)
+add_executable( show src/show.cpp src/predator.cpp lib/cellworld/src/prey.cpp)
 target_link_libraries(show cellworld)
 
 #[[

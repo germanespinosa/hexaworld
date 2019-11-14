@@ -5,8 +5,8 @@
 struct Predator : cellworld::Agent {
     cellworld::World &world;
     cellworld::Visibility &visibility;
-    uint32_t *acum;
-    Predator(cellworld::World &w, cellworld::Visibility &v);
+    uint32_t prey_id;
+    Predator(cellworld::World &, cellworld::Visibility &, uint32_t);
     void update_state(cellworld::State) override;
     bool get_action() override;
 };

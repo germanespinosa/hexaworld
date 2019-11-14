@@ -4,7 +4,7 @@
 #include <thread>
 #include <stdlib.h>
 #include <sys/time.h>
-
+#include "../include/predator.h"
 
 using namespace cellworld;
 using namespace std;
@@ -65,9 +65,10 @@ int main(int argc, char *args[]){
     if ( argc > 1 ) w = get_parameter(args[1]);
     if ( argc > 2 ) h = get_parameter(args[2]);
     World world;
-    world.load("heatmap.dat");
+    world.load("output.dat");
     Visibility vi(world);
-    Test_Agent a(world);
+    Predator a(world, vi, 1);
+    //Test_Agent a(world);
     vector<Agent*> va;
     va.push_back(&a);
     Controller c(world,va, {w, h});
