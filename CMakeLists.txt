@@ -9,8 +9,6 @@ find_package(GComm CONFIG QUIET)
 
 get_target_property( UTF8-CPP_INTERFACE_INCLUDE_DIRECTORIES utf8-cpp INTERFACE_INCLUDE_DIRECTORIES )
 
-message ("here!! ${UTF8-CPP_INTERFACE_INCLUDE_DIRECTORIES}")
-
 add_executable(hexamap src/hexamap.cpp)
 
 target_link_libraries(hexamap
