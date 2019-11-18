@@ -1,4 +1,0 @@
-/home/cs211/hexaworld/build/CMakeFiles/rebuild_cache.dir
-/home/cs211/hexaworld/build/CMakeFiles/edit_cache.dir
-/home/cs211/hexaworld/build/CMakeFiles/hexamap.dir
-/home/cs211/hexaworld/build/CMakeFiles/show.dir
