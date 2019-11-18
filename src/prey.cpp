@@ -1,4 +1,4 @@
-#include<gcomm.h>
+/*#include<gcomm.h>
 #include<gmemconnector.h>
 #include"definitions.h"
 #include<stdlib.h>
@@ -24,3 +24,4 @@ int main()
         }
     }
 }
+*/
