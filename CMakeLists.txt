@@ -17,6 +17,6 @@ target_link_libraries(hexamap
         PUBLIC
         cellworld)
 
-add_executable( show src/show.cpp src/predator.cpp lib/cellworld/src/prey.cpp)
+add_executable( show src/show.cpp src/predator.cpp src/prey.cpp)
 target_link_libraries(show cellworld)
 include_directories(include)
