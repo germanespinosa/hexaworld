@@ -16,19 +16,6 @@ Basic_position<double> get_location(Coordinates c) {
     return {(double)c.x *  .5 ,  (double)c.y * 0.866025403784439};
 }
 
-double distance(Coordinates const p0, Coordinates const p1) {
-    ge211::Basic_position<double> c1 = get_location(p1);
-    ge211::Basic_position<double> c0 = get_location(p0);
-    return sqrt(pow(c1.y-c0.y,2) + pow(c1.x-c0.x,2));
-}
-
-double distance(Coordinates const p0, Coordinates const p1, Coordinates const p2) {
-    ge211::Basic_position<double> c1 = get_location(p1);
-    ge211::Basic_position<double> c2 = get_location(p2);
-    ge211::Basic_position<double> c0 = get_location(p0);
-    return abs((c2.y-c1.y) * c0.x-(c2.x-c1.x) *c0.y+c2.x*c1.y-c2.y * c1.x) / sqrt(pow(c2.y-c1.y,2)+pow(c2.x-c1.x,2));
-}
-
 bool is_valid(Coordinates c) {
     return ((c.x + c.y) % 2 == 0) && 
         (abs(c.y) + abs(c.x) <= 2 * (arena_side - 1)) && 

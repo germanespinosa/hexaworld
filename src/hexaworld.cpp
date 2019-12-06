@@ -1,37 +1,51 @@
+#include <cellworld.h>
 #include <iostream>
-#include <fstream>
-#include <model.h>
-#include <view.h>
-#include <controller.h>
-#include <gcomm.h>
-#include <gmemconnector.h>
+#include <stdlib.h>
+#include "utils.h"
+#include "predator.h"
+#include "prey.h"
 
-using namespace ge211;
+#include <sys/stat.h>
+
+using namespace cellworld;
 using namespace std;
 
-int main()
-{ 
-/*    ifstream in_file;
-    in_file.open("setup.dat", ios::in);
-    if (in_file.fail()) {
-        cout << "Could not open input file.  Program terminating.\n\n";
-        return 9;
+int main(int argc, char *args[]){
+    if (argc == 1) {
+        print_help();
+        exit(0);
     }
-    vector<Coordinates> occlussions;
-    int x, y, t = 0;
-    Coordinates start;
-    Coordinates goal;
-    Coordinates predator;
-    while (t!=4){
-        in_file >> x;
-        in_file >> y;
-        in_file >> t;
-        Coordinates coordinates{(int8_t)x,(int8_t)y};
-        occlussions.push_back(coordinates);
-    }*/
-/*    GMemConnector prey_connector (8020, GMemConnector::mode::master);
-    GComm<Action, State> prey_comm(prey_connector);
-    GMemConnector predator_connector (8030, GMemConnector::mode::master);
-    GComm<Action, State> predator_comm(predator_connector);
-    Hexaworld{occlussions, start, goal, predator, prey_comm, predator_comm}.run(); */
+    {
+        struct stat buffer;
+        if (stat (args[1], &buffer)) {
+            cout << "'" << args[1] << "': No such file or directory" << endl;
+            exit(0);
+        }
+    }
+    string filename = args[1];
+    bool show = get_parameter("-show", "true", argc, args)=="true";
+    uint16_t steps = get_parameter_int("-episodes", 100, argc, args);
+    uint32_t episodes = get_parameter_int("-episodes", 1, argc, args);
+    int width = get_parameter_int("-width", 1024, argc, args);
+    int height = get_parameter_int("-height", 768, argc, args);
+    for (uint32_t episode = 0 ; episode < episodes; episode++ ) {
+        World world;
+        world.load(filename);
+        Visibility vi(world);
+        Predator predator(world, vi, 1);
+        Prey prey(world, vi, 0);
+        vector<Agent*> va;
+        va.push_back(&predator);
+        va.push_back(&prey);
+        if (show) {
+            Controller c(world, va, {width, height}, steps);
+            c.run();
+        } else {
+            Model m(world,va);
+            for (uint32_t i = 0; i < steps ; i++){
+                m.update();
+            }
+        }
+        world.save("heatmap.dat");
+    }
 }
