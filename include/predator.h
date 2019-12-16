@@ -1,14 +1,26 @@
 #ifndef HEXAWORLD_PREDATOR_H
 #define HEXAWORLD_PREDATOR_H
 #include <cellworld.h>
+#define PREDATOR_TYPE 2
 
 struct Predator : cellworld::Agent {
-    cellworld::World &world;
-    cellworld::Visibility &visibility;
-    uint32_t prey_id;
-    Predator(cellworld::World &, cellworld::Visibility &, uint32_t);
-    void update_state(cellworld::State) override;
-    bool get_action() override;
+    // called from the simulation
+    void start_episode(const cellworld::State &) override;
+    void update_state(const cellworld::State &) override;
+    void end_episode(const cellworld::State &) override;
+    uint32_t action_ready() override;
+    uint32_t get_destination() override;
+
+    Predator(cellworld::World &, cellworld::Visibility &);
+    void reset();
+private:
+    const std::vector<cellworld::Coordinates> _predator_moves {{0,0},{-2,0},{-1,-1},{1,-1},{2,0},{1,1},{-1,1}};
+    cellworld::World &_world;
+    cellworld::Visibility &_visibility;
+    uint32_t _prey_id;
+    uint32_t _iteration;
+    uint32_t _next_action;
+    cellworld::World_connections _wc;
 };
 
 #endif //HEXAWORLD_PREDATOR_H

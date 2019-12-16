@@ -6,6 +6,13 @@
 
 using namespace std;
 
+void set_seed (int32_t seed){
+    if (seed>0)
+        srand(seed);
+    else
+        srand(time(NULL));
+}
+
 string get_parameter (const string parameter_name, const string default_value, int argc, char *args[]){
     for (int i=0; i < argc - 1; i++){
         if (parameter_name == args[i]) return args[i+1];
@@ -18,7 +25,7 @@ int64_t get_parameter_int (const std::string parameter_name, const int64_t defau
     return strtoimax(get_parameter(parameter_name, default_value_S, argc, args).c_str(), NULL, 10);
 }
 
-void print_help(){
+void print_hexaworld_help(){
     cout << "Hexaworld simulation" << endl;
     cout << "--------------------" << endl;
     cout << "usage:" << endl;
@@ -30,5 +37,17 @@ void print_help(){
     cout << "   -show: display the execution. Boolean true-false (default true)" << endl;
     cout << "   -width: windows width (only if show is true). Integer 640-1920 (default 1024)" << endl;
     cout << "   -height: windows height (only if show is true). Integer 480-1440 (default 768)" << endl;
+    cout << endl;
+}
+
+void print_hexamap_help(){
+    cout << "Hexaworld simulation map creation tool" << endl;
+    cout << "--------------------------------------" << endl;
+    cout << "usage:" << endl;
+    cout << "   hexamap [filename.map] -seed [seed] -size [size] -occlusions [occlusions]" << endl;
+    cout << "parameters:" << endl;
+    cout << "   -seed: random seed. Integer 0-65535 (default 0)" << endl;
+    cout << "   -size: number of cells in a side. Odd integer 5-19 (default 11)" << endl;
+    cout << "   -occlusions: number of occlusions. Integer 0-200 (default 80)" << endl;
     cout << endl;
 }

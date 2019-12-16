@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include "utils.h"
 #include "predator.h"
-#include "prey.h"
-
+#include "blind.h"
+#include "full_vision.h"
 #include <sys/stat.h>
 
 using namespace cellworld;
@@ -12,7 +12,7 @@ using namespace std;
 
 int main(int argc, char *args[]){
     if (argc == 1) {
-        print_help();
+        print_hexaworld_help();
         exit(0);
     }
     {
@@ -23,29 +23,51 @@ int main(int argc, char *args[]){
         }
     }
     string filename = args[1];
-    bool show = get_parameter("-show", "true", argc, args)=="true";
-    uint16_t steps = get_parameter_int("-episodes", 100, argc, args);
+    int64_t p_seed = get_parameter_int("-seed", -1, argc, args);
+    set_seed(p_seed);
+    bool exploration = get_parameter("-exploration", "false", argc, args)=="true";
+    bool show = get_parameter("-show", "false", argc, args)=="true";
+    uint16_t steps = get_parameter_int("-steps", 100, argc, args);
     uint32_t episodes = get_parameter_int("-episodes", 1, argc, args);
     int width = get_parameter_int("-width", 1024, argc, args);
     int height = get_parameter_int("-height", 768, argc, args);
-    for (uint32_t episode = 0 ; episode < episodes; episode++ ) {
-        World world;
-        world.load(filename);
-        Visibility vi(world);
-        Predator predator(world, vi, 1);
-        Prey prey(world, vi, 0);
-        vector<Agent*> va;
-        va.push_back(&predator);
-        va.push_back(&prey);
-        if (show) {
-            Controller c(world, va, {width, height}, steps);
-            c.run();
-        } else {
-            Model m(world,va);
-            for (uint32_t i = 0; i < steps ; i++){
-                m.update();
-            }
-        }
-        world.save("heatmap.dat");
+    World world;
+    world.load(filename);
+    Visibility vi(world);
+    Predator predator(world, vi);
+    Prey_config config;
+    config.start = world[{-20,0}].id;
+    config.goal = world[{20,0}].id;
+    config.success_reward = 1000;
+    config.failure_reward = 0;
+    config.discount = 1;
+    config.step_cost = -1;
+    config.color = Green;
+    cout << "Exploration mode: ";
+    if (exploration) {
+        cout << "ON" << endl;
+        config.action_probabilities = {50, 75, 80, 85, 90, 95, 100};
     }
+    else {
+        cout << "OFF" << endl;
+        config.action_probabilities = {80, 95, 96, 97, 98, 99, 100};
+    }
+    Full_vision prey(world, vi, config);
+    vector<Agent*> va;
+    va.push_back((Agent*)&predator);
+    va.push_back((Agent*)&prey);
+    if (show) {
+        Controller c(world, va, {width, height}, steps, episodes);
+        c.run();
+    }else{
+        Model m(world,va);
+        for (uint32_t episode = 1 ; episode <= episodes; episode++ ) {
+            if (episode % (episodes/100) == 0)  cout << "\repisode: " << episode << flush;
+            m.start_episode();
+            for (uint32_t i = 0; i < steps &&  m.update(); i++);
+            m.end_episode();
+        }
+    }
+    cout << endl;
+//    world.save("heatmap.dat");
 }
