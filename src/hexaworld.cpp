@@ -4,7 +4,7 @@
 #include "utils.h"
 #include "predator.h"
 #include "blind.h"
-#include "full_vision.h"
+#include "partial_vision.h"
 #include <sys/stat.h>
 
 using namespace cellworld;
@@ -52,7 +52,7 @@ int main(int argc, char *args[]){
         cout << "OFF" << endl;
         config.action_probabilities = {80, 95, 96, 97, 98, 99, 100};
     }
-    Full_vision prey(world, vi, config);
+    Partial_vision prey(world, vi, config);
     vector<Agent*> va;
     va.push_back((Agent*)&predator);
     va.push_back((Agent*)&prey);

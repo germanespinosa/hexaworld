@@ -23,6 +23,7 @@ Prey::Prey(World &w, Visibility &v, Prey_config &config)
     data.color = config.color;
     _episodes = 0;
     _successes = 0;
+    _reward_acum = 0;
 }
 
 uint32_t Prey::_get_action(std::vector<uint32_t> &options,  Prey_expected_reward *er,  int dice) {
@@ -97,13 +98,14 @@ void Prey::end_episode(const State &state) {
         reward = _config.success_reward;
         _successes++;
     }
+    _reward_acum += reward + _iteration * _config.step_cost;
     for (size_t i=0 ; i < _history.size(); i++){
         save_expected_reward(_history[i], reward, _iteration);
     }
 }
 
 Prey::~Prey() {
-    cout << "success rate "<< (float(_successes) / (float(_episodes)) * 100.00) << "%" << endl;
+    cout << "success rate: "<< (float(_successes) / (float(_episodes)) * 100.00) << "% - average reward: " << _reward_acum/(double)_episodes << endl;
 }
 
 Prey_expected_reward_buffer::Prey_expected_reward_buffer(uint32_t size) : _size(size){

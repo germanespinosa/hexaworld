@@ -67,6 +67,7 @@ protected:
     uint32_t _next_action;
     uint32_t _episodes;
     uint32_t _successes;
+    double _reward_acum;
 private:
     uint32_t _get_action(std::vector<uint32_t> &,Prey_expected_reward *,  int);
 };
