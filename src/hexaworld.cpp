@@ -31,6 +31,8 @@ int main(int argc, char *args[]){
     uint32_t episodes = get_parameter_int("-episodes", 1, argc, args);
     int width = get_parameter_int("-width", 1024, argc, args);
     int height = get_parameter_int("-height", 768, argc, args);
+    string input_file  = get_parameter("-in", "partial_vision.", argc, args);
+    string output_file  = get_parameter("-out", "partial_vision.", argc, args);
     World world;
     world.load(filename);
     Visibility vi(world);
@@ -61,8 +63,9 @@ int main(int argc, char *args[]){
         c.run();
     }else{
         Model m(world,va);
+        int perc = 0;
         for (uint32_t episode = 1 ; episode <= episodes; episode++ ) {
-            if (episode % (episodes/100) == 0)  cout << "\repisode: " << episode << flush;
+            if (episode % (episodes/100) == 0)  cout << "\rProgress: " << ++perc << "% episode: " << episode << flush;
             m.start_episode();
             for (uint32_t i = 0; i < steps &&  m.update(); i++);
             m.end_episode();

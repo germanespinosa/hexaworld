@@ -18,7 +18,7 @@ private:
     Prey_expected_reward_buffer _buffer;
     Prey_expected_reward_buffer _habit;
     cellworld::World_connections _wc;
-
+    uint32_t _predator_contacts;
 };
 
 #endif //HEXAWORLD_PARTIAL_VISION_H

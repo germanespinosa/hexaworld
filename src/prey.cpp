@@ -121,7 +121,7 @@ bool Prey_expected_reward_buffer::load(std::string file_name){
 
 bool Prey_expected_reward_buffer::save(std::string file_name){
     ofstream wf(file_name.c_str(), ios::out | ios::binary);
-    cout<<"saving" << endl;
+    cout<<"saving " << file_name << endl;
     wf.write((char *) values, _size * sizeof(Prey_expected_reward));
     return true;
 }
