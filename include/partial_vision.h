@@ -14,7 +14,7 @@ struct Partial_vision : Prey{
     ~Partial_vision();
 private:
     const int _memory = 10;
-    const std::vector<cellworld::Coordinates> _prey_moves {{0,0},{-2,0},{-1,-1},{1,-1},{2,0},{1,1},{-1,1}};
+    const std::vector<cellworld::Coordinates> _prey_moves CONTACT_CELLS;
     Prey_expected_reward_buffer _buffer;
     Prey_expected_reward_buffer _habit;
     cellworld::World_connections _wc;

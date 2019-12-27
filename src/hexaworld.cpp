@@ -5,6 +5,7 @@
 #include "predator.h"
 #include "blind.h"
 #include "partial_vision.h"
+#include "hexaworld.h"
 #include <sys/stat.h>
 
 using namespace cellworld;
@@ -35,6 +36,18 @@ int main(int argc, char *args[]){
     string output_file  = get_parameter("-out", "partial_vision.", argc, args);
     World world;
     world.load(filename);
+    World_connections wc(world, ADJACENT_CELLS);
+    cout << "convergence : " << wc.process_eigen_centrality(1000, .000001) << endl;
+    double max = 0;
+    double sum = 0;
+    for (uint32_t i = 0 ; i < world.size(); i++) {
+        if (max < wc.eigen_centrality[i])max = wc.eigen_centrality[i];
+        sum += wc.eigen_centrality[i];
+    }
+    cout << "max eigencentrality: "<< max <<endl;
+    cout << "sum eigencentrality: "<< sum <<endl;
+    for (uint32_t i = 0 ; i < world.size(); i++)
+        world.set_value(i,wc.eigen_centrality[i]/max);
     Visibility vi(world);
     Predator predator(world, vi);
     Prey_config config;
@@ -59,7 +72,7 @@ int main(int argc, char *args[]){
     va.push_back((Agent*)&predator);
     va.push_back((Agent*)&prey);
     if (show) {
-        Controller c(world, va, {width, height}, steps, episodes);
+        Simulation c(world, va, {width, height}, steps, episodes);
         c.run();
     }else{
         Model m(world,va);

@@ -2,6 +2,7 @@
 #define HEXAWORLD_PREY_H
 #include <cellworld.h>
 #include "predator.h"
+#include "hexaworld.h"
 #define PREY_TYPE 1
 
 struct Prey_state_action{
