@@ -71,7 +71,7 @@ int main(int argc, char *args[]){
     vector<Agent*> va;
     va.push_back((Agent*)&predator);
     va.push_back((Agent*)&prey);
-    if (show) {
+    if ( show ) {
         Simulation c(world, va, {width, height}, steps, episodes);
         c.run();
     }else{
