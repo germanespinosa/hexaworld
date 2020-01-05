@@ -20,7 +20,7 @@ private:
     uint32_t _prey_id;
     uint32_t _iteration;
     uint32_t _next_action;
-    cellworld::World_connections _wc;
+    cellworld::Connections _wc;
 };
 
 #endif //HEXAWORLD_PREDATOR_H

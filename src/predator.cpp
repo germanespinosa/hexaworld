@@ -21,8 +21,8 @@ void Predator::reset() {
 Predator::Predator(World &w, Visibility &v)
     : _world(w)
     , _visibility(v)
-    , _wc(w, _predator_moves)
 {
+    w.get_connections(_wc,CONTACT_CELLS);
     data.type = PREDATOR_TYPE;
     data.id = 0;
     data.color = Yellow;
@@ -30,7 +30,7 @@ Predator::Predator(World &w, Visibility &v)
 
 void Predator::update_state(const State &state){
     _iteration = state.iteration;
-    auto conns = _wc.cell_connections(data.cell_id);
+    auto conns = _wc[data.cell_id];
     if (state.agents[_prey_id]->status == 0) {
         active = false;
         return;

@@ -1,5 +1,12 @@
 import networkx as nx
 
+with open('test.con') as fp:
+    line = fp.readline()
+    while line:
+        print("{}".format(line.strip()))
+        line = fp.readline()
+
+
 G = nx.Graph();
 
 G.add_node(0);

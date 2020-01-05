@@ -7,10 +7,6 @@
 using namespace std;
 using namespace cellworld;
 
-std::vector<uint32_t> Full_vision::get_options(uint32_t cell_id) {
-    return _wc.cell_connections(cell_id);
-}
-
 Prey_expected_reward *Full_vision::get_expected_rewards(Prey_state_action &sa) {
     return _buffer[sa.current_predator_cell_id * _world.size() * _prey_moves.size()+ sa.prey_cell_id * _prey_moves.size()];
 }
@@ -25,13 +21,17 @@ void Full_vision::save_expected_reward(Prey_state_action &sa, double reward, uin
 
 Full_vision::Full_vision(World &w, Visibility &vi, Prey_config &config) :
         _buffer(w.size() * w.size() * _prey_moves.size()),
-        _wc (w, _prey_moves),
         Prey(w,vi,config)
 {
+    w.get_connections(_wc, CONTACT_CELLS);
     if (!_buffer.load("full_vision.dat")) {
     }
 }
 
 Full_vision::~Full_vision() {
     _buffer.save("full_vision.dat");
+}
+
+const std::vector<uint32_t> &Full_vision::get_options(uint32_t cell_id) {
+    return _wc[cell_id].get_all();
 }

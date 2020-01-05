@@ -7,10 +7,6 @@
 using namespace std;
 using namespace cellworld;
 
-std::vector<uint32_t> Partial_vision::get_options(uint32_t cell_id) {
-    return _wc.cell_connections(cell_id);
-}
-
 Prey_expected_reward *Partial_vision::get_expected_rewards(Prey_state_action &sa) {
     if (sa.last_seen == -1 || sa.iteration - sa.last_seen >= _memory) {
         return _habit[sa.prey_cell_id * _prey_moves.size()];
@@ -44,9 +40,9 @@ void Partial_vision::save_expected_reward(Prey_state_action &sa, double reward, 
 Partial_vision::Partial_vision(World &w, Visibility &vi, Prey_config &config) :
         _buffer(_memory * w.size() * w.size() * _prey_moves.size()),
         _habit(w.size() * _prey_moves.size()),
-        _wc (w, _prey_moves),
         Prey(w,vi,config)
 {
+    w.get_connections(_wc,CONTACT_CELLS);
     _predator_contacts = 0;
 
     if (!_buffer.load("partial_vision.dat")) {
@@ -59,4 +55,8 @@ Partial_vision::~Partial_vision() {
     _buffer.save("partial_vision.dat");
     _habit.save("partial_vision_habit.dat");
     cout << "Predator contacts: " << _predator_contacts << endl;
+}
+
+const std::vector<uint32_t> &Partial_vision::get_options(uint32_t cell_id) {
+    return _wc[cell_id].get_all();
 }

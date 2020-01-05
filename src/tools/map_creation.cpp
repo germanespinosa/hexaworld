@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <time.h>
+#include "hexaworld.h"
 
 using namespace ge211;
 using namespace std;
@@ -23,19 +24,21 @@ bool is_valid(Coordinates c, int size) {
 std::vector<Coordinates> const possible_connections = {{0,0},{1,1},{2,0},{1,-1},{-1,-1},{-2,0},{-1,1}};
 
 int main (int argc, char *args[]) {
+    string world_name;
     if (argc == 1) {
         print_hexamap_help();
         exit(0);
     }
     {
         struct stat buffer;
-        if (stat (args[1], &buffer) == 0) {
+        string filename(args[1]);
+        world_name = filename;
+        if (stat ((world_name + ".map").c_str(), &buffer) == 0) {
             cerr << "'" << args[1] << "': File already exists" << endl;
             exit(0);
         }
     }
-    World world;
-    string filepath(args[1]);
+    World world (world_name);
 
     int64_t p_seed = get_parameter_int("-size",-1,argc,args);
     if (p_seed < -1 || p_seed > 65535){
@@ -79,5 +82,8 @@ int main (int argc, char *args[]) {
             i++;
         }
     }
-    world.save(filepath);
+    world.save();
+    Connections wc;
+    world.get_connections(wc, ADJACENT_CELLS);
+    wc.save(world_name + ".con");
 }

@@ -18,12 +18,13 @@ int main(int argc, char *args[]){
     }
     {
         struct stat buffer;
-        if (stat (args[1], &buffer)) {
+        string filename (args[1]);
+        if (stat ((filename + ".map").c_str(), &buffer)) {
             cout << "'" << args[1] << "': No such file or directory" << endl;
             exit(0);
         }
     }
-    string filename = args[1];
+    string world_name (args[1]);
     int64_t p_seed = get_parameter_int("-seed", -1, argc, args);
     set_seed(p_seed);
     bool exploration = get_parameter("-exploration", "false", argc, args)=="true";
@@ -34,20 +35,21 @@ int main(int argc, char *args[]){
     int height = get_parameter_int("-height", 768, argc, args);
     string input_file  = get_parameter("-in", "partial_vision.", argc, args);
     string output_file  = get_parameter("-out", "partial_vision.", argc, args);
-    World world;
-    world.load(filename);
-    World_connections wc(world, ADJACENT_CELLS);
+    World world(world_name);
+    world.load();
+    Connections wc;
+    world.get_connections(wc , ADJACENT_CELLS);
     cout << "convergence : " << wc.process_eigen_centrality(1000, .000001) << endl;
     double max = 0;
     double sum = 0;
     for (uint32_t i = 0 ; i < world.size(); i++) {
-        if (max < wc.eigen_centrality[i])max = wc.eigen_centrality[i];
-        sum += wc.eigen_centrality[i];
+        if (max < wc[i].eigen_centrality)max = wc[i].eigen_centrality;
+        sum += wc[i].eigen_centrality;
     }
     cout << "max eigencentrality: "<< max <<endl;
     cout << "sum eigencentrality: "<< sum <<endl;
     for (uint32_t i = 0 ; i < world.size(); i++)
-        world.set_value(i,wc.eigen_centrality[i]/max);
+        world.set_value(i,wc[i].eigen_centrality/max);
     Visibility vi(world);
     Predator predator(world, vi);
     Prey_config config;

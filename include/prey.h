@@ -54,7 +54,7 @@ struct Prey : cellworld::Agent {
     void reset(uint32_t);
 
     // methods should be implemented
-    virtual std::vector<uint32_t> get_options(uint32_t) = 0;
+    virtual const std::vector<uint32_t> &get_options(uint32_t) = 0;
     virtual Prey_expected_reward *get_expected_rewards(Prey_state_action &) = 0;
     virtual void save_expected_reward (Prey_state_action &, double, uint32_t) = 0;
     ~Prey();

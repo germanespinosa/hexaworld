@@ -38,4 +38,6 @@ target_link_libraries( map_editor hexaworld )
 ### TESTS CONFIGURATION
 ###
 
+configure_file(python/map.py ${CMAKE_CURRENT_BINARY_DIR}/map.py COPYONLY)
+
 find_package(CatchTests CONFIG QUIET)
