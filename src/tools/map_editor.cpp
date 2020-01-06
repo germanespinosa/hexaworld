@@ -27,13 +27,16 @@ int main(int argc, char *args[]){
     string output_file  = get_parameter("-out", "partial_vision.", argc, args);
     World world(world_name);
     world.load();
-    Cell_group selected(world);
-    selected.load(world_name + ".sel");
-    Map_editor c(world, selected, {width, height},ADJACENT_CELLS);
     Sub_worlds sw;
     Connections cn;
     world.get_connections(cn,ADJACENT_CELLS);
+    //Cell_group selected = sw.find_bridges(world,cn);
+    Cell_group selected(world);
+    selected.load(world_name + ".sel");
+    cout << "bridges :" << selected.size() << endl;
+    Map_editor c(world, selected, {width, height},ADJACENT_CELLS);
+
     sw.reset(world, selected, cn);
-    cout << "subworlds :" << sw.size();
+    cout << "subworlds :" << sw.size() << endl;
     c.run();
 }
