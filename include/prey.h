@@ -36,17 +36,17 @@ struct Prey_config{
     double failure_reward;
     double discount;
     double step_cost;
-    cellworld::Color color;
+    cell_world::Color color;
     std::vector<int> action_probabilities;
 };
 
-struct Prey : cellworld::Agent {
-    Prey(cellworld::World &, cellworld::Visibility &, Prey_config &);
+struct Prey : cell_world::Agent {
+    Prey(cell_world::World &, cell_world::Visibility &, Prey_config &);
 
     // called from the simulation
-    void start_episode(const cellworld::State &) override;
-    void update_state(const cellworld::State &) override;
-    void end_episode(const cellworld::State &) override;
+    void start_episode(const cell_world::State &) override;
+    void update_state(const cell_world::State &) override;
+    void end_episode(const cell_world::State &) override;
     uint32_t action_ready() override;
     uint32_t get_destination() override;
 
@@ -60,8 +60,8 @@ struct Prey : cellworld::Agent {
     ~Prey();
 protected:
     Prey_config &_config;
-    cellworld::World &_world;
-    cellworld::Visibility &_visibility;
+    cell_world::World &_world;
+    cell_world::Visibility &_visibility;
     std::vector<Prey_state_action> _history;
     uint32_t _predator_id;
     uint32_t _iteration;

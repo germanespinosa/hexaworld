@@ -5,7 +5,7 @@
 #include <string>
 
 using namespace std;
-using namespace cellworld;
+using namespace cell_world;
 
 Prey_expected_reward *Blind::get_expected_rewards(Prey_state_action &sa) {
     return _buffer[sa.prey_cell_id * _prey_moves.size()];

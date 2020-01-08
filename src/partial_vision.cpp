@@ -5,7 +5,7 @@
 #include <string>
 
 using namespace std;
-using namespace cellworld;
+using namespace cell_world;
 
 Prey_expected_reward *Partial_vision::get_expected_rewards(Prey_state_action &sa) {
     if (sa.last_seen == -1 || sa.iteration - sa.last_seen >= _memory) {

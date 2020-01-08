@@ -6,7 +6,7 @@
 // Created by german on 11/13/19.
 //
 
-using namespace cellworld;
+using namespace cell_world;
 using namespace std;
 
 void Predator::reset() {
@@ -68,12 +68,12 @@ uint32_t Predator::get_destination() {
     return _next_action;
 }
 
-void Predator::start_episode(const cellworld::State &state) {
+void Predator::start_episode(const State &state) {
     reset();
     for (unsigned int i=0 ; i<state.agents.size(); i++)
         if (state.agents[i]->type == PREY_TYPE) _prey_id = i;
 }
 
-void Predator::end_episode(const cellworld::State &) {
+void Predator::end_episode(const State &) {
 }
 

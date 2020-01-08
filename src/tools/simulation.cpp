@@ -8,7 +8,7 @@
 #include "hexaworld.h"
 #include <sys/stat.h>
 
-using namespace cellworld;
+using namespace cell_world;
 using namespace std;
 
 int main(int argc, char *args[]){

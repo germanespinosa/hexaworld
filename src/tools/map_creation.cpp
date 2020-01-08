@@ -9,7 +9,7 @@
 
 using namespace ge211;
 using namespace std;
-using namespace cellworld;
+using namespace cell_world;
 
 Basic_position<double> get_location(Coordinates c) {
     return {(double)c.x *  .5 ,  (double)c.y * 0.866025403784439};

@@ -2,7 +2,7 @@
 #include "../include/prey.h"
 
 
-using namespace cellworld;
+using namespace cell_world;
 
 TEST_CASE("right action no rep")
 {

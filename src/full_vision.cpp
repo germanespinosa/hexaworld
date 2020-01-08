@@ -5,7 +5,7 @@
 #include <string>
 
 using namespace std;
-using namespace cellworld;
+using namespace cell_world;
 
 Prey_expected_reward *Full_vision::get_expected_rewards(Prey_state_action &sa) {
     return _buffer[sa.current_predator_cell_id * _world.size() * _prey_moves.size()+ sa.prey_cell_id * _prey_moves.size()];

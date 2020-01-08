@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 
-using namespace cellworld;
+using namespace cell_world;
 using namespace std;
 
 void Prey::reset(uint32_t start){

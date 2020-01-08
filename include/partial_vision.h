@@ -7,17 +7,17 @@
 #include "prey.h"
 
 struct Partial_vision : Prey{
-    Partial_vision(cellworld::World &, cellworld::Visibility &, Prey_config &);
+    Partial_vision(cell_world::World &, cell_world::Visibility &, Prey_config &);
     const std::vector<uint32_t> & get_options(uint32_t) override;
     Prey_expected_reward *get_expected_rewards(Prey_state_action &) override ;
     void save_expected_reward (Prey_state_action &, double, uint32_t) override ;
     ~Partial_vision();
 private:
     const int _memory = 10;
-    const std::vector<cellworld::Coordinates> _prey_moves CONTACT_CELLS;
+    const std::vector<cell_world::Coordinates> _prey_moves CONTACT_CELLS;
     Prey_expected_reward_buffer _buffer;
     Prey_expected_reward_buffer _habit;
-    cellworld::Connections _wc;
+    cell_world::Connections _wc;
     uint32_t _predator_contacts;
 };
 
