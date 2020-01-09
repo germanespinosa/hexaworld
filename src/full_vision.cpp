@@ -23,7 +23,7 @@ Full_vision::Full_vision(World &w, Visibility &vi, Prey_config &config) :
         _buffer(w.size() * w.size() * _prey_moves.size()),
         Prey(w,vi,config)
 {
-    w.get_connections(_wc, CONTACT_CELLS);
+    w.create_cell_group().get_connections(_wc, CONTACT_CELLS);
     if (!_buffer.load("full_vision.dat")) {
     }
 }

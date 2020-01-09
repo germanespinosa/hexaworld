@@ -16,7 +16,7 @@ TEST_CASE("right action no rep")
     w.add(c3);
     w.add(c4);
     Connections wc;
-    w.get_connections(wc,{{-1,0},{1,0}});
+    w.create_cell_group().get_connections(wc,{{-1,0},{1,0}});
     wc.process_eigen_centrality();
     CHECK(wc[0].size()==1);
     CHECK(wc[0][0]==1);

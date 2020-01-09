@@ -23,7 +23,7 @@ Blind::Blind(World &w, Visibility &vi, Prey_config &config) :
     _buffer(w.size() * _prey_moves.size()),
     Prey(w,vi,config)
 {
-    w.get_connections(_wc,CONTACT_CELLS);
+    w.create_cell_group().get_connections(_wc,CONTACT_CELLS);
     if (!_buffer.load("blind.dat")) {
     }
 }

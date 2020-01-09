@@ -42,7 +42,7 @@ Partial_vision::Partial_vision(World &w, Visibility &vi, Prey_config &config) :
         _habit(w.size() * _prey_moves.size()),
         Prey(w,vi,config)
 {
-    w.get_connections(_wc,CONTACT_CELLS);
+    w.create_cell_group().get_connections(_wc,CONTACT_CELLS);
     _predator_contacts = 0;
 
     if (!_buffer.load("partial_vision.dat")) {

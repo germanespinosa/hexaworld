@@ -22,7 +22,7 @@ Predator::Predator(World &w, Visibility &v)
     : _world(w)
     , _visibility(v)
 {
-    w.get_connections(_wc,CONTACT_CELLS);
+    w.create_cell_group().get_connections(_wc,CONTACT_CELLS);
     data.type = PREDATOR_TYPE;
     data.id = 0;
     data.color = Yellow;

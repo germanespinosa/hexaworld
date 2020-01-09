@@ -84,6 +84,6 @@ int main (int argc, char *args[]) {
     }
     world.save();
     Connections wc;
-    world.get_connections(wc, ADJACENT_CELLS);
+    world.create_cell_group().get_connections(wc, ADJACENT_CELLS);
     wc.save(world_name + ".con");
 }

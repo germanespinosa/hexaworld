@@ -38,7 +38,7 @@ int main(int argc, char *args[]){
     World world(world_name);
     world.load();
     Connections wc;
-    world.get_connections(wc , ADJACENT_CELLS);
+    world.create_cell_group().get_connections(wc , ADJACENT_CELLS);
     cout << "convergence : " << wc.process_eigen_centrality(1000, .000001) << endl;
     double max = 0;
     double sum = 0;
@@ -52,9 +52,10 @@ int main(int argc, char *args[]){
         world.set_value(i,wc[i].eigen_centrality/max);
     Visibility vi(world);
     Predator predator(world, vi);
+    Cell_group cg = world.create_cell_group();
     Prey_config config;
-    config.start = world[{-20,0}].id;
-    config.goal = world[{20,0}].id;
+    config.start = cg.find({-20,0});
+    config.goal = cg.find({20,0});
     config.success_reward = 1000;
     config.failure_reward = 0;
     config.discount = 1;

@@ -29,9 +29,8 @@ int main(int argc, char *args[]){
     world.load();
     Sub_worlds sw;
     Connections cn;
-    world.get_connections(cn,ADJACENT_CELLS);
-    Cell_group selected(world);
-    selected.load(world_name + ".sel");
+    world.create_cell_group().get_connections(cn,ADJACENT_CELLS);
+    Cell_group selected = world.create_cell_group(world_name + ".sel");
     Map_editor c(world, selected, {width, height},ADJACENT_CELLS);
     sw.reset(world, selected, cn);
     c.run();
