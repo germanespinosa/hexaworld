@@ -13,6 +13,13 @@ void set_seed (int32_t seed){
         srand(time(NULL));
 }
 
+bool find_parameter (const string parameter_name, int argc, char *args[]){
+    for (int i=0; i < argc - 1; i++){
+        if (parameter_name == args[i]) return true;
+    }
+    return false;
+}
+
 string get_parameter (const string parameter_name, const string default_value, int argc, char *args[]){
     for (int i=0; i < argc - 1; i++){
         if (parameter_name == args[i]) return args[i+1];

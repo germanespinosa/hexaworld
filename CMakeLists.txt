@@ -10,22 +10,19 @@ get_target_property( UTF8-CPP_INTERFACE_INCLUDE_DIRECTORIES utf8-cpp INTERFACE_I
 include_directories( include )
 
 add_library( hexaworld
-        include/blind.h
-        include/full_vision.h
-        include/partial_vision.h
         include/predator.h
-        include/prey.h
         include/hexaworld.h
         include/utils.h
-        src/blind.cpp
-        src/full_vision.cpp
-        src/partial_vision.cpp
-        src/predator.cpp
-        src/prey.cpp
-        src/utils.cpp )
+        include/habit_training.h
+        src/utils.cpp
+        src/hexaworld.cpp
+        src/agents/habit_training.cpp
+        src/agents/predator.cpp
+        src/agents/habit_ham.cpp
+        )
 target_link_libraries( hexaworld PUBLIC cellworld )
 
-add_executable( map_creation src/tools/map_creation.cpp )
+add_executable( map_creation src/tools/map_creation.cpp)
 target_link_libraries( map_creation hexaworld )
 
 add_executable( simulation src/tools/simulation.cpp)
@@ -36,6 +33,9 @@ target_link_libraries( map_editor hexaworld )
 
 add_executable( train src/tools/train.cpp)
 target_link_libraries( train hexaworld )
+
+add_executable( action_set src/tools/action_set.cpp)
+target_link_libraries( action_set hexaworld )
 
 
 ###

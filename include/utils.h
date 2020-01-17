@@ -11,4 +11,5 @@ int64_t get_parameter_int (const std::string parameter_name, const int64_t defau
 void print_hexaworld_help();
 void print_hexamap_help();
 void set_seed (int32_t seed);
+bool find_parameter (const std::string parameter_name, int argc, char *args[]);
 #endif //HEXAWORLD_UTILS_H

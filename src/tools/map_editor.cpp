@@ -16,7 +16,7 @@ int main(int argc, char *args[]){
     string world_name (args[1]);
     {
         struct stat buffer;
-        if (stat (( world_name + ".map").c_str(), &buffer)) {
+        if (stat (( world_name + ".world").c_str(), &buffer)) {
             cout << "'" << args[1] << "': No such file or directory" << endl;
             exit(0);
         }
@@ -27,11 +27,12 @@ int main(int argc, char *args[]){
     string output_file  = get_parameter("-out", "partial_vision.", argc, args);
     World world(world_name);
     world.load();
-    Sub_worlds sw;
-    Connections cn;
-    world.create_cell_group().get_connections(cn,ADJACENT_CELLS);
-    Cell_group selected = world.create_cell_group(world_name + ".sel");
-    Map_editor c(world, selected, {width, height},ADJACENT_CELLS);
-    sw.reset(world, selected, cn);
+    Cell_group cg = world.create_cell_group();
+    Sub_worlds sw(cg);
+    Connections cn(cg,ADJACENT_CELLS);
+    Cell_group selected = world.create_cell_group(world_name);
+    Map_editor c(world, {width, height},ADJACENT_CELLS);
+    //sw.reset(cg, selected, cn);
+    //sw.reset(cg, selected, cn);
     c.run();
 }

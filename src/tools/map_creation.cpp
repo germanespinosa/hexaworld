@@ -2,16 +2,13 @@
 #include <ge211.h>
 #include <cellworld.h>
 #include "utils.h"
-#include <stdlib.h>
-#include <sys/stat.h>
-#include <time.h>
 #include "hexaworld.h"
 
 using namespace ge211;
 using namespace std;
 using namespace cell_world;
 
-Basic_position<double> get_location(Coordinates c) {
+Location get_location(Coordinates c) {
     return {(double)c.x *  .5 ,  (double)c.y * 0.866025403784439};
 }
 
@@ -24,23 +21,12 @@ bool is_valid(Coordinates c, int size) {
 std::vector<Coordinates> const possible_connections = {{0,0},{1,1},{2,0},{1,-1},{-1,-1},{-2,0},{-1,1}};
 
 int main (int argc, char *args[]) {
-    string world_name;
     if (argc == 1) {
         print_hexamap_help();
         exit(0);
     }
-    {
-        struct stat buffer;
-        string filename(args[1]);
-        world_name = filename;
-        if (stat ((world_name + ".map").c_str(), &buffer) == 0) {
-            cerr << "'" << args[1] << "': File already exists" << endl;
-            exit(0);
-        }
-    }
-    World world (world_name);
-
-    int64_t p_seed = get_parameter_int("-size",-1,argc,args);
+    string world_name(args[1]);
+    int64_t p_seed = get_parameter_int("-seed",-1,argc,args);
     if (p_seed < -1 || p_seed > 65535){
         cerr << "Incorrect value for parameter seed (\"" << p_seed << "\")" << endl;
         print_hexamap_help();
@@ -63,6 +49,8 @@ int main (int argc, char *args[]) {
     int occlusions = p_occlusions;
 
     unsigned int prey, predator, goal;
+    World world (world_name);
+
     Coordinates start_coordinates{(int8_t)-size,0}, goal_coordinates{0,0}, predator_coordinates{size,0};
     for ( int8_t y = -10 ; y <= 10; y++ ){
         for ( int8_t x = -20 ; x <= 40; x++ ){
@@ -75,15 +63,16 @@ int main (int argc, char *args[]) {
     for(int i=0;i<occlusions;){
         unsigned int r = rand() % world.size();
         if (!world[r].occluded && 
-            !(world[r].coordinates==start_coordinates) &&
-            !(world[r].coordinates==goal_coordinates) &&
-            !(world[r].coordinates==predator_coordinates)){
+            !(world[r].coordinates == start_coordinates) &&
+            !(world[r].coordinates == goal_coordinates) &&
+            !(world[r].coordinates == predator_coordinates)){
             world.set_occlusion(r,true);
             i++;
         }
     }
+    cout << world.size() << endl;
     world.save();
-    Connections wc;
-    world.create_cell_group().get_connections(wc, ADJACENT_CELLS);
-    wc.save(world_name + ".con");
+    Connections wc( world.create_cell_group(), ADJACENT_CELLS);
+    wc.save(world_name);
+    cout << "done" << endl;
 }
