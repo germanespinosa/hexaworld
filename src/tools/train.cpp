@@ -40,37 +40,31 @@ int main(int argc, char *args[]){
     Cell_group cg = world.create_cell_group();
     Connections cnn(cg,ADJACENT_CELLS);
     Cell_group gates = world.create_cell_group( world_name + "_gates" );
-    cout << "gates: " << gates.size() << endl;
-    Sub_worlds sw(cg, gates, cnn);
+    Sub_worlds sws(cg, gates, cnn);
     vector<Habit> habits;
-    for (auto g : sw.gates)
-    {
-        for (auto gc:g.gate_connections)
-        {
-            uint32_t index;
-            for( index = 0;
-                index < habits.size() &&
-                !( habits[index].source.id == g.cell.id && habits[index].destination.id == gc.destination.id );
-                index++);
-            if (index == habits.size()){
-                habits.emplace_back(g.cell,gc.destination);
-            }
-            auto habit = habits[index];
-            habit.connections.cells += gc.sub_world.cells;
-            habit.gate_cells += gc.sub_world.gate_cells;
+    for ( uint32_t i = 0; i < sws.size(); i++){
+        auto sw = sws[i];
+        for ( uint32_t j = 0; j < sw.gate_cells.size(); j++){
+            Habit habit;
+            habit.convergence = false;
+            habit.sub_world_id = i;
+            habit.destination = sw.gate_cells[j];
+            habit.cells = sw.cells - habit.destination;
+            habit.gate_cells = sw.gate_cells;
+            habits.push_back(habit);
         }
     }
-    for (uint32_t i=0;i<habits.size();i++){
-        habits[i].connections.reset(ADJACENT_CELLS);
-        habits[i].load(world_name);
+    Probabilities p(vector<uint32_t>{100,50,25,10,10,10});
+    Action_set aas(cg,ADJACENT_CELLS,p);
+    for (auto &habit:habits){
+        habit.load(world_name, aas.size());
     }
     Predator predator(cg,vi);
     vector<Agent*> va;
-    Probabilities p(vector<uint32_t>{100,30,20,10,10,10});
     Reward_config rc {100,-100,.99,1};
-    Habit_training ht(habits,rc,p);
+    Habit_training ht(habits,rc,aas, p);
     va.push_back(&predator);
-    //va.push_back(&ht);
+    va.push_back(&ht);
     Model m(world,va);
     int perc = 0;
     for (uint32_t episode = 1 ; episode <= episodes; episode++ ) {
@@ -79,7 +73,7 @@ int main(int argc, char *args[]){
         for (uint32_t i = 0; i < steps &&  m.update(); i++);
         m.end_episode();
     }
-    cout << endl;
+    cout << endl << "saving habits"<< endl;
     for (uint32_t i=0;i<habits.size();i++){
         habits[i].save(world_name);
     }

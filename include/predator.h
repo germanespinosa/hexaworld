@@ -1,16 +1,7 @@
 #pragma once
 #include <cell_world.h>
 #include <hexaworld.h>
-
-struct Predator_actions{
-    Predator_actions(cell_world::Cell_group &,cell_world::Connection_pattern, cell_world::Probabilities &);
-    cell_world::Agent_action &operator[](uint32_t);
-    uint32_t  get_best (cell_world::Location);
-private:
-    std::vector<cell_world::Agent_action> _actions;
-    std::vector<cell_world::Location> _displacements;
-    void _add_action(cell_world::Location, cell_world::Cell_group &,  cell_world::Probabilities &);
-};
+#include <action_set.h>
 
 struct Predator : cell_world::Agent {
     explicit Predator(cell_world::Cell_group, cell_world::Visibility &) ;
@@ -28,7 +19,7 @@ private:
     int32_t _iteration;
     cell_world::Agent_action _random_action;
     cell_world::Probabilities _probabilities;
-    Predator_actions _actions;
+    Action_set _actions;
     cell_world::Visibility &_visibility;
 };
 
