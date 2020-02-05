@@ -35,9 +35,9 @@ int main(int argc, char *args[]){
     string output_file  = get_parameter("-out", "partial_vision.", argc, args);
     World world(world_name);
     world.load();
-    Visibility vi(world);
     Cell_group cg = world.create_cell_group();
-    Predator predator(cg, vi);
+    Probabilities pp(PREDATOR_PROBABILITIES);
+    Predator predator(world,pp);
     Test_prey tp(cg);
     vector<Agent*> va;
     va.push_back((Agent*)&predator);

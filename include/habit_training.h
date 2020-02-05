@@ -10,14 +10,18 @@ struct History{
 };
 
 struct Habit_training: cell_world::Agent{
-    Habit_training(std::vector<Habit> &, Reward_config, Action_set, cell_world::Probabilities &);
+    Habit_training(std::vector<Habit> &, Reward_config, Action_set, cell_world::Probabilities &, uint32_t , uint32_t );
     const cell_world::Cell & start_episode(const cell_world::State &) override;
     void update_state(const cell_world::State &) override;
     cell_world::Agent_action &get_action() override;
-    uint32_t action_ready() override;
     void end_episode(const cell_world::State &) override ;
+    void set_fixed_start(const cell_world::Cell &);
+    uint32_t episodes;
+    uint32_t success;
 private:
     void _add_history(uint32_t, uint32_t);
+    bool _fixed_start;
+    cell_world::Cell _start;
     std::vector<History> _history;
     uint32_t _iteration;
     uint32_t _current_habit;
@@ -25,7 +29,6 @@ private:
     std::vector<Habit> &_habits;
     cell_world::Probabilities & _probabilities;
     Action_set _action_set;
-    uint32_t _predator_index;
-    double _episode_reward;
+    Episode_result  _episode_result;
     cell_world::Probabilities _habit_probability;
 };

@@ -3,6 +3,7 @@
 //
 #include <iostream>
 #include <inttypes.h>
+#include <math.h>       /* pow */
 
 using namespace std;
 
@@ -57,4 +58,56 @@ void print_hexamap_help(){
     cout << "   -size: number of cells in a side. Odd integer 5-19 (default 11)" << endl;
     cout << "   -occlusions: number of occlusions. Integer 0-200 (default 80)" << endl;
     cout << endl;
+}
+
+#include <sys/stat.h>
+#include <unistd.h>
+#include <utils.h>
+
+
+void create_folder(string path){
+    mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+}
+
+Cmd_parameters::Cmd_parameters(int c, char **s) {
+    argc = c;
+    args = s;
+}
+
+Cmd_parameter Cmd_parameters::operator[](std::string name) {
+    for (int i=0; i < argc - 1; i++){
+        if (name == args[i]) {
+            Cmd_parameter cp;
+            if (i+1<argc && args[i+1][0]!='-') cp._content = args[i+1];
+            cp._present = true;
+            return cp;
+        }
+    }
+    return Cmd_parameter();
+}
+
+bool Cmd_parameter::present() {
+    return _present;
+}
+
+int64_t Cmd_parameter::int_value(int64_t d) {
+    if (_present) return strtoimax(_content.c_str(), NULL, 10);
+    return d;
+}
+
+std::string Cmd_parameter::value(std::string d) {
+    if (_present) return _content;
+    return d;
+}
+
+double Cmd_parameter::double_value(double d) {
+    if (_present) return strtod(_content.c_str(), NULL);
+    return d;
+}
+
+double round(double v, int d){
+    double m = pow(10,d);
+    v=v*m;
+    v=(int)v;
+    return v/m;
 }

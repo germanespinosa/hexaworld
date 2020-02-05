@@ -15,14 +15,15 @@ add_library( hexaworld
         include/utils.h
         include/habit.h
         include/habit_training.h
+        include/policy_training.h
         include/action_set.h
         src/utils.cpp
         src/hexaworld.cpp
         src/habit.cpp
         src/agents/habit_training.cpp
         src/agents/predator.cpp
-        src/action_set.cpp
-        )
+        src/action_set.cpp )
+
 target_link_libraries( hexaworld PUBLIC cellworld )
 
 add_executable( map_creation src/tools/map_creation.cpp)
@@ -34,8 +35,11 @@ target_link_libraries( simulation hexaworld )
 add_executable( map_editor src/tools/map_editor.cpp)
 target_link_libraries( map_editor hexaworld )
 
-add_executable( train src/tools/train.cpp)
+add_executable( train src/tools/habit_train.cpp)
 target_link_libraries( train hexaworld )
+
+add_executable( square src/tools/square_world.cpp)
+target_link_libraries( square hexaworld )
 
 ###
 ### TESTS CONFIGURATION

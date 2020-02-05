@@ -31,7 +31,8 @@ int main(int argc, char *args[]){
     Sub_worlds sw(cg);
     Connections cn(cg,ADJACENT_CELLS);
     Cell_group selected = world.create_cell_group(world_name);
-    Map_editor c(world, {width, height},ADJACENT_CELLS);
+    //world.connection_pattern = ADJACENT_CELLS;
+    Map_editor c(world, {width, height});
     //sw.reset(cg, selected, cn);
     //sw.reset(cg, selected, cn);
     c.run();
