@@ -4,7 +4,7 @@
 #include <action_set.h>
 
 struct Predator : cell_world::Agent {
-    explicit Predator(cell_world::World &, const cell_world::Probabilities&);
+    explicit Predator(cell_world::World &, const cell_world::Chance&);
     const cell_world::Cell &start_episode(const cell_world::State &) override;
     void update_state(const cell_world::State &) override;
     cell_world::Agent_action &get_action() override ;
@@ -24,7 +24,7 @@ private:
     cell_world::Cell_group _cg;
     int32_t _next_action;
     cell_world::Agent_action _random_action;
-    cell_world::Probabilities _probabilities;
+    cell_world::Chance _probabilities;
     Action_set _actions;
 };
 

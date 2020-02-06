@@ -4,14 +4,14 @@
 using namespace cell_world;
 using namespace std;
 
-Predator::Predator(cell_world::World &world, const cell_world::Probabilities& probabilities)
+Predator::Predator(cell_world::World &world, const cell_world::Chance& probabilities)
     : _visits (world.size())
     , _use_view_range(false)
     , _fixed_start (false)
     , _chasing (false)
     , _cg(world.create_cell_group())
     , _next_action(Not_found)
-    , _random_action(world.connection_pattern,Probabilities(vector<uint32_t>((world.connection_pattern).size(),1)))
+    , _random_action(world.connection_pattern,Chance(vector<uint32_t>((world.connection_pattern).size(),1)))
     , _probabilities(probabilities)
     , _actions(_cg,world.connection_pattern,_probabilities)
     , _first_episode(true)
@@ -22,7 +22,7 @@ Predator::Predator(cell_world::World &world, const cell_world::Probabilities& pr
 const Cell &Predator::start_episode(const State &state) {
     set_color(Green);
     if (_fixed_start) return _start;
-    Probabilities p(_visits);// start in a cell with probability proportional to previous visits
+    Chance p(_visits);// start in a cell with probability proportional to previous visits
     set_status(Action_ready);
     return _cg[p.pick()];
 }
@@ -76,7 +76,7 @@ void Predator::set_view_range(double range) {
 
 Test_prey::Test_prey(cell_world::Cell_group cg) :
     _cg(cg),
-    _random_action(ADJACENT_CELLS,Probabilities(vector<uint32_t>((ADJACENT_CELLS).size(),1))),
+    _random_action(ADJACENT_CELLS,Chance(vector<uint32_t>((ADJACENT_CELLS).size(),1))),
     Agent({"Prey",1}){
     set_color(Green);
 }

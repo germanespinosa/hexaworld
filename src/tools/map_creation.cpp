@@ -1,6 +1,6 @@
 #include <iostream>
 #include <ge211.h>
-#include <cellworld.h>
+#include <cell_world.h>
 #include "utils.h"
 #include "hexaworld.h"
 

@@ -4,14 +4,14 @@
 using namespace cell_world;
 using namespace std;
 
-Action_set::Action_set(cell_world::Cell_group &cells, cell_world::Connection_pattern cp, cell_world::Probabilities &prob) {
+Action_set::Action_set(cell_world::Cell_group &cells, cell_world::Connection_pattern cp, cell_world::Chance &prob) {
     Map map(cells);
     Cell_group cg;
     for(auto p:cp.pattern) cg.add(map[p]);
     for(auto p:cp.pattern) _add_action(map[p].location,cg,prob);
 }
 
-void Action_set::_add_action(Location source, cell_world::Cell_group &destinations, cell_world::Probabilities &prob) {
+void Action_set::_add_action(Location source, cell_world::Cell_group &destinations, cell_world::Chance &prob) {
     Agent_action aa;
     aa.probabilities = prob;
     auto indexes = new_index(destinations.size()); // creates an index vector for the options

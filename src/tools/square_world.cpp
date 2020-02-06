@@ -1,6 +1,6 @@
 #include <iostream>
 #include <ge211.h>
-#include <cellworld.h>
+#include <cell_world.h>
 #include "utils.h"
 #include "hexaworld.h"
 #include "predator.h"
@@ -20,6 +20,7 @@ int main (int argc, char *args[]) {
     create_folder(world_name);
     World world(world_name);
     world.load();
+
     /*for (int16_t y = -7; y <= 7; y++) {
         for (int16_t x = -7; x <= 7; x++) {
             Coordinates coordinates{(int8_t )x,(int8_t ) y};
@@ -37,7 +38,7 @@ int main (int argc, char *args[]) {
     Map map(cg);
     cout<< "here1" << endl;
 
-    Probabilities pp(vector<uint32_t>{80,10,5,5});
+    Chance pp(vector<uint32_t>{80,10,5,5});
     Predator predator(world,pp);
     cout<< "here1" << endl;
     vector<Agent*> va;
@@ -49,9 +50,9 @@ int main (int argc, char *args[]) {
     habit.cells = cg;
     habit.gate_cells += habit.destination;
     cout<< "here1" << endl;
-    Probabilities sm(vector<uint32_t>{80,10,5,5});
+    Chance sm(vector<uint32_t>{80,10,5,5});
     cout<< "here1" << endl;
-    Probabilities exploration(vector<uint32_t>{80,10,5,5});
+    Chance exploration(vector<uint32_t>{80,10,5,5});
     cout<< "here1" << endl;
     Action_set aas(cg,world.connection_pattern,sm);
     cout<< "here1" << endl;

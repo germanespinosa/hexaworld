@@ -1,5 +1,5 @@
 #pragma once
-#include <cellworld.h>
+#include <cell_world.h>
 #include <action_set.h>
 #include <hexaworld.h>
 #include <habit.h>
@@ -10,7 +10,7 @@ struct History{
 };
 
 struct Habit_training: cell_world::Agent{
-    Habit_training(std::vector<Habit> &, Reward_config, Action_set, cell_world::Probabilities &, uint32_t , uint32_t );
+    Habit_training(std::vector<Habit> &, Reward_config, Action_set, cell_world::Chance &, uint32_t , uint32_t );
     const cell_world::Cell & start_episode(const cell_world::State &) override;
     void update_state(const cell_world::State &) override;
     cell_world::Agent_action &get_action() override;
@@ -27,8 +27,8 @@ private:
     uint32_t _current_habit;
     Reward_config _rewards;
     std::vector<Habit> &_habits;
-    cell_world::Probabilities & _probabilities;
+    cell_world::Chance & _probabilities;
     Action_set _action_set;
     Episode_result  _episode_result;
-    cell_world::Probabilities _habit_probability;
+    cell_world::Chance _habit_probability;
 };

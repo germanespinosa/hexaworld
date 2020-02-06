@@ -3,11 +3,10 @@
 #include <fstream>
 #include <iostream>
 
-
 using namespace cell_world;
 using namespace std;
 
-Habit_training::Habit_training(std::vector<Habit> &habits, const Reward_config rewards, Action_set actions, cell_world::Probabilities & probabilities, uint32_t thread, uint32_t threads)
+Habit_training::Habit_training(std::vector<Habit> &habits, const Reward_config rewards, Action_set actions, cell_world::Chance & probabilities, uint32_t thread, uint32_t threads)
 : _fixed_start(false)
 , _habits ( habits )
 , _rewards ( rewards )
@@ -28,7 +27,7 @@ Habit_training::Habit_training(std::vector<Habit> &habits, const Reward_config r
             chances.push_back(0);// will be taken care by another thread
         }
     }
-    _habit_probability = Probabilities(chances);
+    _habit_probability = Chance(chances);
 }
 
 const Cell & Habit_training::start_episode(const cell_world::State &state) {
@@ -37,7 +36,7 @@ const Cell & Habit_training::start_episode(const cell_world::State &state) {
     _current_habit = _habit_probability.pick(); //pick a random habit with probability direct to habit size;
     _episode_result = Unknown;
     auto &habit = _habits[_current_habit];
-    auto &cell =_fixed_start ? _start : _habits[_current_habit].cells[Probabilities::dice(habit.cells.size())]; //pick a random start cell
+    auto &cell =_fixed_start ? _start : _habits[_current_habit].cells[Chance::dice(habit.cells.size())]; //pick a random start cell
     set_status(Action_ready);
     return cell;
 }
@@ -76,7 +75,7 @@ Agent_action &Habit_training::get_action() {
     int32_t cell_index = habit.cells.find(cell());
     uint32_t action_index;
     if (_iteration==0){ // pick a random action with probability inverse to the number of visits (exploration)
-        Probabilities p(habit.values[cell_index].visits);
+        Chance p(habit.values[cell_index].visits);
         action_index = (!p).pick();
     } else {
         action_index = _probabilities.pick(habit.values[cell_index].rewards);

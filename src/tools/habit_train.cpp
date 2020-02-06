@@ -1,4 +1,4 @@
-#include <cellworld.h>
+#include <cell_world.h>
 #include <iostream>
 #include <thread>         // std::thread
 #include <mutex>          // std::mutex
@@ -17,8 +17,8 @@ uint32_t steps = 0;
 uint32_t episodes = 0;
 uint32_t threads = 0;
 vector<Habit> habits;
-Probabilities exploration(vector<uint32_t>{95,1,1,1,1,1});
-Probabilities sm(vector<uint32_t>{95,1,1,1,1,1});
+Chance exploration(vector<uint32_t>{95,1,1,1,1,1});
+Chance sm(vector<uint32_t>{95,1,1,1,1,1});
 Reward_config rc {100,-100,0, .99,-1};
 uint32_t episode = 0;
 World *P_world = NULL;
@@ -26,7 +26,7 @@ Action_set *P_aas = NULL;
 uint32_t success=0;
 
 void run_train(uint32_t thread){
-    Probabilities pp(PREDATOR_PROBABILITIES);
+    Chance pp(PREDATOR_PROBABILITIES);
     Predator predator(*P_world,pp);
     vector<Agent*> va;
     Habit_training ht(habits, rc,*P_aas, exploration, thread, threads);

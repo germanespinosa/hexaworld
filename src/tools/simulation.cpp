@@ -1,4 +1,4 @@
-#include <cellworld.h>
+#include <cell_world.h>
 #include <iostream>
 #include <stdlib.h>
 #include "utils.h"
@@ -36,7 +36,7 @@ int main(int argc, char *args[]){
     World world(world_name);
     world.load();
     Cell_group cg = world.create_cell_group();
-    Probabilities pp(PREDATOR_PROBABILITIES);
+    Chance pp(PREDATOR_PROBABILITIES);
     Predator predator(world,pp);
     Test_prey tp(cg);
     vector<Agent*> va;

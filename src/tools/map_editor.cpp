@@ -1,4 +1,4 @@
-#include <cellworld.h>
+#include <cell_world.h>
 #include <iostream>
 #include <stdlib.h>
 #include "utils.h"
