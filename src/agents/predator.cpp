@@ -21,14 +21,24 @@ Predator::Predator(cell_world::World &world)
 }
 
 const Cell &Predator::start_episode(const State &state) {
+    L("Predator::start_episode(const State &) start");
+    L("Predator::start_episode(const State &) - set_color(Green);");
     set_color(Green);
+    L("Predator::start_episode(const State &) - if (_fixed_start) return _start;");
     if (_fixed_start) return _start;
+    L("Predator::start_episode(const State &) - Chance p(_visits);");
     Chance p(_visits);// start in a cell with probability proportional to previous visits
+    L("Predator::start_episode(const State &) - set_status(Action_ready);");
     set_status(Action_ready);
-    return _cg[p.pick()];
+    L("Predator::start_episode(const State &) - auto &cell = _cg[p.pick()];");
+    cout << _cg.size() << endl;
+    auto &cell = _cg[p.pick()];
+    L("Predator::start_episode(const State &) end");
+    return cell;
 }
 
 void Predator::update_state(const cell_world::State &state) {
+    L("Predator::update_state(const cell_world::State &state) start");
     auto predator_cell = cell();
     _visits[_cg.find(predator_cell)]++;
     set_color(Green);
@@ -49,9 +59,12 @@ void Predator::update_state(const cell_world::State &state) {
     }else {
         _next_action = Not_found;
     }
+    L("Predator::update_state(const cell_world::State &state) end");
 }
 
-cell_world::Agent_action &Predator::get_action() {
+Agent_action &Predator::get_action() {
+    L("Agent_action &Predator::get_action() start");
+    L("Agent_action &Predator::get_action() end");
     if (_next_action == Not_found)
         return _random_action;
     else
@@ -82,15 +95,19 @@ Test_prey::Test_prey(cell_world::World &cg) :
     set_color(Green);
 }
 
-const cell_world::Cell &Test_prey::start_episode(const cell_world::State &) {
+const Cell &Test_prey::start_episode(const cell_world::State &) {
+    L("Cell &Test_prey::start_episode(const cell_world::State &) start");
     uint32_t i = 0;
     while (_cg[ i = (rand() % _cg.size())].occluded);
     set_status(Action_ready);
+    L("Cell &Test_prey::start_episode(const cell_world::State &) end");
     return _cg[i];
 }
 
 void Test_prey::update_state(const cell_world::State &state) {
+    L("Test_prey::update_state(const cell_world::State &state) start");
     set_status(Action_ready);
+    L("Test_prey::update_state(const cell_world::State &state) end");
 }
 
 cell_world::Agent_action &Test_prey::get_action() {

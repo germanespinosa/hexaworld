@@ -1,9 +1,7 @@
 cmake_minimum_required( VERSION 3.13 )
 project( hexaworld CXX )
 
-find_package( Python3 COMPONENTS Interpreter Development )
 find_package( Cellworld CONFIG QUIET )
-find_package( GComm CONFIG QUIET )
 
 get_target_property( UTF8-CPP_INTERFACE_INCLUDE_DIRECTORIES utf8-cpp INTERFACE_INCLUDE_DIRECTORIES )
 
@@ -24,7 +22,15 @@ add_library( hexaworld
         src/agents/predator.cpp
         src/action_set.cpp )
 
-target_link_libraries( hexaworld PUBLIC cellworld )
+
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    add_definitions(-DDEBUG=1)
+    message("-- Using DEBUG configuration")
+    target_link_libraries( hexaworld PUBLIC cellworlddebug )
+else()
+    message("-- Using RELEASE configuration")
+    target_link_libraries( hexaworld PUBLIC cellworld )
+endif()
 
 add_executable( map_creation src/tools/map_creation.cpp)
 target_link_libraries( map_creation hexaworld )
@@ -48,7 +54,5 @@ target_link_libraries( square hexaworld )
 configure_file(python/map.py ${CMAKE_CURRENT_BINARY_DIR}/map.py COPYONLY)
 
 find_package(CatchTests CONFIG QUIET)
-
-message("resources ${CELLWORLD_RESOURCES}")
 
 cellworld_add_custom_icon(icons/bridge.png)

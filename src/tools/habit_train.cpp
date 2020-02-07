@@ -12,7 +12,6 @@ using namespace cell_world;
 using namespace std;
 
 mutex mtx;
-
 uint32_t steps = 0;
 uint32_t episodes = 0;
 uint32_t threads = 0;
@@ -51,6 +50,7 @@ void run_train(uint32_t thread){
 }
 
 int main(int argc, char *args[]){
+    L("here 10");
     if (argc == 1) {
         print_hexaworld_help();
         exit(0);
@@ -98,8 +98,9 @@ int main(int argc, char *args[]){
     P_world = &world;
     P_aas = &aas;
     vector<thread> t;
-    for (uint32_t i =0; i<threads; i++)
-        t.push_back(thread(run_train,i));
+    run_train(0);
+/*    for (uint32_t i =0; i<threads; i++)
+        t.push_back(thread(run_train,i));*/
     int32_t perc = episodes / 100;
     int32_t progress = -1;
     while ( episode < episodes) {
