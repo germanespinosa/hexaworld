@@ -48,3 +48,7 @@ target_link_libraries( square hexaworld )
 configure_file(python/map.py ${CMAKE_CURRENT_BINARY_DIR}/map.py COPYONLY)
 
 find_package(CatchTests CONFIG QUIET)
+
+message("resources ${CELLWORLD_RESOURCES}")
+
+cellworld_add_custom_icon(icons/bridge.png)

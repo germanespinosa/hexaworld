@@ -26,8 +26,7 @@ Action_set *P_aas = NULL;
 uint32_t success=0;
 
 void run_train(uint32_t thread){
-    Chance pp(PREDATOR_PROBABILITIES);
-    Predator predator(*P_world,pp);
+    Predator predator(*P_world);
     vector<Agent*> va;
     Habit_training ht(habits, rc,*P_aas, exploration, thread, threads);
     va.push_back(&predator);
@@ -77,7 +76,7 @@ int main(int argc, char *args[]){
     Visibility vi;
     Cell_group cg = world.create_cell_group();
     vi.reset(cg);
-    Connections cnn(cg,ADJACENT_CELLS);
+    Connections cnn(cg,world.connection_pattern);
     Cell_group gates = world.create_cell_group( world_name + "_gates" );
     Sub_worlds sws(cg, gates, cnn);
     for ( uint32_t i = 0; i < sws.size(); i++){
@@ -92,7 +91,7 @@ int main(int argc, char *args[]){
             habits.push_back(habit);
         }
     }
-    Action_set aas(cg,ADJACENT_CELLS,sm);
+    Action_set aas(cg,world.connection_pattern,sm);
     for (auto &habit:habits){
         habit.load(world_name, aas.size());
     }

@@ -36,9 +36,8 @@ int main(int argc, char *args[]){
     World world(world_name);
     world.load();
     Cell_group cg = world.create_cell_group();
-    Chance pp(PREDATOR_PROBABILITIES);
-    Predator predator(world,pp);
-    Test_prey tp(cg);
+    Predator predator(world);
+    Test_prey tp(world);
     vector<Agent*> va;
     va.push_back((Agent*)&predator);
     va.push_back((Agent*)&tp);

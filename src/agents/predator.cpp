@@ -4,15 +4,16 @@
 using namespace cell_world;
 using namespace std;
 
-Predator::Predator(cell_world::World &world, const cell_world::Chance& probabilities)
-    : _visits (world.size())
+Predator::Predator(cell_world::World &world)
+    : _action_count(world.connection_pattern.size())
+    , _visits (world.size())
     , _use_view_range(false)
     , _fixed_start (false)
     , _chasing (false)
     , _cg(world.create_cell_group())
     , _next_action(Not_found)
-    , _random_action(world.connection_pattern,Chance(vector<uint32_t>((world.connection_pattern).size(),1)))
-    , _probabilities(probabilities)
+    , _random_action(world.connection_pattern,Chance(vector<uint32_t>(_action_count,1)))
+    , _probabilities(.9,_action_count)
     , _actions(_cg,world.connection_pattern,_probabilities)
     , _first_episode(true)
     , Agent({"Predator", 1}) {
@@ -74,9 +75,9 @@ void Predator::set_view_range(double range) {
     }
 }
 
-Test_prey::Test_prey(cell_world::Cell_group cg) :
+Test_prey::Test_prey(cell_world::World &cg) :
     _cg(cg),
-    _random_action(ADJACENT_CELLS,Chance(vector<uint32_t>((ADJACENT_CELLS).size(),1))),
+    _random_action(cg.connection_pattern,Chance(cg.connection_pattern.size())),
     Agent({"Prey",1}){
     set_color(Green);
 }

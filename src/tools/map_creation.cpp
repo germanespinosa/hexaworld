@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "hexaworld.h"
 
+#define ADJACENT_CELLS cell_world::Connection_pattern({{-2,0},{-1,-1},{1,-1},{2,0},{1,1},{-1,1}})
 using namespace ge211;
 using namespace std;
 using namespace cell_world;
