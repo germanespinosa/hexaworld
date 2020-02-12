@@ -12,12 +12,14 @@ Predator::Predator(cell_world::World &world)
     , _chasing (false)
     , _cg(world.create_cell_group())
     , _next_action(Not_found)
-    , _random_action(world.connection_pattern,Chance(vector<uint32_t>(_action_count,1)))
+    , _random_action(world.connection_pattern,Chance(vector<uint32_t>(_action_count)))
     , _probabilities(.9,_action_count)
     , _actions(_cg,world.connection_pattern,_probabilities)
     , _first_episode(true)
     , Agent({"Predator", 1}) {
+    L("Predator::Predator(cell_world::World &) start");
     for (uint32_t i = 0; i < world.size(); i++) _visits[i] = world[i].occluded ? 0 :1;
+    L("Predator::Predator(cell_world::World &) end");
 }
 
 const Cell &Predator::start_episode(const State &state) {
@@ -31,7 +33,6 @@ const Cell &Predator::start_episode(const State &state) {
     L("Predator::start_episode(const State &) - set_status(Action_ready);");
     set_status(Action_ready);
     L("Predator::start_episode(const State &) - auto &cell = _cg[p.pick()];");
-    cout << _cg.size() << endl;
     auto &cell = _cg[p.pick()];
     L("Predator::start_episode(const State &) end");
     return cell;

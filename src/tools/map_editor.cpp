@@ -9,7 +9,8 @@ using namespace cell_world;
 using namespace std;
 
 int main(int argc, char *args[]){
-    if (argc == 1) {
+    Cmd_parameters cp(argc,args);
+    if (!cp[1].present()) {
         print_hexaworld_help();
         exit(0);
     }
@@ -17,14 +18,12 @@ int main(int argc, char *args[]){
     {
         struct stat buffer;
         if (stat (( world_name + ".world").c_str(), &buffer)) {
-            cout << "'" << args[1] << "': No such file or directory" << endl;
+            cout << "'" << cp[1].value() << "': No such file or directory" << endl;
             exit(0);
         }
     }
-    int width = get_parameter_int("-width", 1024, argc, args);
-    int height = get_parameter_int("-height", 768, argc, args);
-    string input_file  = get_parameter("-in", "partial_vision.", argc, args);
-    string output_file  = get_parameter("-out", "partial_vision.", argc, args);
+    int width = cp["-width"].int_value(1024);
+    int height = cp["-height"].int_value(768);
     World world(world_name);
     world.load();
     Cell_group cg = world.create_cell_group();

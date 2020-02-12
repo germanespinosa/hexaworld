@@ -39,6 +39,7 @@ struct Habit{
     bool load(const std::string&, uint32_t);
     bool save(const std::string&);
     void add_reward(uint32_t, uint32_t,Reward_config &, Episode_result, uint32_t);
+    void end_episode(uint32_t, Episode_result);
 private:
     const std::string _extension = ".habit";
 };

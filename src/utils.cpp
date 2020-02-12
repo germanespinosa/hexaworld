@@ -2,8 +2,9 @@
 // Created by german on 12/5/19.
 //
 #include <iostream>
-#include <inttypes.h>
-#include <math.h>       /* pow */
+#include <cinttypes>
+#include <cmath>
+#include "utils.h"
 
 using namespace std;
 
@@ -12,25 +13,6 @@ void set_seed (int32_t seed){
         srand(seed);
     else
         srand(time(NULL));
-}
-
-bool find_parameter (const string parameter_name, int argc, char *args[]){
-    for (int i=0; i < argc - 1; i++){
-        if (parameter_name == args[i]) return true;
-    }
-    return false;
-}
-
-string get_parameter (const string parameter_name, const string default_value, int argc, char *args[]){
-    for (int i=0; i < argc - 1; i++){
-        if (parameter_name == args[i]) return args[i+1];
-    }
-    return default_value;
-}
-
-int64_t get_parameter_int (const std::string parameter_name, const int64_t default_value, int argc, char *args[]){
-    string default_value_S = std::to_string(default_value);
-    return strtoimax(get_parameter(parameter_name, default_value_S, argc, args).c_str(), NULL, 10);
 }
 
 void print_hexaworld_help(){
@@ -63,6 +45,7 @@ void print_hexamap_help(){
 #include <sys/stat.h>
 #include <unistd.h>
 #include <utils.h>
+#include <sstream>
 
 
 void create_folder(string path){
@@ -86,6 +69,14 @@ Cmd_parameter Cmd_parameters::operator[](std::string name) {
     return Cmd_parameter();
 }
 
+Cmd_parameter Cmd_parameters::operator[](uint32_t index) {
+    Cmd_parameter cp;
+    if (index>=argc) return cp;
+    cp._present = true;
+    cp._content = args[index];
+    return cp;
+}
+
 bool Cmd_parameter::present() {
     return _present;
 }
@@ -105,9 +96,50 @@ double Cmd_parameter::double_value(double d) {
     return d;
 }
 
+std::string Cmd_parameter::value() {
+    return value("");
+}
+
+int64_t Cmd_parameter::int_value() {
+    return int_value(0);
+}
+
 double round(double v, int d){
     double m = pow(10,d);
     v=v*m;
     v=(int)v;
     return v/m;
+}
+
+Stop_watch::Stop_watch() {
+    _clock = clock();
+}
+
+double Stop_watch::tick() {
+    clock_t stop_clock = clock();
+    double time_spent = (double)(stop_clock - _clock) / CLOCKS_PER_SEC;
+    _clock = stop_clock;
+    return time_spent;
+}
+
+double Stop_watch::elapsed() {
+    clock_t stop_clock = clock();
+    double time_spent = (double)(stop_clock - _clock) / CLOCKS_PER_SEC;
+    return time_spent;
+}
+
+std::string Stop_watch::to_string(double t) {
+    int seg = t;
+    int s = seg % 60;
+    int m = (seg / 60) % 60;
+    int h = ( seg / 3600);
+    std::stringstream fmt;
+    if (h > 0) {
+        fmt << h << "h ";
+    }
+    if (m > 0) {
+        fmt << m << "m ";
+    }
+    fmt << s << "s ";
+    return fmt.str();
 }

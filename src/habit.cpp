@@ -55,17 +55,6 @@ bool Habit::load(const std::string& world_name, uint32_t options) {
 
 void Habit::add_reward(uint32_t cell_index, uint32_t action_index, Reward_config &rc, Episode_result result, uint32_t length) {
     double reward = rc.value(result, length);
-    switch(result){
-        case Unknown:
-            values[cell_index].unknowns++;
-            break;
-        case Fail:
-            values[cell_index].fails++;
-            break;
-        case Success:
-            values[cell_index].successes++;
-            break;
-    }
     double old_visits = values[cell_index].visits[action_index];
     double old_reward = values[cell_index].rewards[action_index];
     double old_length = values[cell_index].length;
@@ -82,6 +71,20 @@ void Habit::clear_stats() {
     for (auto &v:values) v.successes=v.fails=v.unknowns = 0;
 }
 
+void Habit::end_episode(uint32_t cell_index, Episode_result result) {
+    switch(result){
+        case Unknown:
+            values[cell_index].unknowns++;
+            break;
+        case Fail:
+            values[cell_index].fails++;
+            break;
+        case Success:
+            values[cell_index].successes++;
+            break;
+    }
+}
+
 Habit_value::Habit_value(uint32_t options) :
         rewards(options,0),
         visits(options,0),
@@ -92,7 +95,9 @@ Habit_value::Habit_value(uint32_t options) :
 }
 
 uint32_t Habit_value::get_visits() {
-    uint32_t vt=0;
-    for (auto v:visits) vt+=v;
-    return vt;
+    return successes+fails+unknowns;
+}
+
+uint32_t Habit_value::get_policy() {
+    return 0;
 }

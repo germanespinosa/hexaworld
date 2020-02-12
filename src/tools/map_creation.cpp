@@ -22,26 +22,27 @@ bool is_valid(Coordinates c, int size) {
 std::vector<Coordinates> const possible_connections = {{0,0},{1,1},{2,0},{1,-1},{-1,-1},{-2,0},{-1,1}};
 
 int main (int argc, char *args[]) {
-    if (argc == 1) {
+    Cmd_parameters cp(argc,args);
+    if (!cp[1].present()) {
         print_hexamap_help();
         exit(0);
     }
-    string world_name(args[1]);
-    int64_t p_seed = get_parameter_int("-seed",-1,argc,args);
+    string world_name(cp[1].value());
+    int64_t p_seed = cp["-seed"].int_value(-1);
     if (p_seed < -1 || p_seed > 65535){
         cerr << "Incorrect value for parameter seed (\"" << p_seed << "\")" << endl;
         print_hexamap_help();
         exit(0);
     }
     set_seed(p_seed);
-    int64_t p_size = get_parameter_int("-size",11,argc,args);
+    int64_t p_size = cp["-size"].int_value(11);
     if (p_size < 5 || p_size > 19 || p_size % 2 == 0) {
         cerr << "Incorrect value for parameter size (\"" << p_size << "\")" << endl;
         print_hexamap_help();
         exit(0);
     }
     int8_t size = p_size;
-    int64_t p_occlusions = get_parameter_int("-occlusions",80,argc,args);
+    int64_t p_occlusions = cp["-occlusions"].int_value(80);
     if (p_occlusions < 1 || p_occlusions > 200) {
         cerr << "Incorrect value for parameter occlusions (\"" << p_occlusions << "\")" << endl;
         print_hexamap_help();

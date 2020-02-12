@@ -4,11 +4,19 @@
 using namespace cell_world;
 using namespace std;
 
-Action_set::Action_set(cell_world::Cell_group &cells, cell_world::Connection_pattern cp, cell_world::Chance &prob) {
+Action_set::Action_set(Cell_group &cells, Connection_pattern cp, Chance &prob) {
+    L("Action_set::Action_set (Cell_group &, Connection_pattern , Chance &) start");
+    L("Action_set::Action_set (Cell_group &, Connection_pattern , Chance &) - Map map(cells)");
     Map map(cells);
+    L("Action_set::Action_set (Cell_group &, Connection_pattern , Chance &) - Cell_group cg;");
     Cell_group cg;
-    for(auto p:cp.pattern) cg.add(map[p]);
+    L("Action_set::Action_set (Cell_group &, Connection_pattern , Chance &) - for(auto p:cp.pattern) cg.add(map[p]);");
+    for(auto p:cp.pattern) {
+        cg.add(map[p]);
+    }
+    L("Action_set::Action_set (Cell_group &, Connection_pattern , Chance &) - for(auto p:cp.pattern) _add_action(map[p].location,cg,prob);");
     for(auto p:cp.pattern) _add_action(map[p].location,cg,prob);
+    L("Action_set::Action_set (Cell_group &, Connection_pattern , Chance &) end");
 }
 
 void Action_set::_add_action(Location source, cell_world::Cell_group &destinations, cell_world::Chance &prob) {

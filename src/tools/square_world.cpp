@@ -18,7 +18,6 @@ int main (int argc, char *args[]) {
     create_folder(world_name);
     World world(world_name);
     world.load();
-    world.connection_pattern = Connection_pattern ({{-1,0},{1,0},{0,-1},{0,1}});
     Visibility vi;
     Cell_group cg = world.create_cell_group();
     vi.reset(cg);
@@ -47,22 +46,21 @@ int main (int argc, char *args[]) {
         predator.set_fixed_start(map[{0,0}]);
     }
     predator.set_view_range(5);
-    if (find_parameter("-seedvalues", argc,args)) cout << "Seed values - " << flush;
+    if (cp["-seedvalues"].present()) cout << "Seed values - " << flush;
 
     va.push_back(&predator);
     va.push_back(&ht);
-    Simulation simulation (world, va, {1000,1000},cp["-s"].int_value(60),cp["-e"].int_value(100000));
+    Simulation simulation (cg, va, {1000,1000},cp["-s"].int_value(60),cp["-e"].int_value(100000));
     cout << "here " << endl;
-    if (find_parameter("-silent", argc,args))
+    if (cp["-silent"].present())
         simulation.run_silent(true);
     else
         simulation.run();
     cout << "here2 " << endl;
 
-    if (find_parameter("-seedvalues", argc,args)) habits[0].clear_stats();
+    if (cp["-seedvalues"].present()) habits[0].clear_stats();
 
     habits[0].save(world_name);
-    world.save();
     clock_t end = clock();
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
     cout << " Success: " << round((double)ht.success/(double)ht.episodes * 100,2)

@@ -2,17 +2,20 @@
 #include <habit_training.h>
 #include <fstream>
 #include <iostream>
+#include <utility>
 
 using namespace cell_world;
 using namespace std;
 
-Habit_training::Habit_training(std::vector<Habit> &habits, const Reward_config rewards, Action_set actions, Chance & probabilities, uint32_t thread, uint32_t threads)
+Habit_training::Habit_training(std::vector<Habit> &habits, const Reward_config rewards, Action_set &actions, Chance & probabilities, uint32_t thread, uint32_t threads)
 : _fixed_start(false)
 , _habits ( habits )
 , _rewards ( rewards )
 , _probabilities ( probabilities )
 , _action_set(actions)
 , episodes(0)
+, _iteration(0)
+, _episode_result(Unknown)
 , success(0)
 , Agent({"Prey",2})
 {
@@ -100,9 +103,11 @@ void Habit_training::end_episode(const State &) {
     L("Habit_training::end_episode(const State &) start");
     auto &habit = _habits[_current_habit];
     for (uint32_t i = 0 ; i < _iteration ; i++){
+        //uint32_t i = 0;
         uint32_t steps_to_end = _iteration - i ;
         habit.add_reward( _history[i].cell, _history[i].action, _rewards, _episode_result, steps_to_end);
     }
+    habit.end_episode( _history[0].cell, _episode_result);
     L("Habit_training::end_episode(const State &) end");
 }
 

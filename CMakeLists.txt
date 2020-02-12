@@ -3,8 +3,6 @@ project( hexaworld CXX )
 
 find_package( Cellworld CONFIG QUIET )
 
-get_target_property( UTF8-CPP_INTERFACE_INCLUDE_DIRECTORIES utf8-cpp INTERFACE_INCLUDE_DIRECTORIES )
-
 include_directories( include )
 
 add_library( hexaworld
@@ -24,10 +22,12 @@ add_library( hexaworld
 
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
-    add_definitions(-DDEBUG=1)
+    #cmake .. -DCMAKE_BUILD_TYPE=Debug
+    add_definitions(-DDEBUG=ON)
     message("-- Using DEBUG configuration")
     target_link_libraries( hexaworld PUBLIC cellworlddebug )
 else()
+    #cmake .. -DCMAKE_BUILD_TYPE=Release
     message("-- Using RELEASE configuration")
     target_link_libraries( hexaworld PUBLIC cellworld )
 endif()
@@ -48,11 +48,20 @@ add_executable( square src/tools/square_world.cpp)
 target_link_libraries( square hexaworld )
 
 ###
+### COPY WORLDS
+###
+
+file(GLOB world_glob "worlds/*" )
+file(COPY ${world_glob} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+###
+### COPY CUSTOM ICONS
+###
+
+cellworld_add_custom_icon(icons/bridge.png)
+
+###
 ### TESTS CONFIGURATION
 ###
 
-configure_file(python/map.py ${CMAKE_CURRENT_BINARY_DIR}/map.py COPYONLY)
-
 find_package(CatchTests CONFIG QUIET)
-
-cellworld_add_custom_icon(icons/bridge.png)
