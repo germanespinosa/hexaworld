@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include "utils.h"
 #include "predator.h"
+#include "test_prey.h"
+#include "habit_training.h"
 #include "hexaworld.h"
 #include <sys/stat.h>
 
@@ -11,38 +13,30 @@ using namespace std;
 
 int main(int argc, char *args[]){
     Cmd_parameters cp(argc,args);
-    if (!cp[1].present()) {
-        print_hexaworld_help();
-        exit(0);
-    }
-    {
-        struct stat buffer;
-        string filename (args[1]);
-        if (stat ((filename + ".world").c_str(), &buffer)) {
-            cout << "'" << cp[1].value() << "': No such file or directory" << endl;
-            exit(0);
-        }
-    }
-    string world_name (args[1]);
-    int64_t p_seed = cp["-seed"].int_value(-1);
-    set_seed(p_seed);
-    bool exploration = cp["-exploration"].present();
-    bool show = cp["-show"].present();
+    cp[1].check_present().check_file_exist(".world");
+    int64_t p_seed = cp["-seed"].default_value(-1).check_range(-1,65535).int_value();
     uint16_t steps = cp["-steps"].int_value(1000);
     uint32_t episodes = cp["-episodes"].int_value(1);
     int width = cp["-width"].int_value(1024);
     int height = cp["-height"].int_value(768);
-    string input_file  = cp["-in"].value("partial_vision");
-    string output_file  = cp["-out"].value("partial_vision.");
+    set_seed(p_seed);
+    string world_name (cp[1].value());
     World world(world_name);
     world.load();
-    Cell_group cg = world.create_cell_group();
-    Predator predator(world);
-    Test_prey tp(world);
-    vector<Agent*> va;
-    va.push_back((Agent*)&predator);
-    va.push_back((Agent*)&tp);
-    Simulation c(cg, va, {width, height}, steps, episodes);
+    auto world_cells = world.create_cell_group();
+    auto world_graph = world.create_graph();
+    Model m(world_cells);
+    Predator predator(world_graph);
+    m.add_agent(predator);
+//    Test_prey tp(world_graph);
+//    m.add_agent(tp);
+    Cell_group cg_gates = world.create_cell_group( world_name + "_gates" );
+    Graph gates_graph(cg_gates);
+    Graph gate_connections(world_cells);
+    vector<Habit> world_habits = Habit::get_habits(world_graph, gates_graph, world_name);
+    Reward_config rc {100,-100,0, .99,-1};
+    Habit_training ht(world_habits,rc,.9);
+    m.add_agent(ht);
+    Simulation c(m, {width, height}, steps, episodes);
     c.run();
-    cout << endl;
 }

@@ -1,6 +1,3 @@
-//
-// Created by german on 12/5/19.
-//
 #include <iostream>
 #include <cinttypes>
 #include <cmath>
@@ -46,6 +43,7 @@ void print_hexamap_help(){
 #include <unistd.h>
 #include <utils.h>
 #include <sstream>
+#include <utility>
 
 
 void create_folder(string path){
@@ -57,20 +55,22 @@ Cmd_parameters::Cmd_parameters(int c, char **s) {
     args = s;
 }
 
-Cmd_parameter Cmd_parameters::operator[](std::string name) {
-    for (int i=0; i < argc - 1; i++){
+Cmd_parameter Cmd_parameters::operator[](const std::string& name) {
+    Cmd_parameter cp;
+    cp._name = name;
+    for (int i=0; i < argc; i++){
         if (name == args[i]) {
-            Cmd_parameter cp;
             if (i+1<argc && args[i+1][0]!='-') cp._content = args[i+1];
             cp._present = true;
             return cp;
         }
     }
-    return Cmd_parameter();
+    return cp;
 }
 
 Cmd_parameter Cmd_parameters::operator[](uint32_t index) {
     Cmd_parameter cp;
+    cp._name = "position " + std::to_string(index);
     if (index>=argc) return cp;
     cp._present = true;
     cp._content = args[index];
@@ -104,6 +104,77 @@ int64_t Cmd_parameter::int_value() {
     return int_value(0);
 }
 
+bool Cmd_parameter::file_exist(const std::string& extension) {
+    struct stat buffer{};
+    return stat((_content+extension).c_str(), &buffer) == 0;
+}
+
+bool Cmd_parameter::file_exist() {
+    return file_exist("");
+}
+
+bool Cmd_parameter::range(double min, double max) {
+    double  v = double_value();
+    return v>=min && v<=max;
+}
+
+double Cmd_parameter::double_value() {
+    return double_value(0);
+}
+
+Cmd_parameter &Cmd_parameter::default_value(std::string value) {
+    if (!present())_content = value;
+    return *this;
+}
+
+Cmd_parameter &Cmd_parameter::default_value(int value) {
+    return default_value(std::to_string(value));
+}
+
+Cmd_parameter &Cmd_parameter::check_present() {
+    return check_present("Missing parameter: " + _name);
+}
+
+Cmd_parameter &Cmd_parameter::check_present(const std::string& message) {
+    if (!present()) {
+        cerr << message << endl;
+        exit(0);
+    }
+    return *this;
+}
+
+Cmd_parameter &Cmd_parameter::check_file_exist(const std::string& extension ,const std::string& message) {
+    if (!file_exist(extension)) {
+        cerr << message << endl;
+        exit(0);
+    }
+    return *this;
+}
+
+Cmd_parameter &Cmd_parameter::check_file_exist(const std::string& extension) {
+    return check_file_exist(extension,"File " + _content + extension + " not found.");
+}
+
+Cmd_parameter &Cmd_parameter::check_range(int min, int max, const std::string& message) {
+    if (!range(min, max)){
+        cerr << message << endl;
+        exit(0);
+    }
+    return *this;
+}
+
+Cmd_parameter &Cmd_parameter::check_range(int min, int max) {
+    return check_range(min, max, "Parameter " + _name + " value " + _content + " not within " + std::to_string(min) + "-" + std::to_string(max) + " range.");
+}
+
+Cmd_parameter::operator std::string() {
+    return _content;
+}
+
+Cmd_parameter::operator double() {
+    return double_value();
+}
+
 double round(double v, int d){
     double m = pow(10,d);
     v=v*m;
@@ -116,10 +187,9 @@ Stop_watch::Stop_watch() {
 }
 
 double Stop_watch::tick() {
-    clock_t stop_clock = clock();
-    double time_spent = (double)(stop_clock - _clock) / CLOCKS_PER_SEC;
-    _clock = stop_clock;
-    return time_spent;
+    double e = elapsed();
+    reset();
+    return e;
 }
 
 double Stop_watch::elapsed() {
@@ -142,4 +212,12 @@ std::string Stop_watch::to_string(double t) {
     }
     fmt << s << "s ";
     return fmt.str();
+}
+
+bool Stop_watch::time_out(double period) {
+    return elapsed()>=period;
+}
+
+void Stop_watch::reset() {
+    _clock = clock();
 }

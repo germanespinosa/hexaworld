@@ -7,50 +7,53 @@
 using namespace cell_world;
 using namespace std;
 
-Habit_training::Habit_training(std::vector<Habit> &habits, const Reward_config rewards, Action_set &actions, Chance & probabilities, uint32_t thread, uint32_t threads)
-: _fixed_start(false)
-, _habits ( habits )
+Habit_training::Habit_training(std::vector<Habit> &habits, const Reward_config rewards, double best_action_probability)
+: _habits ( habits )
 , _rewards ( rewards )
-, _probabilities ( probabilities )
-, _action_set(actions)
 , episodes(0)
 , _iteration(0)
 , _episode_result(Unknown)
 , success(0)
+, _current_habit(0)
 , Agent({"Prey",2})
-{
-    L("Habit_training::Habit_training(std::vector<Habit> &,const Reward_config ,Action_set ,Chance & ,uint32_t ,uint32_t ) start");
-    _current_habit = 0;
-    vector<uint32_t > chances;
-    set_color(Blue);
-    for (uint32_t i=0; i<habits.size();i++){
-        if (i % threads == thread) {
-            auto &habit = habits[i];
-            chances.push_back(habit.cells.size());
-        }else{
-            chances.push_back(0);// will be taken care by another thread
-        }
-    }
-    _habit_probability = Chance(chances);
-    L("Habit_training::Habit_training(std::vector<Habit> &,const Reward_config ,Action_set ,Chance & ,uint32_t ,uint32_t ) end");
-}
+{}
 
 const Cell & Habit_training::start_episode(const State &state) {
-    L("Habit_training::start_episode(const State &) start");
+    L("const Cell & Habit_training::start_episode(const State &state) start");
     episodes++;
-    _iteration = 0;
-    _current_habit = _habit_probability.pick(); //pick a random habit with probability direct to habit size;
-    _episode_result = Unknown;
+
+    //pick the next habit
+    vector<uint32_t> habit_sizes;
+    for (auto &h:_habits) habit_sizes.push_back(h.size());
+    _current_habit = _habit_probability.pick(habit_sizes); //pick a random habit with probability direct to habit size;
     auto &habit = _habits[_current_habit];
-    auto &cell =_fixed_start ? _start : _habits[_current_habit].cells[Chance::dice(habit.cells.size())]; //pick a random start cell
+
+    //set the result to unknown
+    _episode_result = Unknown;
+
+    //let the model known the agent is ready
     set_status(Action_ready);
-    L("Habit_training::start_episode(const State &) end");
-    return cell;
+
+    //clear the history
+    _history.clear();
+
+    //determine the start cell with probability inverse to previous visits
+    vector<uint32_t > visits;
+    for (auto &v:habit.values)visits.push_back(v.visits);
+    _start_cell_index = Chance::pick_inverse(visits);
+    //determine the start action
+    vector<uint32_t > action_visits;
+    for (auto &a:habit.values[_start_cell_index].actions)action_visits.push_back(a.visits);
+    _start_action_index = Chance::pick_inverse(action_visits);
+    _history.push_back({_start_cell_index,_start_action_index});
+    _next_move = habit.values[_start_cell_index].actions[_start_action_index].move;
+
+    L("const Cell & Habit_training::start_episode(const State &state) end " << _start_cell_index );
+    return habit.nodes[_start_cell_index]; //pick a random start cell
 }
 
-
 void Habit_training::update_state(const State &state) {
-    L("Habit_training::update_state(const State &) start");
+    L("Habit_training::update_state(const State &state) start");
     _iteration = state.iteration;
     set_status(Action_ready);
     auto prey_cell = cell();
@@ -59,69 +62,40 @@ void Habit_training::update_state(const State &state) {
         if (predator_cell.location.dist(prey_cell.location)<2) {
             set_status(Agent_status::Finished); //eaten -- fail
             _episode_result = Fail;
-            L("Habit_training::update_state(const State &) end");
             return;
         }
     }
-    if (prey_cell == _habits[_current_habit].destination){
+    auto &habit = _habits[_current_habit];
+
+    if (prey_cell== habit.destination){
         set_status(Agent_status::Finished); // success
         _episode_result = Success;
         success++;
-        L("Habit_training::update_state(const State &) end");
         return;
     }
-    if ( _habits[_current_habit].gate_cells.contains(prey_cell)){
-        set_status(Agent_status::Finished); // wrong gate -- fail
-        L("Habit_training::update_state(const State &) end");
+    int32_t cell_index = habit.nodes.find(prey_cell);
+    if ( cell_index == Not_found ) {
+        set_status(Agent_status::Finished); // wrong sub world only for stochastic simulations
         return;
     }
-    if ( _habits[_current_habit].cells.find(prey_cell)== Not_found ) {
-        set_status(Agent_status::Finished); // wrong sub world
-        L("Habit_training::update_state(const State &) end");
-        return;
-    }
-    L("Habit_training::update_state(const State &) end");
+    _next_move = habit.values[cell_index].policy();
+    L("Habit_training::update_state(const State &state) end");
 }
 
-Agent_action &Habit_training::get_action() {
-    L("Habit_training::get_action() start");
-    auto habit = _habits[_current_habit];
-    int32_t cell_index = habit.cells.find(cell());
-    uint32_t action_index;
-    if (_iteration==0){ // pick a random action with probability inverse to the number of visits (exploration)
-        Chance p(habit.values[cell_index].visits);
-        action_index = (!p).pick();
-    } else {
-        action_index = _probabilities.pick(habit.values[cell_index].rewards);
-    }
-    _add_history(cell_index,action_index);
-    L("Habit_training::get_action() end");
-    return _action_set[action_index];
+Coordinates Habit_training::get_move() {
+    L("Coordinates Habit_training::get_move() start");
+    //cout<< _next_move << endl;
+    return _next_move;
+    L("Coordinates Habit_training::get_move() end");
 }
 
 void Habit_training::end_episode(const State &) {
-    L("Habit_training::end_episode(const State &) start");
+    L("void Habit_training::end_episode(const State &) start");
     auto &habit = _habits[_current_habit];
-    for (uint32_t i = 0 ; i < _iteration ; i++){
-        //uint32_t i = 0;
-        uint32_t steps_to_end = _iteration - i ;
-        habit.add_reward( _history[i].cell, _history[i].action, _rewards, _episode_result, steps_to_end);
-    }
-    habit.end_episode( _history[0].cell, _episode_result);
-    L("Habit_training::end_episode(const State &) end");
-}
-
-void Habit_training::_add_history(uint32_t cell_index, uint32_t action_index) {
-    L("Habit_training::_add_history(uint32_t , uint32_t ) start");
-    while(_history.size()<=_iteration) _history.emplace_back();
-    _history[_iteration].cell = cell_index;
-    _history[_iteration].action = action_index;
-    L("Habit_training::_add_history(uint32_t , uint32_t ) end");
-}
-
-void Habit_training::set_fixed_start(const Cell &cell) {
-    L("Habit_training::set_fixed_start(const Cell &) start");
-    _start = cell;
-    _fixed_start = true;
-    L("Habit_training::set_fixed_start(const Cell &) end");
+/*    for (uint32_t i=0;i<_history.size(); i ++) {
+        habit.add_reward(_history[i].cell_index,_history[i].action_index, _rewards, _episode_result, _iteration-i);
+    }*/
+    habit.add_reward(_start_cell_index,_start_action_index, _rewards, _episode_result, _iteration);
+    habit.end_episode( _start_cell_index, _episode_result);
+    L("void Habit_training::end_episode(const State &) end");
 }

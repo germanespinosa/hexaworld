@@ -4,79 +4,68 @@
 using namespace cell_world;
 using namespace std;
 
-Predator::Predator(cell_world::World &world)
-    : _action_count(world.connection_pattern.size())
-    , _visits (world.size())
-    , _use_view_range(false)
+Predator::Predator(Graph &graph)
+    : _use_view_range(false)
     , _fixed_start (false)
     , _chasing (false)
-    , _cg(world.create_cell_group())
-    , _next_action(Not_found)
-    , _random_action(world.connection_pattern,Chance(vector<uint32_t>(_action_count)))
-    , _probabilities(.9,_action_count)
-    , _actions(_cg,world.connection_pattern,_probabilities)
+    , _graph(graph)
     , _first_episode(true)
     , Agent({"Predator", 1}) {
-    L("Predator::Predator(cell_world::World &) start");
-    for (uint32_t i = 0; i < world.size(); i++) _visits[i] = world[i].occluded ? 0 :1;
-    L("Predator::Predator(cell_world::World &) end");
 }
 
 const Cell &Predator::start_episode(const State &state) {
     L("Predator::start_episode(const State &) start");
-    L("Predator::start_episode(const State &) - set_color(Green);");
-    set_color(Green);
-    L("Predator::start_episode(const State &) - if (_fixed_start) return _start;");
+    set_color(Blue);
     if (_fixed_start) return _start;
-    L("Predator::start_episode(const State &) - Chance p(_visits);");
-    Chance p(_visits);// start in a cell with probability proportional to previous visits
-    L("Predator::start_episode(const State &) - set_status(Action_ready);");
     set_status(Action_ready);
-    L("Predator::start_episode(const State &) - auto &cell = _cg[p.pick()];");
-    auto &cell = _cg[p.pick()];
+    auto &cell = _graph.nodes[Chance::dice(_graph.nodes.size())];
     L("Predator::start_episode(const State &) end");
     return cell;
 }
 
-void Predator::update_state(const cell_world::State &state) {
+void Predator::update_state(const State &state) {
     L("Predator::update_state(const cell_world::State &state) start");
     auto predator_cell = cell();
-    _visits[_cg.find(predator_cell)]++;
-    set_color(Green);
-    set_status(Action_ready);
+    set_color(Blue);
     if ( !state.agents_data.empty() ) {
         auto prey_cell = state.agents_data[0].cell;
         if ( !_use_view_range || predator_cell.location.dist(prey_cell.location) < _view_range ) {
-            set_color(Red);
+            set_color(Yellow);
             _chasing = true;
             _last_prey_cell = prey_cell;
         }
     }
     if (predator_cell == _last_prey_cell) _chasing = false;
-
-    if (_chasing){
-        auto displacement = _last_prey_cell.location - predator_cell.location ;
-        _next_action = _actions.get_best(displacement);
-    }else {
-        _next_action = Not_found;
-    }
+    set_status(Action_ready);
     L("Predator::update_state(const cell_world::State &state) end");
 }
 
-Agent_action &Predator::get_action() {
-    L("Agent_action &Predator::get_action() start");
-    L("Agent_action &Predator::get_action() end");
-    if (_next_action == Not_found)
-        return _random_action;
-    else
-        return _actions[_next_action];
+Move Predator::get_move() {
+    L("Move Predator::get_move() start");
+    if (_chasing){
+        L("Move Predator::get_move() chasing");
+        auto c = cell();
+        auto &con = _graph[c];
+        vector<double> distances = con.get_distances(_last_prey_cell);
+        uint32_t mini= 0;
+        for (uint32_t i=1;i<distances.size();i++) if (distances[i]<distances[mini]) mini =i;
+        _next_move = con[mini].coordinates-cell().coordinates;
+
+    }else {
+        L("Move Predator::get_move() random");
+        auto &con = _graph[cell()];
+        Connection_pattern cp = Connection_pattern::get_pattern(cell(),con);
+        _next_move = cp[Chance::dice(cp.size())];
+    }
+    L("Move Predator::get_move() end" << _next_move);
+    return _next_move;
 }
 
-void Predator::end_episode(const cell_world::State &state) {
+void Predator::end_episode(const State &state) {
 
 }
 
-void Predator::set_fixed_start(const cell_world::Cell &cell) {
+void Predator::set_fixed_start(const Cell &cell) {
     _fixed_start = true;
     _start = cell;
 }
@@ -87,34 +76,4 @@ void Predator::set_view_range(double range) {
         _use_view_range = true;
         _view_range = range;
     }
-}
-
-Test_prey::Test_prey(cell_world::World &cg) :
-    _cg(cg),
-    _random_action(cg.connection_pattern,Chance(cg.connection_pattern.size())),
-    Agent({"Prey",1}){
-    set_color(Green);
-}
-
-const Cell &Test_prey::start_episode(const cell_world::State &) {
-    L("Cell &Test_prey::start_episode(const cell_world::State &) start");
-    uint32_t i = 0;
-    while (_cg[ i = (rand() % _cg.size())].occluded);
-    set_status(Action_ready);
-    L("Cell &Test_prey::start_episode(const cell_world::State &) end");
-    return _cg[i];
-}
-
-void Test_prey::update_state(const cell_world::State &state) {
-    L("Test_prey::update_state(const cell_world::State &state) start");
-    set_status(Action_ready);
-    L("Test_prey::update_state(const cell_world::State &state) end");
-}
-
-cell_world::Agent_action &Test_prey::get_action() {
-    return _random_action;
-}
-
-void Test_prey::end_episode(const cell_world::State &) {
-
 }

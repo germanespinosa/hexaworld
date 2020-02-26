@@ -12,13 +12,17 @@ add_library( hexaworld
         include/habit.h
         include/habit_training.h
         include/policy_training.h
-        include/action_set.h
+        include/option.h
+        include/test_prey.h
+        include/fixed_time_prey.h
         src/utils.cpp
         src/hexaworld.cpp
         src/habit.cpp
         src/agents/habit_training.cpp
         src/agents/predator.cpp
-        src/action_set.cpp )
+        src/option.cpp
+        src/agents/test_prey.cpp
+        src/agents/fixed_time_prey.cpp include/cell_option.h src/cell_option.cpp)
 
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -32,7 +36,11 @@ else()
     target_link_libraries( hexaworld PUBLIC cellworld )
 endif()
 
-add_executable( map_creation src/tools/map_creation.cpp)
+add_executable( viewer src/tools/habit_viewer.cpp)
+target_link_libraries( viewer hexaworld )
+
+
+add_executable( map_creation src/tools/map_creation.cpp )
 target_link_libraries( map_creation hexaworld )
 
 add_executable( simulation src/tools/simulation.cpp)
@@ -41,8 +49,8 @@ target_link_libraries( simulation hexaworld )
 add_executable( map_editor src/tools/map_editor.cpp)
 target_link_libraries( map_editor hexaworld )
 
-add_executable( train src/tools/habit_train.cpp)
-target_link_libraries( train hexaworld )
+add_executable( train_habit src/tools/habit_train.cpp)
+target_link_libraries( train_habit hexaworld )
 
 add_executable( square src/tools/square_world.cpp)
 target_link_libraries( square hexaworld )
@@ -53,6 +61,9 @@ target_link_libraries( square hexaworld )
 
 file(GLOB world_glob "worlds/*" )
 file(COPY ${world_glob} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+file(GLOB scripts_glob "scripts/*" )
+file(COPY ${scripts_glob} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 ###
 ### COPY CUSTOM ICONS
@@ -65,3 +76,5 @@ cellworld_add_custom_icon(icons/bridge.png)
 ###
 
 find_package(CatchTests CONFIG QUIET)
+
+message("HERE ${CELLWORLD_RESOURCES}")

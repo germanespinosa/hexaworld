@@ -1,45 +1,39 @@
 #pragma once
+#include <hexaworld.h>
 #include <cell_world.h>
-#include <action_set.h>
-#include "hexaworld.h"
+#include <option.h>
+
+struct Habit_action{
+    Habit_action (cell_world::Move, uint32_t ,double);
+    cell_world::Move move;
+    uint32_t visits = 0;
+    double reward = 0;
+};
 
 struct Habit_value{
-    Habit_value(uint32_t);
-    std::vector<double> rewards;
-    std::vector<uint32_t> visits;
-    double length;
-    uint32_t fails;
-    uint32_t successes;
-    uint32_t unknowns;
-    uint32_t get_policy();
-    uint32_t get_visits();
+    std::vector<Habit_action> actions;
+    double length = 0;
+    uint32_t fails = 0;
+    uint32_t successes = 0;
+    uint32_t unknowns = 0;
+    uint32_t visits = 0;
+    cell_world::Move policy();
 };
 
-struct Habit_policies{
-    uint32_t sub_world_id;
-    cell_world::Cell source;
-    cell_world::Cell destination;
-    double lenght;
-    double death_rate;
-    cell_world::Cell_group gate_cells;
-    std::vector<double> probabilities;
-    cell_world::Cell_group cells;
-    std::vector<uint32_t> policies;
-};
-
-struct Habit{
-    uint32_t sub_world_id;
-    cell_world::Cell destination;
-    cell_world::Cell_group cells;
-    cell_world::Cell_group gate_cells;
+struct Habit : Option{
+    explicit Habit (Option);
     std::vector<Habit_value> values;
-    void clear_stats();
-    void init_values(uint32_t);
-    bool convergence;
-    bool load(const std::string&, uint32_t);
+    bool load(const std::string&);
     bool save(const std::string&);
     void add_reward(uint32_t, uint32_t,Reward_config &, Episode_result, uint32_t);
     void end_episode(uint32_t, Episode_result);
+    static std::vector<Habit> get_habits(cell_world::Graph &, cell_world::Cell_group &);
+    static std::vector<Habit> get_habits(cell_world::Graph &, cell_world::Cell_group &, const std::string &);
+    static std::vector<Habit> get_habits(cell_world::Graph &, cell_world::Graph &);
+    static std::vector<Habit> get_habits(cell_world::Graph &, cell_world::Graph &, const std::string &);
+    static std::vector<Habit> get_habits(cell_world::Graph &, cell_world::Graph &, cell_world::Graph &);
+    static std::vector<Habit> get_habits(cell_world::Graph &, cell_world::Graph &, cell_world::Graph &, const std::string &);
 private:
+    std::string _file_name();
     const std::string _extension = ".habit";
 };

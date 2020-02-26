@@ -27,12 +27,7 @@ int main(int argc, char *args[]){
     World world(world_name);
     world.load();
     Cell_group cg = world.create_cell_group();
-    Sub_worlds sw(cg);
-    Connections cn(cg,world.connection_pattern);
     Cell_group selected = world.create_cell_group(world_name);
-    //world.connection_pattern = ADJACENT_CELLS;
     Map_editor c(world, {width, height});
-    //sw.reset(cg, selected, cn);
-    //sw.reset(cg, selected, cn);
     c.run();
 }

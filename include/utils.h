@@ -4,12 +4,27 @@
 
 struct Cmd_parameter{
     bool present();
+    bool file_exist();
+    bool file_exist(const std::string&);
+    bool range(double, double);
     int64_t int_value(int64_t);
     int64_t int_value();
     std::string value(std::string);
     std::string value();
     double double_value(double);
+    double double_value();
+    Cmd_parameter & default_value(std::string);
+    Cmd_parameter & default_value(int);
+    Cmd_parameter & check_present(const std::string&);
+    Cmd_parameter & check_present();
+    Cmd_parameter & check_file_exist(const std::string&, const std::string&);
+    Cmd_parameter & check_file_exist(const std::string&);
+    Cmd_parameter & check_range(int, int, const std::string&);
+    Cmd_parameter & check_range(int, int);
+    operator std::string();
+    operator double ();
 private:
+    std::string _name;
     std::string _content;
     bool _present = false;
     friend class Cmd_parameters;
@@ -17,7 +32,7 @@ private:
 
 struct Cmd_parameters{
     Cmd_parameters(int, char **);
-    Cmd_parameter operator [](std::string);
+    Cmd_parameter operator [](const std::string&);
     Cmd_parameter operator [](uint32_t);
 private:
     int argc;
@@ -26,8 +41,10 @@ private:
 
 struct Stop_watch{
     Stop_watch();
+    bool time_out (double);
     double elapsed();
     double tick();
+    void reset();
     static std::string to_string(double);
 private:
     clock_t _clock;
