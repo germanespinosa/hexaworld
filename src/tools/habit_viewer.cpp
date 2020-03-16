@@ -20,8 +20,14 @@ struct Handler : Viewer_handler{
         _habits = Habit::get_habits(world_graph, gates_graph, world.name);
         Cell_group_view destination {Cell_group(),Blue,true};
         cells_view.emplace_back(destination );
+        Cell_group_view current {Cell_group(),Red,true};
+        cells_view.emplace_back(current );
         for (uint32_t i=0;i<gates.size();i++){
             world[gates[i].id].icon = Bridge_icon;
+            cells_view[0].cells.add(gates[i]);
+        }
+        for (uint32_t i=0;i<world.size();i++){
+            world[i].value = 0;
         }
     }
     void on_key_up(Key key) override {
@@ -41,25 +47,20 @@ struct Handler : Viewer_handler{
         } else {
             message = "habit "  + to_string(_current_habit);
         }
-        cells_view[0].cells.clear();
-        cells_view[0].cells.add(_habits[_current_habit].destination);
-        for(uint32_t i=0;i<_world.size();i++) {
-            _world[i].value = 0;
-            if ( !_gates.contains(_world[i]) ) _world[i].icon = No_icon;
-        }
         _habits[_current_habit].load(_world.name);
         double  max = 1;
-        /*for(uint32_t i=0;i<_habits[_current_habit].values.size();i++){
-            if (_habits[_current_habit].values[i].visits>max) max = _habits[_current_habit].values[i].visits;
-        }*/
+        for (uint32_t i=0;i<_world.size();i++){
+            _world[i].icon = No_icon;
+        }
         for(uint32_t i=0;i<_habits[_current_habit].values.size();i++) {
             auto &cell = _habits[_current_habit].nodes[i];
-            if ( !_gates.contains(cell) ) {
-                _world[cell.id].icon = Arrow_icon;
-                _world[cell.id].direction = _habits[_current_habit].values[i].policy();
-            }
-            //_world[cell.id].value = ((double) _habits[_current_habit].values[i].visits )/max;
+            _world[cell.id].icon = Arrow_icon;
+            _world[cell.id].direction = _habits[_current_habit].values[i].policy();
         }
+        _world[_habits[_current_habit].destination.id].icon = Bridge_icon;
+        _world[_habits[_current_habit].destination.id].direction = {0,1};
+        cells_view[1].cells.clear();
+        cells_view[1].cells.add(_habits[_current_habit].destination);
     }
 private:
     int32_t _current_habit = Not_found;

@@ -184,6 +184,7 @@ double round(double v, int d){
 
 Stop_watch::Stop_watch() {
     _clock = clock();
+    _running = false;
 }
 
 double Stop_watch::tick() {
@@ -204,20 +205,21 @@ std::string Stop_watch::to_string(double t) {
     int m = (seg / 60) % 60;
     int h = ( seg / 3600);
     std::stringstream fmt;
-    if (h > 0) {
-        fmt << h << "h ";
-    }
-    if (m > 0) {
-        fmt << m << "m ";
-    }
-    fmt << s << "s ";
+    if (h > 0) fmt << h << "h ";
+    if (m > 0) fmt << m << "m ";
+    if (s > 0) fmt << s << "s ";
     return fmt.str();
 }
 
 bool Stop_watch::time_out(double period) {
-    return elapsed()>=period;
+    return _running && elapsed()>=period;
 }
 
 void Stop_watch::reset() {
     _clock = clock();
+    _running = true;
+}
+
+void Stop_watch::stop() {
+    _running = false;
 }

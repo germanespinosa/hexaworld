@@ -3,11 +3,9 @@
 #include <hexaworld.h>
 #include <habit.h>
 
-
-
 struct Habit_training: cell_world::Agent{
     Habit_training(std::vector<Habit> &, Reward_config, double);
-    const cell_world::Cell & start_episode(const cell_world::State &) override;
+    const cell_world::Cell & start_episode() override;
     void update_state(const cell_world::State &) override;
     cell_world::Coordinates get_move() override;
     void end_episode(const cell_world::State &) override ;

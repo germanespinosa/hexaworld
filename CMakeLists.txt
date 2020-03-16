@@ -11,10 +11,11 @@ add_library( hexaworld
         include/utils.h
         include/habit.h
         include/habit_training.h
-        include/policy_training.h
         include/option.h
         include/test_prey.h
         include/fixed_time_prey.h
+        include/cell_option.h
+        include/planner_history.h
         src/utils.cpp
         src/hexaworld.cpp
         src/habit.cpp
@@ -22,7 +23,10 @@ add_library( hexaworld
         src/agents/predator.cpp
         src/option.cpp
         src/agents/test_prey.cpp
-        src/agents/fixed_time_prey.cpp include/cell_option.h src/cell_option.cpp)
+        src/agents/fixed_time_prey.cpp
+        src/cell_option.cpp
+        src/planners/planner_history.cpp
+        src/planners/fixed_time_planner.cpp )
 
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)

@@ -13,7 +13,7 @@ Predator::Predator(Graph &graph)
     , Agent({"Predator", 1}) {
 }
 
-const Cell &Predator::start_episode(const State &state) {
+const Cell &Predator::start_episode() {
     L("Predator::start_episode(const State &) start");
     set_color(Blue);
     if (_fixed_start) return _start;

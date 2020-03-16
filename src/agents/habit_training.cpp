@@ -18,7 +18,7 @@ Habit_training::Habit_training(std::vector<Habit> &habits, const Reward_config r
 , Agent({"Prey",2})
 {}
 
-const Cell & Habit_training::start_episode(const State &state) {
+const Cell & Habit_training::start_episode() {
     L("const Cell & Habit_training::start_episode(const State &state) start");
     episodes++;
 
@@ -84,7 +84,6 @@ void Habit_training::update_state(const State &state) {
 
 Coordinates Habit_training::get_move() {
     L("Coordinates Habit_training::get_move() start");
-    //cout<< _next_move << endl;
     return _next_move;
     L("Coordinates Habit_training::get_move() end");
 }
@@ -92,9 +91,6 @@ Coordinates Habit_training::get_move() {
 void Habit_training::end_episode(const State &) {
     L("void Habit_training::end_episode(const State &) start");
     auto &habit = _habits[_current_habit];
-/*    for (uint32_t i=0;i<_history.size(); i ++) {
-        habit.add_reward(_history[i].cell_index,_history[i].action_index, _rewards, _episode_result, _iteration-i);
-    }*/
     habit.add_reward(_start_cell_index,_start_action_index, _rewards, _episode_result, _iteration);
     habit.end_episode( _start_cell_index, _episode_result);
     L("void Habit_training::end_episode(const State &) end");

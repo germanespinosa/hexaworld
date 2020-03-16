@@ -42,12 +42,14 @@ private:
 struct Stop_watch{
     Stop_watch();
     bool time_out (double);
+    void stop();
     double elapsed();
     double tick();
     void reset();
     static std::string to_string(double);
 private:
     clock_t _clock;
+    bool _running;
 };
 
 void print_hexaworld_help();

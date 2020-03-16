@@ -1,3 +1,4 @@
+#pragma once
 #include <cell_world.h>
 #include <habit.h>
 
