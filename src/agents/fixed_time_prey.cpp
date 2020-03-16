@@ -14,6 +14,7 @@ Agent ({"prey",1}){
 
 const Cell &Fixed_time_prey::start_episode() {
     _planner._prey_history.clear();
+    _planner._predator_history.clear();
     return _start;
 }
 

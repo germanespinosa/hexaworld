@@ -5,7 +5,7 @@
 #include <fixed_time_planner.h>
 
 struct Fixed_time_prey : cell_world::Agent {
-    Fixed_time_prey(Fixed_time_planner &, double time, const cell_world::Cell & , const cell_world::Cell &);
+    Fixed_time_prey(Fixed_time_planner &, double, const cell_world::Cell & , const cell_world::Cell &);
     const cell_world::Cell &start_episode() override;
     void update_state(const cell_world::State &) override;
     cell_world::Move get_move() override;
