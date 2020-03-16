@@ -22,7 +22,7 @@ void Planner_history::clear() {
 
 void Planner_history::add_record(uint32_t iteration, const cell_world::Cell &cell) {
     int32_t index = _cells.find(cell);
-    if (index==Not_found) {
+    if (index == Not_found) {
         index = _cells.size();
         _cells.add(cell);
     }
