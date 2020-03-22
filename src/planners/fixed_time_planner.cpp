@@ -13,6 +13,7 @@ cell_world::Move Fixed_time_planner::get_move() {
     running = false;
     _thread->join();
     delete (_thread);
+    _get_best_move();
     return m;
 }
 
@@ -26,6 +27,6 @@ Fixed_time_planner::Fixed_time_planner()
         , _thread (nullptr) { }
 
 void Fixed_time_planner::_plan() {
-    plan( _prey_history.last_update, _prey_history, _predator_history);
+    action_ready = false;
+    plan( prey_history.last_update, prey_history, predator_history);
 }
-

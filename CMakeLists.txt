@@ -16,6 +16,11 @@ add_library( hexaworld
         include/fixed_time_prey.h
         include/cell_option.h
         include/planner_history.h
+        include/action_planner.h
+        include/planner.h
+        include/planner_set.h
+        include/planner_prey.h
+        include/action_planner.h
         src/utils.cpp
         src/hexaworld.cpp
         src/habit.cpp
@@ -26,7 +31,10 @@ add_library( hexaworld
         src/agents/fixed_time_prey.cpp
         src/cell_option.cpp
         src/planners/planner_history.cpp
-        src/planners/fixed_time_planner.cpp )
+        src/planners/planner.cpp
+        src/planners/planner_set.cpp
+        src/planners/action_planner.cpp
+        src/agents/planner_prey.cpp)
 
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)

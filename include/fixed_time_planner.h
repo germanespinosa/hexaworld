@@ -5,14 +5,15 @@
 struct Fixed_time_planner {
     Fixed_time_planner();
     virtual void plan(uint32_t iteration, Planner_history &prey_history, Planner_history &predator_history);
+    cell_world::Move get_move();
+    bool action_ready{};
     bool running{};
     cell_world::Move best_move{};
+    void start_planning();
+    Planner_history predator_history;
+    Planner_history prey_history;
 private:
     void _plan();
-    void start_planning();
-    cell_world::Move get_move();
-    Planner_history _predator_history;
-    Planner_history _prey_history;
+    virtual cell_world::Move _get_best_move();
     std::thread *_thread{};
-    friend class Fixed_time_prey;
 };

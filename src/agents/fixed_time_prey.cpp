@@ -3,18 +3,21 @@
 using namespace std;
 using namespace cell_world;
 
-Fixed_time_prey::Fixed_time_prey(Fixed_time_planner &planner, double time, const cell_world::Cell &start, const cell_world::Cell &goal):
+Fixed_time_prey::Fixed_time_prey(uint32_t steps, Planner &planner, double time, const cell_world::Cell &start, const cell_world::Cell &goal):
+_steps(steps),
 _planner(planner),
 _time_out(time),
 _start(start),
 _goal(goal),
 Agent ({"prey",1}){
+    L("Fixed_time_prey::Fixed_time_prey start");
 
 }
 
 const Cell &Fixed_time_prey::start_episode() {
-    _planner._prey_history.clear();
-    _planner._predator_history.clear();
+    L("Fixed_time_prey::start_episode() start");
+    _planning = false;
+    L("Fixed_time_prey::start_episode() end");
     return _start;
 }
 
@@ -23,16 +26,20 @@ void Fixed_time_prey::update_state(const State &state) {
         set_status(Finished);
     } else if (!state.agents_data.empty() && state.agents_data[0].cell == cell()) {
         set_status(Finished);
-    } else if (!_planner.running) {
+    } else if (!_planning) {
         // time to plan
         // add the records to the history
-        _planner._prey_history.add_record(state.iteration,cell());
-        if (!state.agents_data.empty()) _planner._predator_history.add_record(state.iteration,state.agents_data[0].cell);
+        _planning = true;
+        if (!state.agents_data.empty())
+            _planner.set.update_state(state.iteration,cell(),state.agents_data[0].cell);
+        else
+            _planner.set.update_state(state.iteration,cell());
         // triggers the planning
-        _planner.start_planning();
         _stop_watch.reset(); // starts the clock
-    }else if (_stop_watch.time_out(_time_out)) {
+    }else if ( _stop_watch.time_out(_time_out)) {
+        // stop planning and get the result
         _stop_watch.stop();
+        _planning = false;
         set_status(Action_ready);
     }
 }
