@@ -9,7 +9,9 @@ Planner_set::Planner_set(const cell_world::World &w):
         graph(w.create_graph()),
         model(cell_group),
         prey(graph),
-        predator(graph){
+        predator(graph),
+        last_contact(0),
+        iteration(0){
     model.add_agent(prey);
     model.add_agent(predator);
 }
@@ -30,7 +32,7 @@ cell_world::Model &Planner_set::get_valid_model () {
     do {
         model.start_episode();
         model.iteration = last_contact;
-        for (;model.iteration<iteration;model.update());
+        model.run(iteration);
     } while (prey.filtered);
     return model;
 }

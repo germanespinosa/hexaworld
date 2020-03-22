@@ -4,7 +4,7 @@ using namespace cell_world;
 using namespace std;
 
 const cell_world::Cell &Planner_prey::start_episode() {
-    filtered = true;
+    filtered = false;
     current_move = 0;
     return start_cell;
 }

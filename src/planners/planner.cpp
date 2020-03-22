@@ -5,7 +5,6 @@ using namespace std;
 
 Planner::Planner(const World &w):
         set(w),
-        _running(true),
         _thread(&Planner::_plan, this){
 }
 
@@ -15,10 +14,11 @@ Planner::~Planner(){
 }
 
 void Planner::_plan(){
+    _running = true;
     while(_running){
-        _mutex.lock();
-        plan();
-        _mutex.unlock();
+        if (planning) {
+            plan();
+        }
     }
 }
 

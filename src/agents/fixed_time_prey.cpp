@@ -16,7 +16,6 @@ Agent ({"prey",1}){
 
 const Cell &Fixed_time_prey::start_episode() {
     L("Fixed_time_prey::start_episode() start");
-    _planning = false;
     L("Fixed_time_prey::start_episode() end");
     return _start;
 }
@@ -26,10 +25,10 @@ void Fixed_time_prey::update_state(const State &state) {
         set_status(Finished);
     } else if (!state.agents_data.empty() && state.agents_data[0].cell == cell()) {
         set_status(Finished);
-    } else if (!_planning) {
+    } else if (!_planner.planning) {
         // time to plan
         // add the records to the history
-        _planning = true;
+        _planner.planning = true;
         if (!state.agents_data.empty())
             _planner.set.update_state(state.iteration,cell(),state.agents_data[0].cell);
         else
@@ -39,7 +38,7 @@ void Fixed_time_prey::update_state(const State &state) {
     }else if ( _stop_watch.time_out(_time_out)) {
         // stop planning and get the result
         _stop_watch.stop();
-        _planning = false;
+        _planner.planning = false;
         set_status(Action_ready);
     }
 }

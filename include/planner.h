@@ -12,11 +12,12 @@ struct Planner {
 
     virtual cell_world::Move get_move() = 0;
 
+    bool planning = false;
     Planner_set set;
 
 private:
     void _plan();
-    bool _running;
+    bool _running = true;
     std::thread _thread;
     std::mutex _mutex;
 };

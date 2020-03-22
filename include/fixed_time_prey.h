@@ -11,7 +11,6 @@ struct Fixed_time_prey : cell_world::Agent {
     cell_world::Move get_move() override;
     void end_episode(const cell_world::State &) override;
 private:
-    bool _planning;
     uint32_t _steps;
     Planner &_planner;
     Stop_watch _stop_watch;
