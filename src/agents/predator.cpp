@@ -13,11 +13,11 @@ Predator::Predator(Graph &graph)
     , Agent({"Predator", 1}) {
 }
 
-const Cell &Predator::start_episode() {
+const Cell &Predator::start_episode(uint32_t) {
     L("Predator::start_episode(const State &) start");
     set_color(Blue);
-    if (_fixed_start) return _start;
     set_status(Action_ready);
+    if (_fixed_start) return _start;
     auto &cell = _graph.nodes[Chance::dice(_graph.nodes.size())];
     L("Predator::start_episode(const State &) end");
     return cell;

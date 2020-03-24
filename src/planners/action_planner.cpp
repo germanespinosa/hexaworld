@@ -3,8 +3,8 @@
 using namespace cell_world;
 using namespace std;
 
-Action_planner::Action_planner(const World &w, const Cell &g):
-Planner(w), goal(g){
+Action_planner::Action_planner(const World &w, const Cell &s, const Cell &g, double time):
+Planner(w,s,g,time ){
 
 }
 
@@ -26,6 +26,7 @@ void Action_planner::update_state() {
 }
 
 cell_world::Move Action_planner::get_move() {
+    cout << "time: " << _clock.elapsed() << endl;
     uint32_t option = 0;
     for (uint32_t i = 1; i < options.size(); i++) if (rewards[i]>rewards[option]) option = i;
     return options[option];

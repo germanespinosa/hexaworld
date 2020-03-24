@@ -3,7 +3,7 @@
 using namespace cell_world;
 using namespace std;
 
-const cell_world::Cell &Planner_prey::start_episode() {
+const cell_world::Cell &Planner_prey::start_episode(uint32_t) {
     filtered = false;
     current_move = 0;
     return start_cell;
@@ -20,6 +20,8 @@ void Planner_prey::update_state(const cell_world::State &state) {
         } else {
             set_status(Action_ready);
         }
+    } else {
+        set_status(Action_ready);
     }
 }
 

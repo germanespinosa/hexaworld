@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include "utils.h"
 #include "predator.h"
-#include "fixed_time_prey.h"
 #include "action_planner.h"
 #include "habit_training.h"
 #include "hexaworld.h"
@@ -37,9 +36,8 @@ int main(int argc, char *args[]){
     Map map(world_cells);
     auto goal= map[{0,-7}];
     auto start= map[{0,7}];
-    Action_planner ap(world, goal);
-    Fixed_time_prey ftp(steps,ap,2,start,goal);
-    m.add_agent(ftp);
+    Action_planner ap(world, start,goal,5 );
+    m.add_agent(ap);
     Simulation c(m, {width, height}, steps, episodes);
-    c.run();
+    c.run_silent();
 }

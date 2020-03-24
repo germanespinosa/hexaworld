@@ -4,7 +4,7 @@
 
 struct Planner_prey: cell_world::Agent{
     explicit Planner_prey(cell_world::Graph &);
-    const cell_world::Cell &start_episode() override;
+    const cell_world::Cell &start_episode(uint32_t) override;
     void update_state(const cell_world::State &) override;
     void end_episode(const cell_world::State &) override;
     cell_world::Move get_move() override;

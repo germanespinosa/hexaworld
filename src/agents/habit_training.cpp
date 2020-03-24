@@ -18,7 +18,7 @@ Habit_training::Habit_training(std::vector<Habit> &habits, const Reward_config r
 , Agent({"Prey",2})
 {}
 
-const Cell & Habit_training::start_episode() {
+const Cell & Habit_training::start_episode(uint32_t) {
     L("const Cell & Habit_training::start_episode(const State &state) start");
     episodes++;
 

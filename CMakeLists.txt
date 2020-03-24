@@ -13,7 +13,6 @@ add_library( hexaworld
         include/habit_training.h
         include/option.h
         include/test_prey.h
-        include/fixed_time_prey.h
         include/cell_option.h
         include/planner_history.h
         include/action_planner.h
@@ -28,7 +27,6 @@ add_library( hexaworld
         src/agents/predator.cpp
         src/option.cpp
         src/agents/test_prey.cpp
-        src/agents/fixed_time_prey.cpp
         src/cell_option.cpp
         src/planners/planner_history.cpp
         src/planners/planner.cpp

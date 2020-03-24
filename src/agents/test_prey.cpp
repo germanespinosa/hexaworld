@@ -10,7 +10,7 @@ Test_prey::Test_prey(Graph &graph) :
     set_color(Green);
 }
 
-const Cell &Test_prey::start_episode() {
+const Cell &Test_prey::start_episode(uint32_t) {
     L("Cell &Test_prey::start_episode(const cell_world::State &) start");
     set_status(Action_ready);
     L("Cell &Test_prey::start_episode(const cell_world::State &) end");
