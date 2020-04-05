@@ -1,6 +1,9 @@
 #pragma once
+
+#include <reward_config.h>
 #include <cell_world.h>
 #include <planner_history.h>
+#include <hexaworld.h>
 
 struct Planner_prey: cell_world::Agent{
     explicit Planner_prey(cell_world::Graph &);
@@ -11,8 +14,6 @@ struct Planner_prey: cell_world::Agent{
     void set_move(const cell_world::Move &);
 
     void set_start_cell(const cell_world::Cell &);
-    void add_to_trajectory(const cell_world::Cell &);
-    std::vector<cell_world::Move> get_options();
     void pick_random_move();
     bool filtered;
 
@@ -20,9 +21,16 @@ struct Planner_prey: cell_world::Agent{
     uint32_t current_move;
 
     cell_world::Cell start_cell;
-    cell_world::Cell current_cell;
 
+    cell_world::Cell goal;
     cell_world::Graph graph;
     cell_world::Move next_move;
+
+    Reward_config reward_config;
+    uint32_t start_iteration;
+    uint32_t unknown;
+    uint32_t successes;
+    uint32_t fails;
+
     double reward;
 };

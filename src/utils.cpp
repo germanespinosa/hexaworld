@@ -196,6 +196,7 @@ double Stop_watch::tick() {
 double Stop_watch::elapsed() {
     clock_t stop_clock = clock();
     double time_spent = (double)(stop_clock - _clock) / CLOCKS_PER_SEC;
+    asm("");
     return time_spent;
 }
 
@@ -212,7 +213,9 @@ std::string Stop_watch::to_string(double t) {
 }
 
 bool Stop_watch::time_out(double period) {
-    return _running && elapsed()>=period;
+    asm("");
+    double e = elapsed();
+    return _running && e >= period;
 }
 
 void Stop_watch::reset() {

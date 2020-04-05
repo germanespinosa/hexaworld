@@ -3,9 +3,12 @@
 using namespace cell_world;
 using namespace std;
 
-const cell_world::Cell &Planner_prey::start_episode(uint32_t) {
+const cell_world::Cell &Planner_prey::start_episode(uint32_t iteration) {
+    start_iteration = iteration;
+    reward = 0;
     filtered = false;
     current_move = 0;
+    set_status(Action_pending);
     return start_cell;
 }
 
@@ -21,7 +24,22 @@ void Planner_prey::update_state(const cell_world::State &state) {
             set_status(Action_ready);
         }
     } else {
-        set_status(Action_ready);
+        auto prey_cell = cell();
+        if ( prey_cell == goal  ) {
+            reward = reward_config.value(Success, state.iteration - start_iteration);
+            successes ++;
+            set_status(Finished);
+        } else if ( !state.agents_data.empty() && prey_cell == state.agents_data[0].cell ) {
+            fails++;
+            reward = reward_config.value(Fail, state.iteration - start_iteration);
+            set_status(Finished);
+        } else if ( state.iteration == state.iterations ) {
+            unknown++;
+            reward = reward_config.value(Unknown, state.iteration - start_iteration);
+            set_status(Finished);
+        } else {
+            set_status(Action_ready);
+        }
     }
 }
 
@@ -34,34 +52,21 @@ cell_world::Move Planner_prey::get_move() {
 }
 
 Planner_prey::Planner_prey(Graph &g):
-Agent({"Prey",1}),
+Agent({"Planner Prey",1}),
 graph(g){
 
 }
 
 void Planner_prey::set_start_cell(const cell_world::Cell &cell) {
     start_cell = cell;
-    current_cell = cell;
     trajectory.clear();
-}
-
-void Planner_prey::add_to_trajectory(const cell_world::Cell &cell) {
-    trajectory.push_back(cell.coordinates - current_cell.coordinates);
-    current_cell = cell;
 }
 
 void Planner_prey::set_move(const cell_world::Move &move) {
     next_move = move;
 }
 
-std::vector<cell_world::Move> Planner_prey::get_options() {
-    std::vector<cell_world::Move> options;
-    auto &cc = graph[cell()];
-    for (uint32_t i=0;i<cc.size();i++) options.push_back( cc[i].coordinates - cell().coordinates );
-    return options;
-}
-
 void Planner_prey::pick_random_move() {
-    auto o = get_options();
+    auto o = graph.get_connectors(cell());
     next_move = o[Chance::dice(o.size())];
 }

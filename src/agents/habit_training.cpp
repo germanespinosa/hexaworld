@@ -38,16 +38,10 @@ const Cell & Habit_training::start_episode(uint32_t) {
     _history.clear();
 
     //determine the start cell with probability inverse to previous visits
-    vector<uint32_t > visits;
-    for (auto &v:habit.values)visits.push_back(v.visits);
-    _start_cell_index = Chance::pick_inverse(visits);
-    //determine the start action
-    vector<uint32_t > action_visits;
-    for (auto &a:habit.values[_start_cell_index].actions)action_visits.push_back(a.visits);
-    _start_action_index = Chance::pick_inverse(action_visits);
-    _history.push_back({_start_cell_index,_start_action_index});
-    _next_move = habit.values[_start_cell_index].actions[_start_action_index].move;
+    vector<uint32_t > visits(habit.values.size());
+    for (uint32_t i=0;i<visits.size();i++) visits[i] = habit.values[i].visits;
 
+    _start_cell_index = Chance::pick_inverse(visits);
     L("const Cell & Habit_training::start_episode(const State &state) end " << _start_cell_index );
     return habit.nodes[_start_cell_index]; //pick a random start cell
 }
@@ -56,6 +50,17 @@ void Habit_training::update_state(const State &state) {
     L("Habit_training::update_state(const State &state) start");
     _iteration = state.iteration;
     set_status(Action_ready);
+    auto &habit = _habits[_current_habit];
+    if (state.iteration==0){
+        //determine the start action
+        vector<uint32_t > action_visits(habit.values[_start_cell_index].actions.size());
+        for (uint32_t i=0;i<action_visits.size();i++) action_visits[i] = habit.values[_start_cell_index].actions[i].visits;
+        _start_action_index = Chance::pick_inverse(action_visits);
+        _history.push_back({_start_cell_index,_start_action_index});
+        _next_move = habit.values[_start_cell_index].actions[_start_action_index].move;
+        return;
+    }
+
     auto prey_cell = cell();
     if ( !state.agents_data.empty()) {
         auto predator_cell = state.agents_data[0].cell;
@@ -65,7 +70,6 @@ void Habit_training::update_state(const State &state) {
             return;
         }
     }
-    auto &habit = _habits[_current_habit];
 
     if (prey_cell== habit.destination){
         set_status(Agent_status::Finished); // success

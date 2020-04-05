@@ -47,7 +47,6 @@ struct Stop_watch{
     double tick();
     void reset();
     static std::string to_string(double);
-private:
     clock_t _clock;
     bool _running;
 };

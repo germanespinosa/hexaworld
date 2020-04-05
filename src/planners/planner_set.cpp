@@ -16,23 +16,16 @@ Planner_set::Planner_set(const cell_world::World &w):
     model.add_agent(predator);
 }
 
-void Planner_set::update_state(uint32_t i, const cell_world::Cell& prey_cell, const cell_world::Cell& predator_cell){
-    prey.set_start_cell(prey_cell);
-    predator.set_fixed_start(predator_cell);
-    last_contact = i;
-    iteration = i;
-}
-
-void Planner_set::update_state (uint32_t i, const cell_world::Cell& prey_cell){
-    prey.add_to_trajectory(prey_cell);
-    iteration = i;
-}
-
 cell_world::Model &Planner_set::get_valid_model () {
+    if (model.status == cell_world::Model::Status::Running) model.end_episode();
     do {
-        model.start_episode();
-        model.iteration = last_contact;
-        model.run(iteration);
+        model.start_episode(last_contact);
+        uint32_t move_index = 0;
+        for (uint32_t move_index = 0; move_index < trajectory.size() && !prey.filtered ;move_index++) {
+            prey.set_move(trajectory[move_index]);
+            if (!model.update()) break;
+        }
+        if (prey.filtered) model.end_episode();
     } while (prey.filtered);
     return model;
 }

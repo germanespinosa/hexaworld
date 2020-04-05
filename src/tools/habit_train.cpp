@@ -76,10 +76,11 @@ int main(int argc, char *args[]){
 void run_training(uint32_t thread){
     auto &data = threads_data[thread];
     Predator predator(data.graph);
-    Habit_training ht(data.habits, rc,.9);
+    Habit_training ht(data.habits, rc, .9);
     Model m(data.cells);
     m.add_agent(predator);
     m.add_agent(ht);
+    m.iterations = data.steps;
     for (;;) {
         mtx.lock();
         if (data.episode < data.episodes) {
@@ -94,7 +95,7 @@ void run_training(uint32_t thread){
             s.run();
         } else {
             m.start_episode();
-            for (uint32_t i = 0; i < data.steps && m.update(); i++);
+            while (m.update());
             m.end_episode();
         }
     }

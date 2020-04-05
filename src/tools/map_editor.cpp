@@ -27,7 +27,7 @@ int main(int argc, char *args[]){
     World world(world_name);
     world.load();
     Cell_group cg = world.create_cell_group();
-    Cell_group selected = world.create_cell_group(world_name);
+    Cell_group selected = world.create_cell_group(world_name + "_gates");
     Map_editor c(world, {width, height});
     c.run();
 }

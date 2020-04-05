@@ -1,12 +1,11 @@
 #include <cell_world.h>
 #include <iostream>
-#include <stdlib.h>
 #include "utils.h"
 #include "predator.h"
-#include "action_planner.h"
+#include "habit_planner.h"
 #include "habit_training.h"
+#include "test_prey.h"
 #include "hexaworld.h"
-#include <sys/stat.h>
 
 using namespace cell_world;
 using namespace std;
@@ -15,7 +14,7 @@ int main(int argc, char *args[]){
     Cmd_parameters cp(argc,args);
     cp[1].check_present().check_file_exist(".world");
     int64_t p_seed = cp["-seed"].default_value(-1).check_range(-1,65535).int_value();
-    uint16_t steps = cp["-steps"].int_value(1000);
+    uint16_t steps = cp["-steps"].int_value(80);
     uint32_t episodes = cp["-episodes"].int_value(1);
     int width = cp["-width"].int_value(1024);
     int height = cp["-height"].int_value(768);
@@ -32,12 +31,15 @@ int main(int argc, char *args[]){
     Graph gates_graph(cg_gates);
     Graph gate_connections(world_cells);
     vector<Habit> world_habits = Habit::get_habits(world_graph, gates_graph, world_name);
-    Reward_config rc {100,-100,0, .99,-1};
+    Reward_config rc {100,-100,-100, 1,0};
     Map map(world_cells);
-    auto goal= map[{0,-7}];
-    auto start= map[{0,7}];
-    Action_planner ap(world, start,goal,5 );
+    auto goal = map[{0,-7}];
+    auto start = map[{0,7}];
+    //Test_prey tp (world_graph);
+    //m.add_agent(tp);
+    Habit_planner ap(world, cg_gates, start, goal, 1, rc);
     m.add_agent(ap);
-    Simulation c(m, {width, height}, steps, episodes);
-    c.run_silent();
+    m.iterations = steps;
+    Simulation c(m, {width, height}, episodes);
+    c.run();
 }

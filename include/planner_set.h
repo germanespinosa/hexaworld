@@ -5,8 +5,6 @@
 
 struct Planner_set{
     Planner_set(const cell_world::World &);
-    void update_state(uint32_t, const cell_world::Cell&);
-    void update_state(uint32_t, const cell_world::Cell&, const cell_world::Cell&);
     cell_world::Model &get_valid_model();
     uint32_t last_contact;
     uint32_t iteration;
@@ -16,4 +14,5 @@ struct Planner_set{
     cell_world::Model model;
     Predator predator;
     Planner_prey prey;
+    std::vector<cell_world::Move> trajectory;
 };

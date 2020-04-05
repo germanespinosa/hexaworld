@@ -39,7 +39,8 @@ int main (int argc, char *args[]) {
     Model m(cg);
     m.add_agent(predator);
     m.add_agent(ht);
-    Simulation simulation (m, {1000,1000},cp["-s"].int_value(60),cp["-e"].int_value(100000));
+    m.iterations = cp["-s"].int_value(60);
+    Simulation simulation (m, {1000,1000},cp["-e"].int_value(100000));
     if (cp["-silent"].present())
         simulation.run_silent(true);
     else

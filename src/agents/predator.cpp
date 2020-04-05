@@ -44,13 +44,16 @@ Move Predator::get_move() {
     L("Move Predator::get_move() start");
     if (_chasing){
         L("Move Predator::get_move() chasing");
-        auto c = cell();
-        auto &con = _graph[c];
-        vector<double> distances = con.get_distances(_last_prey_cell);
-        uint32_t mini= 0;
-        for (uint32_t i=1;i<distances.size();i++) if (distances[i]<distances[mini]) mini =i;
-        _next_move = con[mini].coordinates-cell().coordinates;
-
+        auto nc = cell();
+        auto dice = Chance::dice(2);
+        {
+            auto c = nc;
+            vector<double> distances = _graph[c].get_distances(_last_prey_cell);
+            uint32_t mini = 0;
+            for (uint32_t i = 1; i < distances.size(); i++) if (distances[i] < distances[mini]) mini = i;
+            nc = _graph[c][mini];
+        } while (dice--);
+        _next_move = nc.coordinates-cell().coordinates;
     }else {
         L("Move Predator::get_move() random");
         auto &con = _graph[cell()];

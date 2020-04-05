@@ -8,6 +8,7 @@ include_directories( include )
 add_library( hexaworld
         include/predator.h
         include/hexaworld.h
+        include/reward_config.h
         include/utils.h
         include/habit.h
         include/habit_training.h
@@ -20,8 +21,10 @@ add_library( hexaworld
         include/planner_set.h
         include/planner_prey.h
         include/action_planner.h
+        include/habit_planner.h
         src/utils.cpp
         src/hexaworld.cpp
+        src/reward_config.cpp
         src/habit.cpp
         src/agents/habit_training.cpp
         src/agents/predator.cpp
@@ -32,7 +35,8 @@ add_library( hexaworld
         src/planners/planner.cpp
         src/planners/planner_set.cpp
         src/planners/action_planner.cpp
-        src/agents/planner_prey.cpp)
+        src/agents/planner_prey.cpp
+        src/planners/habit_planner.cpp )
 
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -53,8 +57,11 @@ target_link_libraries( viewer hexaworld )
 add_executable( map_creation src/tools/map_creation.cpp )
 target_link_libraries( map_creation hexaworld )
 
-add_executable( simulation src/tools/simulation.cpp)
-target_link_libraries( simulation hexaworld )
+add_executable( silver src/tools/silver.cpp)
+target_link_libraries( silver hexaworld )
+
+add_executable( habit src/tools/habit.cpp)
+target_link_libraries( habit hexaworld )
 
 add_executable( map_editor src/tools/map_editor.cpp)
 target_link_libraries( map_editor hexaworld )

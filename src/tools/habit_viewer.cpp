@@ -29,6 +29,7 @@ struct Handler : Viewer_handler{
         for (uint32_t i=0;i<world.size();i++){
             world[i].value = 0;
         }
+        _current_habit = 0;
     }
     void on_key_up(Key key) override {
         if (key == Key::code('q') ) {

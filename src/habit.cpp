@@ -132,6 +132,11 @@ Habit::get_habits(cell_world::Graph &world_graph, cell_world::Graph &gates_graph
     return habits;
 }
 
+cell_world::Move Habit::policy(const cell_world::Cell &cell) {
+    uint32_t i = nodes.find(cell);
+    return values[i].policy();
+}
+
 Move Habit_value::policy() {
     vector<double> values;
     for (auto a:actions) values.push_back(a.reward);
@@ -142,3 +147,20 @@ Habit_action::Habit_action(Move a, uint32_t v, double r) :
 move(a),
 visits(v),
 reward(r){}
+
+Habit_set::Habit_set(const cell_world::World &world, const cell_world::Cell_group &gates){
+    Graph world_graph = world.create_graph();
+    Graph gates_graph(gates);
+    habits = Habit::get_habits(world_graph, gates_graph, options, world.name);
+    for (auto &h:habits)destinations.add(h.destination);
+}
+
+std::vector<std::reference_wrapper<Habit>> Habit_set::operator[](const cell_world::Cell &cell) {
+    std::vector<std::reference_wrapper<Habit>> r;
+    auto o = options[cell];
+    for (uint32_t i = 0;i<o.size();i++){
+        uint32_t index = destinations.find(o[i]);
+        r.emplace_back(habits[index]);
+    }
+    return r;
+}
