@@ -4,15 +4,14 @@
 #include <mutex>
 #include <utils.h>
 #include <atomic>
+#include <agents/prey.h>
 
-struct Planner : cell_world::Agent {
+struct Planner : Prey {
     Planner(cell_world::World &, const cell_world::Cell & , const cell_world::Cell &, double, Reward_config);
-    ~Planner();
-    void update_state(const cell_world::State &) override;
-    const cell_world::Cell &start_episode(uint32_t) override;
-    void end_episode(const cell_world::State &) override;
+    void update(const cell_world::State &) override;
+    const cell_world::Cell &start(uint32_t) override;
+    void end(Episode_result, uint32_t) override;
     cell_world::Move get_move() override;
-    void receive_message(const cell_world::Agent_message &) override;
     virtual void update_state() = 0;
     virtual void plan() = 0;
     virtual cell_world::Move get_best_move() = 0;
@@ -20,7 +19,7 @@ struct Planner : cell_world::Agent {
 
 protected:
     const cell_world::Cell &_start;
-    const cell_world::Cell &_goal;
+    const cell_world::Cell &goal;
     cell_world::Graph _graph;
     Reward_config _reward_config;
     cell_world::World &_world;

@@ -1,9 +1,8 @@
 #pragma once
 
-#include <fixed_time_planner.h>
 #include <agents/predator.h>
 #include <agents/preys/planner_prey.h>
-#include <agents/planner.h>
+#include <agents/preys/planner.h>
 #include <habit.h>
 
 struct Habit_planner : Planner {
@@ -14,9 +13,6 @@ struct Habit_planner : Planner {
     cell_world::Move get_best_move() override;
     std::vector<double> rewards;
     std::vector<uint32_t> visits;
-    std::vector<uint32_t> successes;
-    std::vector<uint32_t> unknowns;
-    std::vector<uint32_t> fails;
     Habit_set _habit_set;
     std::vector<std::reference_wrapper<Habit>> options;
 };

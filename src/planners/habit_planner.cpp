@@ -1,4 +1,4 @@
-#include <habit_planner.h>
+#include <agents/preys/planners/habit_planner.h>
 
 using namespace std;
 using namespace cell_world;
@@ -7,16 +7,12 @@ Habit_planner::Habit_planner( World &world, const Cell_group &gates, const Cell 
     Planner( world, start, goal, time, rc),
     _habit_set(world, gates)
 {
-cout << "here" << endl;
 }
 
 void Habit_planner::update_state() {
     options = _habit_set[cell()];
     rewards = vector<double>(options.size(),0);
     visits = vector<uint32_t>(options.size(),0);
-    fails = vector<uint32_t>(options.size(),0);
-    successes = vector<uint32_t>(options.size(),0);
-    unknowns = vector<uint32_t>(options.size(),0);
 }
 
 void Habit_planner::plan() {

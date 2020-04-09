@@ -16,12 +16,12 @@ add_library( hexaworld
         include/agents/preys/test_prey.h
         include/cell_option.h
         include/planner_history.h
-        include/action_planner.h
-        include/agents/planner.h
+        include/agents/preys/planners/action_planner.h
+        include/agents/preys/planner.h
         include/planner_set.h
         include/agents/preys/planner_prey.h
-        include/action_planner.h
-        include/habit_planner.h
+        include/agents/preys/planners/action_planner.h
+        include/agents/preys/planners/habit_planner.h
         include/agents/prey.h
         src/utils.cpp
         src/hexaworld.cpp
@@ -33,7 +33,7 @@ add_library( hexaworld
         src/agents/preys/test_prey.cpp
         src/cell_option.cpp
         src/planners/planner_history.cpp
-        src/planners/planner.cpp
+        src/agents/preys/planner.cpp
         src/planners/planner_set.cpp
         src/planners/action_planner.cpp
         src/agents/preys/planner_prey.cpp

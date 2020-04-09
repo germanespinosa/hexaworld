@@ -1,9 +1,8 @@
 #pragma once
 
-#include <fixed_time_planner.h>
 #include <agents/predator.h>
 #include <agents/preys/planner_prey.h>
-#include <agents/planner.h>
+#include <agents/preys/planner.h>
 
 struct Action_planner : Planner {
     explicit Action_planner( cell_world::World &, const cell_world::Cell &, const cell_world::Cell &, double, Reward_config);

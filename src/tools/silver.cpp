@@ -2,7 +2,7 @@
 #include <iostream>
 #include "utils.h"
 #include "agents/predator.h"
-#include "action_planner.h"
+#include "agents/preys/planners/action_planner.h"
 #include "agents/preys/habit_training_prey.h"
 #include "agents/preys/test_prey.h"
 #include "hexaworld.h"

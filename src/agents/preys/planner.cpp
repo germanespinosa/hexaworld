@@ -1,4 +1,4 @@
-#include <agents/planner.h>
+#include <agents/preys/planner.h>
 #include <unistd.h>
 using namespace cell_world;
 using namespace std;
@@ -7,14 +7,10 @@ Planner::Planner(World &w, const Cell &start, const Cell &goal, double interval,
         set(w, goal,reward_config),
         _graph(w.create_graph()),
         _start(start),
-        _goal(goal),
+        goal(goal),
         _interval(interval),
         _reward_config(reward_config),
-        _world(w),
-        Agent({"Prey",1}){
-}
-
-Planner::~Planner(){
+        _world(w){
 }
 
 void Planner::_planning_job(){
@@ -34,48 +30,41 @@ void Planner::_planning_job(){
     _running = true;
 }
 
-void Planner::end_episode(const cell_world::State &) {
+void Planner::end(Episode_result, uint32_t) {
     _running = false;
     _thread->join();
 }
 
-void Planner::update_state(const State &state) {
-    if (status == Finished) return;
+void Planner::update(const State &state) {
     auto &prey_cell = cell();
     cout << "prey: " << prey_cell.coordinates;
     if (!state.agents_data.empty()){
         cout << " predator: " << state.agents_data[0].cell.coordinates << " " << (state.agents_data[0].cell == prey_cell);
     }
     cout << endl;
-    if (prey_cell == _goal) {
-        set_status(Finished);
-    } else  if (!state.agents_data.empty() && prey_cell == state.agents_data[0].cell) {
-        set_status(Finished);
-        cout << "FAIL" <<  endl;
+    // time to plan
+    if (!state.agents_data.empty()) {
+        set.trajectory.clear();
+        set.predator.set_fixed_start(state.agents_data[0].cell);
+        set.prey.set_start_cell(prey_cell);
+        set.last_contact = state.iteration;
     } else {
-        // time to plan
-        if (!state.agents_data.empty()) {
-            set.trajectory.clear();
-            set.predator.set_fixed_start(state.agents_data[0].cell);
-            set.prey.set_start_cell(prey_cell);
-            set.last_contact = state.iteration;
-        } else {
-            set.iteration = state.iteration;
-        }
-        // triggers the planning
-        set.model.iterations = state.iterations;
-        //_mutex.lock();
-        update_state();
-        set_status(Action_pending);
-        //_mutex.unlock();
+        set.iteration = state.iteration;
     }
+    // triggers the planning
+    set.model.iterations = state.iterations;
+    //_mutex.lock();
+    update_state();
+    set_status(Action_pending);
+    //_mutex.unlock();
 }
 
-const Cell &Planner::start_episode(uint32_t steps) {
+const Cell &Planner::start(uint32_t steps) {
     set.prey.set_start_cell(_start);
     set.iteration = 0;
     set.model.iterations = steps;
     _thread = new std::thread(&Planner::_planning_job, this);
+    set_goal(goal);
     return _start;
 }
 
@@ -85,8 +74,4 @@ cell_world::Move Planner::get_move() {
     set.trajectory.push_back(move);
     cout << "best move " <<  move <<  endl;
     return move;
-}
-
-void Planner::receive_message(const cell_world::Agent_message &m) {
-    if (m.from.name == "predator") set_status(Finished);
 }
