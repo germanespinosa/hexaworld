@@ -1,10 +1,10 @@
 #include <cell_world.h>
 #include <iostream>
 #include "utils.h"
-#include "predator.h"
+#include "agents/predator.h"
 #include "action_planner.h"
-#include "habit_training.h"
-#include "test_prey.h"
+#include "agents/preys/habit_training_prey.h"
+#include "agents/preys/test_prey.h"
 #include "hexaworld.h"
 
 using namespace cell_world;
@@ -37,7 +37,7 @@ int main(int argc, char *args[]){
     auto start = map[{0,7}];
     //Test_prey tp (world_graph);
     //m.add_agent(tp);
-    Action_planner ap(world, start,goal,10, rc);
+    Action_planner ap(world, start,goal,1, rc);
     m.add_agent(ap);
     m.iterations = steps;
     Simulation c(m, {width, height}, episodes);

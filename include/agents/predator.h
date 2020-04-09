@@ -10,14 +10,15 @@ struct Predator : cell_world::Agent {
     void end_episode(const cell_world::State &) override ;
     void set_fixed_start(const cell_world::Cell &);
     void set_view_range(double);
+    bool _fixed_start;
 
 private:
     bool _use_view_range;
     double _view_range;
-    bool _fixed_start;
     cell_world::Cell _start;
     bool _first_episode;
     bool _chasing;
+    bool _contact;
     cell_world::Cell _last_prey_cell;
     cell_world::Graph _graph;
     cell_world::Move _next_move;

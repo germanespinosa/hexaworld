@@ -6,37 +6,39 @@ find_package( Cellworld CONFIG QUIET )
 include_directories( include )
 
 add_library( hexaworld
-        include/predator.h
+        include/agents/predator.h
         include/hexaworld.h
         include/reward_config.h
         include/utils.h
         include/habit.h
-        include/habit_training.h
+        include/agents/preys/habit_training_prey.h
         include/option.h
-        include/test_prey.h
+        include/agents/preys/test_prey.h
         include/cell_option.h
         include/planner_history.h
         include/action_planner.h
-        include/planner.h
+        include/agents/planner.h
         include/planner_set.h
-        include/planner_prey.h
+        include/agents/preys/planner_prey.h
         include/action_planner.h
         include/habit_planner.h
+        include/agents/prey.h
         src/utils.cpp
         src/hexaworld.cpp
         src/reward_config.cpp
         src/habit.cpp
-        src/agents/habit_training.cpp
+        src/agents/preys/habit_training_prey.cpp
         src/agents/predator.cpp
         src/option.cpp
-        src/agents/test_prey.cpp
+        src/agents/preys/test_prey.cpp
         src/cell_option.cpp
         src/planners/planner_history.cpp
         src/planners/planner.cpp
         src/planners/planner_set.cpp
         src/planners/action_planner.cpp
-        src/agents/planner_prey.cpp
-        src/planners/habit_planner.cpp )
+        src/agents/preys/planner_prey.cpp
+        src/planners/habit_planner.cpp
+        src/agents/prey.cpp)
 
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -62,6 +64,9 @@ target_link_libraries( silver hexaworld )
 
 add_executable( habit src/tools/habit.cpp)
 target_link_libraries( habit hexaworld )
+
+add_executable( sim src/tools/test.cpp)
+target_link_libraries( sim hexaworld )
 
 add_executable( map_editor src/tools/map_editor.cpp)
 target_link_libraries( map_editor hexaworld )

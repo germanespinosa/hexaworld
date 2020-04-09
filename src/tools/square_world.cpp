@@ -3,8 +3,8 @@
 #include <cell_world.h>
 #include "utils.h"
 #include "hexaworld.h"
-#include "predator.h"
-#include "habit_training.h"
+#include "agents/predator.h"
+#include "agents/preys/habit_training_prey.h"
 #include <time.h>   	// for clock_t, clock(), CLOCKS_PER_SEC
 
 using namespace ge211;
@@ -29,7 +29,7 @@ int main (int argc, char *args[]) {
     vector<Habit> habits;
     habits.push_back(habit);
     habits[0].load(world_name);
-    Habit_training ht(habits, rc,.9);
+    Habit_training_prey ht(habits, rc, .9);
     if (cp["-fpreds"].present()) {
         cout << "Fixed predator location - " << flush;
         predator.set_fixed_start(map[{0,0}]);
@@ -48,7 +48,7 @@ int main (int argc, char *args[]) {
     habits[0].save(world_name);
     clock_t end = clock();
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    cout << " Success: " << round((double)ht.success/(double)ht.episodes * 100,2)
+    cout << " Success: " << round((double)ht.successes/(double)ht.episodes * 100,2)
     << "% - Total runtime: " << round(time_spent,2) << "s ("
     << round((double)cp["-e"].int_value(100000)/ time_spent,2) << " episodes/s)" << endl;
 }

@@ -3,10 +3,10 @@
 #include <thread>         // std::thread
 #include <mutex>          // std::mutex
 #include "utils.h"
-#include "predator.h"
+#include "agents/predator.h"
 #include "hexaworld.h"
 #include <sys/stat.h>
-#include "habit_training.h"
+#include "agents/preys/habit_training_prey.h"
 
 using namespace cell_world;
 using namespace std;

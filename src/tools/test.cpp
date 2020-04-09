@@ -6,7 +6,7 @@
 #include "agents/preys/habit_training_prey.h"
 #include "agents/preys/test_prey.h"
 #include "hexaworld.h"
-//11 60 90
+
 using namespace cell_world;
 using namespace std;
 
@@ -22,8 +22,6 @@ int main(int argc, char *args[]){
     string world_name (cp[1].value());
     World world(world_name);
     world.load();
-    for (uint32_t i=0;i<world.size();i++)world[i].value = 0;
-    world.save();
     auto world_cells = world.create_cell_group();
     auto world_graph = world.create_graph();
     Model m(world_cells);
@@ -37,10 +35,10 @@ int main(int argc, char *args[]){
     Map map(world_cells);
     auto goal = map[{0,-7}];
     auto start = map[{0,7}];
-    //Test_prey tp (world_graph);
-    //m.add_agent(tp);
-    Habit_planner ap(world, cg_gates, start, goal, 2, rc);
-    m.add_agent(ap);
+    Test_prey tp (world_graph);
+    m.add_agent(tp);
+    //Habit_planner ap(world, cg_gates, start, goal, .5, rc);
+    //m.add_agent(ap);
     m.iterations = steps;
     Simulation c(m, {width, height}, episodes);
     c.run();

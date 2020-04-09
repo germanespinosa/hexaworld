@@ -1,10 +1,10 @@
-#include <planner_prey.h>
-#include <predator.h>
+#include <agents/preys/planner_prey.h>
+#include <agents/predator.h>
 #include <cell_world.h>
 #include <planner_history.h>
 
 struct Planner_set{
-    Planner_set(const cell_world::World &);
+    Planner_set(const cell_world::World &, const cell_world::Cell &, const Reward_config &);
     cell_world::Model &get_valid_model();
     uint32_t last_contact;
     uint32_t iteration;

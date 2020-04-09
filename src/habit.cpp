@@ -138,8 +138,8 @@ cell_world::Move Habit::policy(const cell_world::Cell &cell) {
 }
 
 Move Habit_value::policy() {
-    vector<double> values;
-    for (auto a:actions) values.push_back(a.reward);
+    vector<double> values (actions.size());
+    for (uint32_t i=0;i<values.size();i++) values[i] = actions[i].reward;
     return actions[Chance::pick_best(1,values)].move;
 }
 

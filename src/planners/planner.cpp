@@ -1,17 +1,17 @@
-#include <planner.h>
+#include <agents/planner.h>
 #include <unistd.h>
 using namespace cell_world;
 using namespace std;
 
-Planner::Planner(const World &w, const Cell &start, const Cell &goal, double interval, Reward_config reward_config):
-        set(w),
+Planner::Planner(World &w, const Cell &start, const Cell &goal, double interval, Reward_config reward_config):
+        set(w, goal,reward_config),
         _graph(w.create_graph()),
         _start(start),
         _goal(goal),
         _interval(interval),
+        _reward_config(reward_config),
+        _world(w),
         Agent({"Prey",1}){
-    set.prey.goal = goal;
-    set.prey.reward_config = reward_config;
 }
 
 Planner::~Planner(){
@@ -23,7 +23,9 @@ void Planner::_planning_job(){
         if (status == Action_pending) {
             Stop_watch sw;
             sw.reset();
-            while (!sw.time_out(_interval) && _running){
+            for (uint32_t i=0; i<5000 && _running; i++)
+            //while (!sw.time_out(_interval) && )
+            {
                 plan();
             }
             set_status(Action_ready);
@@ -38,6 +40,7 @@ void Planner::end_episode(const cell_world::State &) {
 }
 
 void Planner::update_state(const State &state) {
+    if (status == Finished) return;
     auto &prey_cell = cell();
     cout << "prey: " << prey_cell.coordinates;
     if (!state.agents_data.empty()){
@@ -51,7 +54,6 @@ void Planner::update_state(const State &state) {
         cout << "FAIL" <<  endl;
     } else {
         // time to plan
-        // add the records to the history
         if (!state.agents_data.empty()) {
             set.trajectory.clear();
             set.predator.set_fixed_start(state.agents_data[0].cell);
@@ -79,7 +81,12 @@ const Cell &Planner::start_episode(uint32_t steps) {
 
 cell_world::Move Planner::get_move() {
     auto move = get_best_move();
+    // add the records to the history
     set.trajectory.push_back(move);
     cout << "best move " <<  move <<  endl;
     return move;
+}
+
+void Planner::receive_message(const cell_world::Agent_message &m) {
+    if (m.from.name == "predator") set_status(Finished);
 }

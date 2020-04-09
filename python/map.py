@@ -24,3 +24,4 @@ G.add_edge(3,2);
 c=nx.eigenvector_centrality(G)
 
 print(['%s %0.6f'%(node,c[node]) for node in c])
+

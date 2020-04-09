@@ -3,10 +3,10 @@
 #include <thread>         // std::thread
 #include <mutex>          // std::mutex
 #include "utils.h"
-#include "predator.h"
+#include "agents/predator.h"
 #include "hexaworld.h"
 #include <sys/stat.h>
-#include "habit_training.h"
+#include "agents/preys/habit_training_prey.h"
 
 using namespace cell_world;
 using namespace std;
@@ -17,7 +17,7 @@ double show_progress(uint32_t episodes, uint32_t &episode);
 
 struct Thread_data{
     Thread_data(Cell_group c,uint32_t es,uint32_t s,uint32_t &e,uint32_t &su, Graph &g):
-    cells(c), episodes(es), steps(s), episode(e), success(su), graph(g){};
+            cells(c), episodes(es), steps(s), episode(e), success(su), graph(g){};
     Cell_group cells;
     uint32_t episodes;
     uint32_t steps;
@@ -30,7 +30,7 @@ struct Thread_data{
 
 mutex mtx;
 vector<Thread_data> threads_data;
-Reward_config rc {100,-100,-50, .99,-1};
+Reward_config rc {100,-100,-100, .99,-1};
 
 int main(int argc, char *args[]){
     Cmd_parameters cp(argc,args);
@@ -76,11 +76,10 @@ int main(int argc, char *args[]){
 void run_training(uint32_t thread){
     auto &data = threads_data[thread];
     Predator predator(data.graph);
-    Habit_training ht(data.habits, rc, .9);
+    Habit_training_prey ht(data.habits, rc,.9);
     Model m(data.cells);
     m.add_agent(predator);
     m.add_agent(ht);
-    m.iterations = data.steps;
     for (;;) {
         mtx.lock();
         if (data.episode < data.episodes) {
@@ -95,12 +94,12 @@ void run_training(uint32_t thread){
             s.run();
         } else {
             m.start_episode();
-            while (m.update());
+            for (uint32_t i = 0; i < data.steps && m.update(); i++);
             m.end_episode();
         }
     }
     mtx.lock();
-    data.success += ht.success;
+    data.success += ht.successes;
     mtx.unlock();
 }
 
@@ -116,7 +115,7 @@ double show_progress(uint32_t episodes, uint32_t &episode){
             bar[progress/2+1]='=';
             bar[progress/2+2]='>';
             double elapsed = iteration_watch.elapsed();
-            cout << "\r" << bar << (progress<10?" ":"") << progress << "% (" << episode << "/" << episodes << ") - " << (int)elapsed << "s (" <<(double)episode/elapsed << " episodes per sec.)" << flush;
+            cout << "\r" << bar << (progress<10?" ":"") << progress << "% (" << episode << "/" << episodes << ") - " << (int)elapsed << "s (" <<(double)episode/elapsed << " episodes per sec.)    " << flush;
         }
         if (episode >= episodes) break;
     }

@@ -2,9 +2,9 @@
 #include <iostream>
 #include <stdlib.h>
 #include "utils.h"
-#include "predator.h"
-#include "test_prey.h"
-#include "habit_training.h"
+#include "agents/predator.h"
+#include "agents/preys/test_prey.h"
+#include "agents/preys/habit_training_prey.h"
 #include "hexaworld.h"
 #include <sys/stat.h>
 
@@ -30,6 +30,17 @@ struct Handler : Viewer_handler{
             world[i].value = 0;
         }
         _current_habit = 0;
+    }
+    void on_mouse_up(Mouse_button b, Location l, int32_t i) override {
+        if (i==Not_found) return;
+        int32_t hi= _habits[_current_habit].nodes.find(_world[i]);
+        if (hi==Not_found) return;
+        cout << _world[i] << endl;
+        cout << "values:" << endl;
+        for (auto &a:_habits[_current_habit].values[hi].actions){
+            cout << a.move << ": " << a.visits << " - " << a.reward  << endl;
+        }
+        cout << endl;
     }
     void on_key_up(Key key) override {
         if (key == Key::code('q') ) {

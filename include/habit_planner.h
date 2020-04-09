@@ -1,13 +1,13 @@
 #pragma once
 
 #include <fixed_time_planner.h>
-#include <predator.h>
-#include <planner_prey.h>
-#include <planner.h>
+#include <agents/predator.h>
+#include <agents/preys/planner_prey.h>
+#include <agents/planner.h>
 #include <habit.h>
 
 struct Habit_planner : Planner {
-    explicit Habit_planner(const cell_world::World &, const cell_world::Cell_group &, const cell_world::Cell &,
+    explicit Habit_planner( cell_world::World &, const cell_world::Cell_group &, const cell_world::Cell &,
                            const cell_world::Cell &, double , Reward_config);
     void plan() override ;
     void update_state() override;
