@@ -1,7 +1,6 @@
 #pragma once
-#include <hexaworld.h>
 #include <cell_world.h>
-#include <option.h>
+#include <habits/option.h>
 #include <reward_config.h>
 
 struct Habit_action{

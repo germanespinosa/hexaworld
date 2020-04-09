@@ -20,9 +20,6 @@ void Habit_planner::plan() {
     uint32_t option = Chance::dice(options.size());
     auto prey_cell = set.prey.cell();
     auto cur_cell = cell();
-    if (cur_cell.coordinates != prey_cell.coordinates) {
-        cout << "model is not valid" << endl;
-    }
     auto move = options[option].get().policy(prey_cell);
     set.prey.set_move(move);
     auto habits = options;

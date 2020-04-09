@@ -2,7 +2,6 @@
 #include <ge211.h>
 #include <cell_world.h>
 #include "utils.h"
-#include "hexaworld.h"
 
 #define ADJACENT_CELLS cell_world::Connection_pattern({{-2,0},{-1,-1},{1,-1},{2,0},{1,1},{-1,1}})
 using namespace ge211;

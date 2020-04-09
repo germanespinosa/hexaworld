@@ -5,7 +5,6 @@
 #include "agents/preys/planners/habit_planner.h"
 #include "agents/preys/habit_training_prey.h"
 #include "agents/preys/test_prey.h"
-#include "hexaworld.h"
 
 using namespace cell_world;
 using namespace std;

@@ -1,7 +1,6 @@
 #include<catch.h>
 #include<cell_world.h>
-#include<hexaworld.h>
-#include<habit.h>
+#include<habits/habit.h>
 #include<iostream>
 
 using namespace cell_world;

@@ -2,7 +2,6 @@
 #include <iostream>
 #include <stdlib.h>
 #include "utils.h"
-#include "hexaworld.h"
 #include <sys/stat.h>
 
 using namespace cell_world;

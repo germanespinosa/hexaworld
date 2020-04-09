@@ -1,6 +1,5 @@
 #pragma once
 #include <cell_world.h>
-#include <hexaworld.h>
 
 struct Predator : cell_world::Agent {
     explicit Predator(cell_world::Graph &);

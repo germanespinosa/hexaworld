@@ -1,6 +1,5 @@
 #pragma once
 #include <agents/prey.h>
-#include <hexaworld.h>
 
 struct Test_prey : Prey {
     explicit Test_prey(cell_world::Graph &);

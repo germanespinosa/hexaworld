@@ -1,7 +1,6 @@
-#include <hexaworld.h>
 #include <fstream>
 #include <iostream>
-#include <habit.h>
+#include <habits/habit.h>
 
 using namespace cell_world;
 using namespace std;

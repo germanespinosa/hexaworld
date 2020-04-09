@@ -1,6 +1,5 @@
 #include<catch.h>
 #include<cell_world.h>
-#include <hexaworld.h>
 #include <core.h>
 #include<iostream>
 #include<reward_config.h>

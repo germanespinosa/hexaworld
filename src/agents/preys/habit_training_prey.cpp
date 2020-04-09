@@ -1,4 +1,3 @@
-#include <hexaworld.h>
 #include <agents/preys/habit_training_prey.h>
 #include <fstream>
 #include <iostream>

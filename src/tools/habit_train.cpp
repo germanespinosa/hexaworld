@@ -4,7 +4,6 @@
 #include <mutex>          // std::mutex
 #include "utils.h"
 #include "agents/predator.h"
-#include "hexaworld.h"
 #include <sys/stat.h>
 #include "agents/preys/habit_training_prey.h"
 

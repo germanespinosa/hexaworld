@@ -3,7 +3,6 @@
 #include <agents/prey.h>
 #include <reward_config.h>
 #include <planner_history.h>
-#include <hexaworld.h>
 
 struct Planner_prey: Prey {
     explicit Planner_prey(const cell_world::Cell &);

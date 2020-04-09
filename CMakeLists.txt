@@ -7,14 +7,12 @@ include_directories( include )
 
 add_library( hexaworld
         include/agents/predator.h
-        include/hexaworld.h
         include/reward_config.h
         include/utils.h
-        include/habit.h
+        include/habits/habit.h
         include/agents/preys/habit_training_prey.h
-        include/option.h
+        include/habits/option.h
         include/agents/preys/test_prey.h
-        include/cell_option.h
         include/planner_history.h
         include/agents/preys/planners/action_planner.h
         include/agents/preys/planner.h
@@ -24,20 +22,18 @@ add_library( hexaworld
         include/agents/preys/planners/habit_planner.h
         include/agents/prey.h
         src/utils.cpp
-        src/hexaworld.cpp
         src/reward_config.cpp
-        src/habit.cpp
+        src/habits/habit.cpp
         src/agents/preys/habit_training_prey.cpp
         src/agents/predator.cpp
-        src/option.cpp
+        src/habits/option.cpp
         src/agents/preys/test_prey.cpp
-        src/cell_option.cpp
         src/planners/planner_history.cpp
         src/agents/preys/planner.cpp
         src/planners/planner_set.cpp
-        src/planners/action_planner.cpp
+        src/agents/preys/planners/action_planner.cpp
         src/agents/preys/planner_prey.cpp
-        src/planners/habit_planner.cpp
+        src/agents/preys/planners/habit_planner.cpp
         src/agents/prey.cpp)
 
 

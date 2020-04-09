@@ -2,7 +2,6 @@
 #include <ge211.h>
 #include <cell_world.h>
 #include "utils.h"
-#include "hexaworld.h"
 #include "agents/predator.h"
 #include "agents/preys/habit_training_prey.h"
 #include <time.h>   	// for clock_t, clock(), CLOCKS_PER_SEC

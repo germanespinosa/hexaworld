@@ -3,7 +3,7 @@
 #include <agents/predator.h>
 #include <agents/preys/planner_prey.h>
 #include <agents/preys/planner.h>
-#include <habit.h>
+#include <habits/habit.h>
 
 struct Habit_planner : Planner {
     explicit Habit_planner( cell_world::World &, const cell_world::Cell_group &, const cell_world::Cell &,
