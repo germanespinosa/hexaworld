@@ -44,11 +44,6 @@ void Action_planner::update_state() {
 
 cell_world::Move Action_planner::get_best_move() {
     uint32_t option = 0;
-    cout << endl << endl;
-    for (uint32_t i = 0; i < options.size(); i++){
-        cout << options[i] << " :" << visits[i] << " = " << rewards[i] << " - " << successes[i] << " " << unknowns[i] << " " << fails[i] << endl;
-        if (rewards[i] > rewards[option]) option = i;
-    }
-    cout << endl << endl;
+    for (uint32_t i = 0; i < options.size(); i++) if (rewards[i] > rewards[option]) option = i;
     return options[option];
 }
