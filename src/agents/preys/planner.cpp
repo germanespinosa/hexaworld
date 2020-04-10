@@ -37,11 +37,6 @@ void Planner::end(Episode_result, uint32_t) {
 
 void Planner::update(const State &state) {
     auto &prey_cell = cell();
-    cout << "prey: " << prey_cell.coordinates;
-    if (!state.agents_data.empty()){
-        cout << " predator: " << state.agents_data[0].cell.coordinates << " " << (state.agents_data[0].cell == prey_cell);
-    }
-    cout << endl;
     // time to plan
     if (!state.agents_data.empty()) {
         set.trajectory.clear();
@@ -72,6 +67,5 @@ cell_world::Move Planner::get_move() {
     auto move = get_best_move();
     // add the records to the history
     set.trajectory.push_back(move);
-    cout << "best move " <<  move <<  endl;
     return move;
 }

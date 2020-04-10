@@ -1,8 +1,7 @@
 #include<catch.h>
-#include<cell_world.h>
-#include <core.h>
 #include<iostream>
 #include<reward_config.h>
+
 using namespace cell_world;
 using namespace std;
 

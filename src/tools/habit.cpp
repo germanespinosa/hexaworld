@@ -3,8 +3,6 @@
 #include "utils.h"
 #include "agents/predator.h"
 #include "agents/preys/planners/habit_planner.h"
-#include "agents/preys/habit_training_prey.h"
-#include "agents/preys/test_prey.h"
 //11 60 90
 using namespace cell_world;
 using namespace std;
@@ -36,8 +34,6 @@ int main(int argc, char *args[]){
     Map map(world_cells);
     auto goal = map[{0,-7}];
     auto start = map[{0,7}];
-    //Test_prey tp (world_graph);
-    //m.add_agent(tp);
     Habit_planner ap(world, cg_gates, start, goal, 2, rc);
     m.add_agent(ap);
     m.iterations = steps;

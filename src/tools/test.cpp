@@ -2,8 +2,6 @@
 #include <iostream>
 #include "utils.h"
 #include "agents/predator.h"
-#include "agents/preys/planners/habit_planner.h"
-#include "agents/preys/habit_training_prey.h"
 #include "agents/preys/test_prey.h"
 
 using namespace cell_world;
@@ -29,15 +27,12 @@ int main(int argc, char *args[]){
     Cell_group cg_gates = world.create_cell_group( world_name + "_gates" );
     Graph gates_graph(cg_gates);
     Graph gate_connections(world_cells);
-    vector<Habit> world_habits = Habit::get_habits(world_graph, gates_graph, world_name);
     Reward_config rc {100,-100,-80, 1,0};
     Map map(world_cells);
     auto goal = map[{0,-7}];
     auto start = map[{0,7}];
     Test_prey tp (world_graph);
     m.add_agent(tp);
-    //Habit_planner ap(world, cg_gates, start, goal, .5, rc);
-    //m.add_agent(ap);
     m.iterations = steps;
     Simulation c(m, {width, height}, episodes);
     c.run();
