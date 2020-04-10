@@ -1,7 +1,6 @@
 #include <agents/preys/planner_prey.h>
 #include <agents/predator.h>
 #include <cell_world.h>
-#include <planner_history.h>
 
 struct Planner_set{
     Planner_set(const cell_world::World &, const cell_world::Cell &, const Reward_config &);
