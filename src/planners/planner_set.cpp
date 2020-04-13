@@ -4,14 +4,12 @@ using namespace cell_world;
 using namespace std;
 
 Planner_set::Planner_set(const cell_world::World &w, const Cell &goal, const Reward_config &rc ):
-        world(w),
         cell_group(w.create_cell_group()),
         graph(w.create_graph()),
         model(cell_group),
         prey(goal),
         predator(graph),
-        last_contact(Not_found),
-        iteration(0){
+        last_contact(Not_found){
     model.add_agent(predator);
     model.add_agent(prey);
 }

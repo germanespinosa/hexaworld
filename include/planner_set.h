@@ -6,8 +6,6 @@ struct Planner_set{
     Planner_set(const cell_world::World &, const cell_world::Cell &, const Reward_config &);
     cell_world::Model &get_valid_model();
     int32_t last_contact;
-    uint32_t iteration;
-    const cell_world::World &world;
     cell_world::Cell_group cell_group;
     cell_world::Graph graph;
     cell_world::Model model;

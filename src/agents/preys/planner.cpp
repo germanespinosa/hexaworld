@@ -42,8 +42,6 @@ void Planner::update(const State &state) {
         set.predator.set_fixed_start(state.agents_data[0].cell);
         set.prey.set_start_cell(prey_cell);
         set.last_contact = state.iteration;
-    } else {
-        set.iteration = state.iteration;
     }
     // triggers the planning
     set.model.iterations = state.iterations;
@@ -53,7 +51,6 @@ void Planner::update(const State &state) {
 
 const Cell &Planner::start(uint32_t steps) {
     set.prey.set_start_cell(_start);
-    set.iteration = 0;
     set.model.iterations = steps;
     _thread = new std::thread(&Planner::_planning_job, this);
     set_goal(goal);
