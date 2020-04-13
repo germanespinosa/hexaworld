@@ -5,34 +5,33 @@ using namespace std;
 
 Planner::Planner(World &w, const Cell &start, const Cell &goal, double interval, Reward_config reward_config):
         set(w, goal,reward_config),
+        planning_iterations(5000),
         _graph(w.create_graph()),
         _start(start),
         goal(goal),
         _interval(interval),
         _reward_config(reward_config),
-        _world(w){
+        _world(w),
+        _running(true){
 }
 
 void Planner::_planning_job(){
-    _running = true;
     while(_running){
         if (status == Action_pending) {
             Stop_watch sw;
             sw.reset();
-            for (uint32_t i=0; i<5000 && _running; i++)
+            for (uint32_t i = 0; i < planning_iterations && _running; i++)
             //while (!sw.time_out(_interval) && )
-            {
                 plan();
-            }
             set_status(Action_ready);
         }
     }
-    _running = true;
 }
 
-void Planner::end(Episode_result, uint32_t) {
+void Planner::end(Episode_result r , uint32_t l) {
     _running = false;
     _thread->join();
+    cout << (r == Success ? 1 : 0) << ", " << l << ", " << _reward_config.value(r,l);
 }
 
 void Planner::update(const State &state) {
@@ -48,10 +47,8 @@ void Planner::update(const State &state) {
     }
     // triggers the planning
     set.model.iterations = state.iterations;
-    //_mutex.lock();
     update_state();
     set_status(Action_pending);
-    //_mutex.unlock();
 }
 
 const Cell &Planner::start(uint32_t steps) {

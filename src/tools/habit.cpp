@@ -10,11 +10,13 @@ using namespace std;
 int main(int argc, char *args[]){
     Cmd_parameters cp(argc,args);
     cp[1].check_present().check_file_exist(".world");
+    bool show = cp["-show"].present();
     int64_t p_seed = cp["-seed"].default_value(-1).check_range(-1,65535).int_value();
     uint16_t steps = cp["-steps"].int_value(80);
     uint32_t episodes = cp["-episodes"].int_value(1);
     int width = cp["-width"].int_value(1024);
     int height = cp["-height"].int_value(768);
+    int planning_iterations = cp["-pi"].int_value(5000);
     set_seed(p_seed);
     string world_name (cp[1].value());
     World world(world_name);
@@ -30,13 +32,17 @@ int main(int argc, char *args[]){
     Graph gates_graph(cg_gates);
     Graph gate_connections(world_cells);
     vector<Habit> world_habits = Habit::get_habits(world_graph, gates_graph, world_name);
-    Reward_config rc {100,-100,-80, 1,0};
+    Reward_config rc {100,-100,-100, 1,0};
     Map map(world_cells);
     auto goal = map[{0,-7}];
     auto start = map[{0,7}];
     Habit_planner ap(world, cg_gates, start, goal, 2, rc);
+    ap.planning_iterations = planning_iterations;
     m.add_agent(ap);
     m.iterations = steps;
     Simulation c(m, {width, height}, episodes);
-    c.run();
+    if (show)
+        c.run();
+    else
+        c.run_silent(false);
 }

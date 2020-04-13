@@ -16,6 +16,7 @@ struct Planner : Prey {
     virtual void plan() = 0;
     virtual cell_world::Move get_best_move() = 0;
     Planner_set set;
+    uint32_t planning_iterations;
 
 protected:
     const cell_world::Cell &_start;

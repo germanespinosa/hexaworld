@@ -1,0 +1,6 @@
+#/bin/bash
+for ((I=$1;I<=$2;I+=$3))
+do
+    echo $I
+    ./compare 100 $I > log$I
+done
