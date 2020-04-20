@@ -3,8 +3,11 @@
 using namespace cell_world;
 using namespace std;
 
-Action_planner::Action_planner( World &w, const Cell &s, const Cell &g, double time, Reward_config rc):
-Planner( w , s , g , time , rc ){}
+Action_planner::Action_planner( World &w, const Cell &s, const Cell &g, double time, Reward_config rc, uint32_t k):
+Planner( w , s , g , time , rc, k ){}
+
+Action_planner::Action_planner( World &w, const Cell &s, const Cell &g, uint32_t i, Reward_config rc, uint32_t k):
+        Planner( w , s , g , i , rc, k ){}
 
 void Action_planner::plan() {
     Model &model = set.get_valid_model();
@@ -17,29 +20,15 @@ void Action_planner::plan() {
         set.prey.set_move(move);
     }
     model.end_episode();
-    switch (set.prey.result){
-        case Success:
-            successes[option]++;
-            break;
-        case Fail:
-            fails[option]++;
-            break;
-        case Unknown:
-            unknowns[option]++;
-            break;
-    }
     double reward = _reward_config.value(set.prey.result, set.prey.lenght);
     rewards[option] = ( rewards[option] * visits[option] + reward )/( visits[option] + 1 );
     visits[option]++;
 }
 
-void Action_planner::update_state() {
+void Action_planner::update_state(uint32_t &) {
     options = _graph.get_connectors(cell());
     rewards = vector<double>(options.size(),0);
     visits = vector<uint32_t>(options.size(),0);
-    fails = vector<uint32_t>(options.size(),0);
-    successes = vector<uint32_t>(options.size(),0);
-    unknowns = vector<uint32_t>(options.size(),0);
 }
 
 cell_world::Move Action_planner::get_best_move() {

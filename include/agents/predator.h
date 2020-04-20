@@ -8,6 +8,7 @@ struct Predator : cell_world::Agent {
     cell_world::Coordinates get_move() override ;
     void end_episode(const cell_world::State &) override ;
     void set_fixed_start(const cell_world::Cell &);
+    void set_random_start();
     void set_view_range(double);
     bool _fixed_start;
 

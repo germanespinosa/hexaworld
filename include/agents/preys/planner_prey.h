@@ -15,10 +15,8 @@ struct Planner_prey: Prey {
 
     cell_world::Cell goal;
     bool contact;
-    uint32_t current_move;
     cell_world::Cell start_cell;
     cell_world::Move next_move;
 
     Episode_result result;
-    uint32_t lenght;
 };

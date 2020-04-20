@@ -16,6 +16,8 @@ struct Prey : cell_world::Agent {
 
     void set_goal(const cell_world::Cell &);
 
+    uint32_t lenght;
+
 private:
     bool _eaten;
     bool _ready;

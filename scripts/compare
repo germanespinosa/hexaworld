@@ -1,10 +1,10 @@
 #/bin/bash
 R=$1
-echo
-echo "seed,silver_result, silver_len, silver_reward, habit_result, habit_len, habit_reward"
+echo "seed,silver_result, silver_len, silver_reward, habit_result, habit_len, habit_reward" > $2
 for ((I=1;I<=$R;I++))
 do
-    SILVER=$(./silver square_world -seed $I -pi $2)
-    HABIT=$(./habit square_world -seed $I -pi $2)
-    echo "$I,$SILVER,$HABIT"
+    SILVER=$(./silver square_world -seed $I $3 $4 $5 $6 $7 $8 $9 $10)
+    HABIT=$(./habit square_world -seed $I $3 $4 $5 $6 $7 $8 $9 $10)
+    echo "$I,$SILVER,$HABIT" >> $2
+    echo "$2,$I"
 done

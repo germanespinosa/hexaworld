@@ -3,13 +3,21 @@
 using namespace std;
 using namespace cell_world;
 
-Habit_planner::Habit_planner( World &world, const Cell_group &gates, const Cell &start, const Cell &goal, double time, Reward_config rc) :
-    Planner( world, start, goal, time, rc),
-    _habit_set(world, gates)
+Habit_planner::Habit_planner( World &world, const Cell_group &gates, const Cell &start, const Cell &goal, double time, Reward_config rc, uint32_t k) :
+    Planner( world, start, goal, time, rc, k),
+    _habit_set(world, gates),
+    _last_destination(Not_found)
 {
 }
 
-void Habit_planner::update_state() {
+Habit_planner::Habit_planner( World &world, const Cell_group &gates, const Cell &start, const Cell &goal, uint32_t i, Reward_config rc, uint32_t k) :
+        Planner( world, start, goal, i, rc, k),
+        _habit_set(world, gates),
+        _last_destination(Not_found)
+{
+}
+
+void Habit_planner::update_state(uint32_t &) {
     options = _habit_set[cell()];
     rewards = vector<double>(options.size(),0);
     visits = vector<uint32_t>(options.size(),0);
@@ -42,9 +50,9 @@ void Habit_planner::plan() {
 }
 
 cell_world::Move Habit_planner::get_best_move() {
-    uint32_t option = 0;
-    for (uint32_t i=0;i<_world.size();i++)_world[i].value = 0;
-    for (uint32_t i = 0; i < options.size(); i++) if (rewards[i] > rewards[option]) option = i;
-    _world[options[option].get().destination.id].value = 1;
+    if (_last_destination != Not_found) _world[_last_destination].icon = Icon::No_icon;
+    uint32_t option = Chance::pick_best(1,rewards);
+    _last_destination = options[option].get().destination.id;
+    _world[_last_destination].icon = Icon::Custom_icon_1;
     return options[option].get().policy(cell());
 }

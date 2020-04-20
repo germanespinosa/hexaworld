@@ -15,9 +15,11 @@ int main(int argc, char *args[]){
     int64_t p_seed = cp["-seed"].default_value(-1).check_range(-1,65535).int_value();
     uint16_t steps = cp["-steps"].int_value(80);
     uint32_t episodes = cp["-episodes"].int_value(1);
+    uint32_t k = cp["-k"].int_value(10000);
     int width = cp["-width"].int_value(1024);
     int height = cp["-height"].int_value(768);
-    int planning_iterations = cp["-pi"].int_value(5000);
+    uint32_t planning_iterations = cp["-pi"].int_value(5000);
+    float time = cp["-pt"].double_value(1);
     set_seed(p_seed);
     string world_name (cp[1].value());
     World world(world_name);
@@ -34,9 +36,10 @@ int main(int argc, char *args[]){
     Map map(world_cells);
     auto goal = map[{0,-7}];
     auto start = map[{0,7}];
-    Action_planner ap(world, start,goal,1, rc);
-    ap.planning_iterations = planning_iterations;
-    m.add_agent(ap);
+    Action_planner apt(world, start,goal,time, rc,k);
+    Action_planner api(world, start,goal, planning_iterations, rc,k);
+    if (cp["-pt"].present()) m.add_agent(apt);
+    else m.add_agent(api);
     m.iterations = steps;
     Simulation c(m, {width, height}, episodes);
     if (show)

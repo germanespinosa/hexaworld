@@ -1,6 +1,13 @@
 #/bin/bash
-for ((I=$1;I<=$2;I+=$3))
+TIMES=$(echo $1 | tr "," "\n")
+
+for t in $TIMES
 do
-    echo $I
-    ./compare 100 $I > log$I
+    echo $t
+    ms="000$t"
+    ms=${ms: -4}
+    sec="${ms: -4: 1}.${ms: -3}"
+    file_name="${ms}ms.log"
+    #echo "./compare 100 ${file_name} -pt $sec -k 300"
+    ./compare 100 ${file_name} -pt $sec -k 300
 done

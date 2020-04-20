@@ -15,10 +15,13 @@ Predator::Predator(Graph &graph)
 
 const Cell &Predator::start_episode(uint32_t) {
     L("Predator::start_episode(const State &) start");
+    _chasing = false;
     set_color(Blue);
     set_status(Action_ready);
+    data.icon = Icon::Predator_icon;
     if (_fixed_start) return _start;
     auto &cell = _graph.nodes[Chance::dice(_graph.nodes.size())];
+    Coordinates c = {1,7};
     L("Predator::start_episode(const State &) end");
     return cell;
 }
@@ -84,4 +87,8 @@ void Predator::set_view_range(double range) {
         _use_view_range = true;
         _view_range = range;
     }
+}
+
+void Predator::set_random_start() {
+    _fixed_start = false;
 }

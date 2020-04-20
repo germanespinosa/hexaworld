@@ -15,7 +15,7 @@ add_library( hexaworld
         include/agents/preys/test_prey.h
         include/agents/preys/planners/action_planner.h
         include/agents/preys/planner.h
-        include/planner_set.h
+        include/planner/particle_filter.h
         include/agents/preys/planner_prey.h
         include/agents/preys/planners/action_planner.h
         include/agents/preys/planners/habit_planner.h
@@ -28,7 +28,7 @@ add_library( hexaworld
         src/habits/option.cpp
         src/agents/preys/test_prey.cpp
         src/agents/preys/planner.cpp
-        src/planners/planner_set.cpp
+        src/planner/particle_filter.cpp
         src/agents/preys/planners/action_planner.cpp
         src/agents/preys/planner_prey.cpp
         src/agents/preys/planners/habit_planner.cpp
@@ -85,7 +85,7 @@ file(COPY ${scripts_glob} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 ### COPY CUSTOM ICONS
 ###
 
-cellworld_add_custom_icon(icons/bridge.png)
+cellworld_add_custom_icon(icons/bridge.png icons/destination.png)
 
 ###
 ### TESTS CONFIGURATION
