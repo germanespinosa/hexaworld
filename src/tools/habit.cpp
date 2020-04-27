@@ -29,6 +29,14 @@ int main(int argc, char *args[]){
     auto world_graph = world.create_graph();
     Model m(world_cells);
     Predator predator(world_graph);
+    if (cp["-slx"].present() && cp["-sly"].present()){
+        Map m(world_cells);
+        Coordinates coo ;
+        coo.x = (int8_t) (cp["-slx"].int_value());
+        coo.y = (int8_t) (cp["-sly"].int_value());
+        predator.set_fixed_start(m[coo]);
+    }
+    predator.track_history();
     m.add_agent(predator);
     Cell_group cg_gates = world.create_cell_group( world_name + "_gates" );
     Graph gates_graph(cg_gates);
@@ -48,4 +56,6 @@ int main(int argc, char *args[]){
         c.run();
     else
         c.run_silent(false);
+    cout << ",";
+    print_history(predator.history);
 }

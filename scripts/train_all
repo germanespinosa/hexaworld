@@ -1,0 +1,17 @@
+#!/bin/bash
+_dfiles="*.csv"
+
+R=200
+for ((I=1;I<=$R;I++))
+do
+  for f in $_dfiles
+  do
+          NAME=`echo "$f" | cut -d'.' -f1`
+          echo $NAME
+          timeout 60 ./train $NAME
+          if [ $? -ne 0 ] # if it takes too long or fails, it tries again once
+          then
+            timeout 60 ./train $NAME
+          fi
+  done
+done

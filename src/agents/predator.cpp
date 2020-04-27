@@ -5,11 +5,10 @@ using namespace cell_world;
 using namespace std;
 
 Predator::Predator(Graph &graph)
-    : _use_view_range(false)
-    , _fixed_start (false)
+    : _fixed_start (false)
     , _chasing (false)
     , _graph(graph)
-    , _first_episode(true)
+    , _track_history(false)
     , Agent({"predator", 1}) {
 }
 
@@ -21,28 +20,27 @@ const Cell &Predator::start_episode(uint32_t) {
     data.icon = Icon::Predator_icon;
     if (_fixed_start) return _start;
     auto &cell = _graph.nodes[Chance::dice(_graph.nodes.size())];
-    Coordinates c = {1,7};
     L("Predator::start_episode(const State &) end");
+    if (_track_history) history.clear();
     return cell;
 }
 
 void Predator::update_state(const State &state) {
     L("Predator::update_state(const cell_world::State &state) start");
     auto predator_cell = cell();
+    if (_track_history) history.push_back(predator_cell.coordinates);
     set_color(Blue);
     _contact = false;
     if ( !state.agents_data.empty() ) {
         auto prey_cell = state.agents_data[0].cell;
-        if ( !_use_view_range || predator_cell.location.dist(prey_cell.location) < _view_range ) {
-            set_color(Yellow);
-            _chasing = true;
-            _last_prey_cell = prey_cell;
-            _contact = true;
-        }
+        set_color(Yellow);
+        _chasing = true;
+        _last_prey_cell = prey_cell;
+        _contact = true;
     }
     if (predator_cell == _last_prey_cell) _chasing = false;
 
-    if (_chasing){
+    if (_chasing && Chance::dice(4)){
         auto nc = cell();
         auto dice = Chance::dice(2);
         do {
@@ -81,14 +79,10 @@ void Predator::set_fixed_start(const Cell &cell) {
     _start = cell;
 }
 
-void Predator::set_view_range(double range) {
-    if (range <=0 ) _use_view_range = false;
-    else {
-        _use_view_range = true;
-        _view_range = range;
-    }
-}
-
 void Predator::set_random_start() {
     _fixed_start = false;
+}
+
+void Predator::track_history() {
+    _track_history = true;
 }

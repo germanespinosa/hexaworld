@@ -1,0 +1,30 @@
+#!/bin/bash
+
+if (($# < 6))
+then
+  echo "usage:"
+  echo "   run_world [sim_number] [entropy] [repetitions] [planning_iteration] [k] [pred_starting_pos1] [pred_starting_pos2] [pred_starting_pos3] [pred_starting_pos4]... "
+  echo "   pred_starting_pos format: (x;y) "
+else
+    world="OcclusionCoordinates_$1_$2"
+    R=$#
+    start=`date +%s`
+    echo "World $world started"
+    echo "seed, starting_position, habit_result, habit_len, habit_reward, prey_trajectory, predator_trajectory" > ${6}${world}.log
+    for ((I=7;I<=$R;I++))
+    do
+        tuple=${!I}
+        x=$(echo "$tuple" | cut -d';' -f 1 | cut -d'(' -f 2)
+        y=$(echo "$tuple" | cut -d';' -f 2 | cut -d')' -f 1)
+        ./run_episode $3 $world ${6}${world} $4 $5 $x $y &
+        pids[$((I-7))]=$!
+    done
+
+    for pid in ${pids[*]}; do
+        wait $pid
+    done
+    end=`date +%s`
+    runtime=$((end-start))
+
+    echo "World $world completed. Exec time $runtime"
+fi

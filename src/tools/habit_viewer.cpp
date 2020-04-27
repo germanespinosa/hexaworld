@@ -66,7 +66,7 @@ struct Handler : Viewer_handler{
             _world[cell.id].direction = _habits[_current_habit].values[i].policy();
         }
         _world[_habits[_current_habit].destination.id].icon = Bridge_icon;
-        _world[_habits[_current_habit].destination.id].direction = {0,1};
+        _world[_habits[_current_habit].destination.id].direction = Coordinates({0,1});
         cells_view[1].cells.clear();
         cells_view[1].cells.add(_habits[_current_habit].destination);
     }

@@ -9,14 +9,12 @@ struct Predator : cell_world::Agent {
     void end_episode(const cell_world::State &) override ;
     void set_fixed_start(const cell_world::Cell &);
     void set_random_start();
-    void set_view_range(double);
+    void track_history();
     bool _fixed_start;
-
+    std::vector<cell_world::Coordinates> history;
 private:
-    bool _use_view_range;
-    double _view_range;
+    bool _track_history;
     cell_world::Cell _start;
-    bool _first_episode;
     bool _chasing;
     bool _contact;
     cell_world::Cell _last_prey_cell;

@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <ctime>
+#include <cell_world.h>
+
 
 struct Cmd_parameter{
     bool present();
@@ -56,3 +58,4 @@ void print_hexamap_help();
 void set_seed (int32_t seed);
 void create_folder(std::string );
 double round(double,int);
+void print_history(std::vector<cell_world::Coordinates> history);

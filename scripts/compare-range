@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 TIMES=$(echo $1 | tr "," "\n")
 
 for t in $TIMES

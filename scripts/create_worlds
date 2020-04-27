@@ -1,0 +1,9 @@
+#!/bin/bash
+_dfiles="*.csv"
+
+for f in $_dfiles
+do
+        NAME=`echo "$f" | cut -d'.' -f1`
+        ./from_occlussions $NAME
+        ./find_point_of_interest $NAME "(-1,0);(1,0)/(0,-1);(0,1)" "(0,7);(0,-7)"
+done

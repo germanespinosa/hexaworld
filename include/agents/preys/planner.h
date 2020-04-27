@@ -24,7 +24,7 @@ protected:
     cell_world::Graph _graph;
     Reward_config _reward_config;
     cell_world::World &_world;
-
+    std::vector<cell_world::Coordinates> _history;
 private:
     uint32_t _particle_count;
     void _planning_job();

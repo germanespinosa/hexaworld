@@ -4,6 +4,15 @@
 #include "utils.h"
 
 using namespace std;
+using namespace cell_world;
+
+void print_history(vector<Coordinates> history){
+    auto sep = "";
+    for (auto c: history) {
+        cout << sep << (int)c.x << ";" << (int)c.y;
+        sep = "/";
+    }
+}
 
 void set_seed (int32_t seed){
     if (seed>0)
@@ -60,7 +69,7 @@ Cmd_parameter Cmd_parameters::operator[](const std::string& name) {
     cp._name = name;
     for (int i=0; i < argc; i++){
         if (name == args[i]) {
-            if (i+1<argc && args[i+1][0]!='-') cp._content = args[i+1];
+            if (i+1<argc) cp._content = args[i+1];
             cp._present = true;
             return cp;
         }

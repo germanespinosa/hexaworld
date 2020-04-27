@@ -71,6 +71,12 @@ target_link_libraries( train_habit hexaworld )
 add_executable( square src/tools/square_world.cpp)
 target_link_libraries( square hexaworld )
 
+add_executable( from_occlussions src/tools/from_occlussion.cpp)
+target_link_libraries( from_occlussions hexaworld )
+
+add_executable( find_point_of_interest src/tools/find_point_of_interest.cpp )
+target_link_libraries( find_point_of_interest hexaworld )
+
 ###
 ### COPY WORLDS
 ###

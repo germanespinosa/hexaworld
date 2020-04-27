@@ -33,7 +33,6 @@ int main (int argc, char *args[]) {
         cout << "Fixed predator location - " << flush;
         predator.set_fixed_start(map[{0,0}]);
     }
-    predator.set_view_range(5);
     if (cp["-seedvalues"].present()) cout << "Seed values - " << flush;
     Model m(cg);
     m.add_agent(predator);

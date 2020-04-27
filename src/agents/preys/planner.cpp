@@ -29,11 +29,15 @@ Planner::Planner(World &w, const Cell &start, const Cell &goal, uint32_t plannin
 
 
 void Planner::end(Episode_result r , uint32_t l) {
-    cout << (r == Success ? 1 : 0) << ", " << l << ", " << _reward_config.value(r,l);
+    auto &prey_cell = cell();
+    _history.push_back(prey_cell.coordinates);
+    cout << (r == Success ? 1 : 0) << "," << l << "," << _reward_config.value(r,l) << ",";
+    print_history(_history);
 }
 
 void Planner::update(const State &state) {
     auto &prey_cell = cell();
+    _history.push_back(prey_cell.coordinates);
     // time to plan
     if (!state.agents_data.empty()) {
         set.update_state(state.iteration, data.cell.coordinates, state.agents_data[0].cell.coordinates);
@@ -52,6 +56,7 @@ void Planner::update(const State &state) {
 }
 
 const Cell &Planner::start(uint32_t steps) {
+    _history.clear();
     set_goal(goal);
     return _start;
 }
