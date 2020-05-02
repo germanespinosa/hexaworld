@@ -7,7 +7,7 @@ do
   for f in $_dfiles
   do
           NAME=`echo "$f" | cut -d'.' -f1`
-          echo $NAME
+          echo "$I $NAME"
           timeout 60 ./train $NAME
           if [ $? -ne 0 ] # if it takes too long or fails, it tries again once
           then

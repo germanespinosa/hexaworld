@@ -4,6 +4,9 @@
 using namespace cell_world;
 using namespace std;
 
+
+static uint32_t _randomness;
+
 Predator::Predator(Graph &graph)
     : _fixed_start (false)
     , _chasing (false)
@@ -40,7 +43,7 @@ void Predator::update_state(const State &state) {
     }
     if (predator_cell == _last_prey_cell) _chasing = false;
 
-    if (_chasing && Chance::dice(4)){
+    if (_chasing && Chance::dice(100)>_randomness){
         auto nc = cell();
         auto dice = Chance::dice(2);
         do {
@@ -85,4 +88,8 @@ void Predator::set_random_start() {
 
 void Predator::track_history() {
     _track_history = true;
+}
+
+void Predator::set_randomness(uint32_t randomness) {
+    _randomness = randomness;
 }

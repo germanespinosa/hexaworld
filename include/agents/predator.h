@@ -12,6 +12,7 @@ struct Predator : cell_world::Agent {
     void track_history();
     bool _fixed_start;
     std::vector<cell_world::Coordinates> history;
+    static void set_randomness(uint32_t);
 private:
     bool _track_history;
     cell_world::Cell _start;

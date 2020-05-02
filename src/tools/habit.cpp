@@ -36,6 +36,8 @@ int main(int argc, char *args[]){
         coo.y = (int8_t) (cp["-sly"].int_value());
         predator.set_fixed_start(m[coo]);
     }
+    int32_t pr = cp["-pr"].default_value(25).check_range(0,100).int_value();
+    predator.set_randomness(pr);
     predator.track_history();
     m.add_agent(predator);
     Cell_group cg_gates = world.create_cell_group( world_name + "_gates" );

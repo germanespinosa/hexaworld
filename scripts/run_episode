@@ -9,13 +9,13 @@ else
   ny=$((-($7-7)))
   for ((I=1;I<=$R;I++))
   do
-      HABIT=$(./habit $2 -seed $I -pi $4 -k $5 -slx $nx -sly $ny)
+      echo "./habit $2 -seed $I -pi $4 -k $5 -slx $nx -sly $ny -pr $8"
+      HABIT=$(./habit $2 -seed $I -pi $4 -k $5 -slx $nx -sly $ny -pr $8)
       #HABIT=$(./habit $2 -pi $4 -k $5 -slx $nx -sly $ny)
       if [ $? -ne 0 ]; then
         echo "FAILED: ./habit $2 -seed $I -pi $4 -k $5 -slx $nx -sly $ny"
       else
         echo "$I,($6;$7),$HABIT" >> ${3}.log
       fi
-      echo "./habit $2 -seed $I -pi $4 -k $5 -slx $nx -sly $ny"
   done
 fi

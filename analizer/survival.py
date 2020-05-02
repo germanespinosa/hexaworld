@@ -87,7 +87,7 @@ xaxisum=[]
 xaxisge=[]
 for k in keys:
     fig, my_plots = plt.subplots(ncols=6)
-    fig.set_size_inches(40, 5)
+    fig.set_size_inches(40, 7)
     c = 0
     s = 0
     st = numpy.zeros((15, 15))
