@@ -9,7 +9,7 @@ TEST_CASE("stopwach") {
     sw2.reset();
     sw.reset();
     while (!sw.time_out(.5));
-    CHECK(sw.elapsed()>.5);
+    CHECK(sw.elapsed()>=.5);
     sw.reset();
     while (!sw.time_out(.5));
     CHECK(sw.elapsed()>.5);
