@@ -1,0 +1,8 @@
+#!/bin/bash
+R=$(timeout 120 ./train_habit $1 -episodes 5000000 -steps 30 -threads 1)
+if [ $? -ne 0 ] # if it takes too long or fails, it tries again once
+then
+  R=$(timeout 120 ./train_habit $1 -episodes 5000000 -steps 30 -threads 1)
+fi
+printf "$1 $R\n"
+

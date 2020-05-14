@@ -1,9 +1,0 @@
-#!/bin/bash
-R=1
-echo
-for ((I=1;I<=$R;I++))
-do
-    echo "Iteration $I of $R"
-    ./train_habit $1 -episodes 1000000 -steps 30 -threads 8
-    echo
-done

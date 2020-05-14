@@ -8,7 +8,7 @@ struct Planner_prey: Prey {
     const cell_world::Cell &start(uint32_t) override;
     void update(const cell_world::State &) override;
     cell_world::Move get_move() override;
-    void end(Episode_result, uint32_t) override;
+    void end(Episode_result, uint32_t, const cell_world::History &) override;
 
     void set_move(const cell_world::Move &);
     void set_start_cell(const cell_world::Cell &);
@@ -19,4 +19,5 @@ struct Planner_prey: Prey {
     cell_world::Move next_move;
 
     Episode_result result;
+    friend class Particle_filter;
 };

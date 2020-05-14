@@ -1,17 +1,22 @@
 #!/bin/bash
+
 _dfiles="*.csv"
 
-R=200
+FILECOUNT=$(ls $_dfiles | wc -l)
+
+WORKERS=$(dc -e "[$FILECOUNT]sM $2d $FILECOUNT<Mp")
+
+echo "Starting training of $FILECOUNT worlds on $WORKERS workers"
+
+R=$1
 for ((I=1;I<=$R;I++))
 do
   for f in $_dfiles
   do
-          NAME=`echo "$f" | cut -d'.' -f1`
-          echo "$I $NAME"
-          timeout 60 ./train $NAME
-          if [ $? -ne 0 ] # if it takes too long or fails, it tries again once
-          then
-            timeout 60 ./train $NAME
-          fi
+    NAME=`echo "$f" | cut -d'.' -f1`
+    echo "launching $I $NAME..."
+    worker -w $WORKERS -c "./train_world $NAME"
   done
 done
+
+worker -w 1 -c "Done!"

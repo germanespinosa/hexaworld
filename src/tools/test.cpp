@@ -29,11 +29,10 @@ int main(int argc, char *args[]){
     Graph gate_connections(world_cells);
     Reward_config rc {100,-100,-80, 1,0};
     Map map(world_cells);
-    auto goal = map[{0,-7}];
-    auto start = map[{0,7}];
     Test_prey tp (world_graph);
     m.add_agent(tp);
     m.iterations = steps;
     Simulation c(m, {width, height}, episodes);
     c.run();
+    cout << m.history;
 }

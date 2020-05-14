@@ -5,16 +5,18 @@ using namespace cell_world;
 
 void Prey::update_state(const State &s) {
     if (!_ready) throw logic_error("Goal not set");
-    if (_eaten){
+    if (cell() == _goal){
+        _result = Success;
+        set_status(Finished);
         return;
     }
-    if (cell() == _goal){
-        end (Success, lenght);
+    if ( !s.agents_data.empty() && cell() == s.agents_data[0].cell){
+        _result = Fail;
         set_status(Finished);
         return;
     }
     if (s.iteration == s.iterations){
-        end (Unknown, lenght);
+        _result = Unknown;
         set_status(Finished);
         return;
     }
@@ -23,25 +25,22 @@ void Prey::update_state(const State &s) {
 }
 
 const Cell &Prey::start_episode(uint32_t i) {
-    _eaten = false;
     _ready = false;
+    _result = Unknown;
     _start_iteration = i;
     lenght = 0;
     return start(i);
 }
 
-void Prey::receive_message(const Agent_message &m) {
-    if (m.from.name == "predator") {
-        _eaten = true;
-        end (Fail, lenght);
-        set_status(Finished);
-    }
+void Prey::end_episode(const cell_world::State &, const cell_world::History &h) {
+    end (_result, lenght, h);
 }
 
-void Prey::end_episode(const cell_world::State &) {
-}
-
-Prey::Prey(): Agent({"prey",1}) {
+Prey::Prey():
+    Agent({"prey",1}),
+    lenght(0),
+    _ready(false),
+    _start_iteration(0){
     set_color(Green);
     data.icon = Icon::Prey_icon;
 }
@@ -53,6 +52,5 @@ void Prey::set_goal(const cell_world::Cell &g) {
     _goal = g;
 }
 
-void Prey::end(Episode_result, uint32_t) {
-
+void Prey::end(Episode_result, uint32_t, const cell_world::History &) {
 }

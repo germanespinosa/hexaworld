@@ -5,42 +5,39 @@ using namespace cell_world;
 using namespace std;
 
 
-static uint32_t _randomness;
+static uint32_t _randomness = 0;
 
 Predator::Predator(Graph &graph)
     : _fixed_start (false)
+    , _contact(false)
     , _chasing (false)
     , _graph(graph)
-    , _track_history(false)
+    , _next_move({0,0})
+    , _prev_move({0,0})
     , Agent({"predator", 1}) {
 }
 
 const Cell &Predator::start_episode(uint32_t) {
-    L("Predator::start_episode(const State &) start");
-    _chasing = false;
+    _prev_move = Move{0,0};
     set_color(Blue);
-    set_status(Action_ready);
+    _chasing = false;
     data.icon = Icon::Predator_icon;
     if (_fixed_start) return _start;
-    auto &cell = _graph.nodes[Chance::dice(_graph.nodes.size())];
-    L("Predator::start_episode(const State &) end");
-    if (_track_history) history.clear();
-    return cell;
+    return _graph.nodes[Chance::dice(_graph.nodes.size())];
 }
 
 void Predator::update_state(const State &state) {
-    L("Predator::update_state(const cell_world::State &state) start");
     auto predator_cell = cell();
-    if (_track_history) history.push_back(predator_cell.coordinates);
-    set_color(Blue);
-    _contact = false;
+
     if ( !state.agents_data.empty() ) {
         auto prey_cell = state.agents_data[0].cell;
-        set_color(Yellow);
         _chasing = true;
         _last_prey_cell = prey_cell;
         _contact = true;
+    } else {
+        _contact = false;
     }
+
     if (predator_cell == _last_prey_cell) _chasing = false;
 
     if (_chasing && Chance::dice(100)>_randomness){
@@ -52,28 +49,30 @@ void Predator::update_state(const State &state) {
             uint32_t mini = 0;
             for (uint32_t i = 1; i < distances.size(); i++) if (distances[i] < distances[mini]) mini = i;
             nc = _graph[c][mini];
-            if (_contact && _last_prey_cell == nc){
-                send_message({"prey",0},"eaten");
-                set_status(Action_pending);
-                return;
-            }
-        } while (dice--);
+        } while (dice-- && !(_contact && _last_prey_cell == nc));
         _next_move = nc.coordinates-cell().coordinates;
     }else {
         auto &con = _graph[cell()];
-        Connection_pattern cp = Connection_pattern::get_pattern(cell(),con);
-        _next_move = cp[Chance::dice(cp.size())];
+        Connection_pattern cp = Connection_pattern::get_pattern(cell(), con);
+        do {
+            _next_move = cp[Chance::dice(cp.size())];
+        } while ( _next_move == _prev_move && cp.size()>1); //going backwards and there are options
     }
 
+    if (_chasing)
+        set_color(Yellow);
+    else
+        set_color(Blue);
+
     set_status(Action_ready);
-    L("Predator::update_state(const cell_world::State &state) end");
 }
 
 Move Predator::get_move() {
+    _prev_move = -_next_move;
     return _next_move;
 }
 
-void Predator::end_episode(const State &state) {
+void Predator::end_episode(const State &state, const cell_world::History &) {
 
 }
 
@@ -84,10 +83,6 @@ void Predator::set_fixed_start(const Cell &cell) {
 
 void Predator::set_random_start() {
     _fixed_start = false;
-}
-
-void Predator::track_history() {
-    _track_history = true;
 }
 
 void Predator::set_randomness(uint32_t randomness) {

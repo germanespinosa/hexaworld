@@ -8,5 +8,6 @@ struct Test_prey : Prey {
     cell_world::Move get_move() override;
 private:
     cell_world::Graph &_cg;
+    cell_world::Map _map;
     bool _clean;
 };

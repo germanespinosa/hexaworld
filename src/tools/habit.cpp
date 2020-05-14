@@ -38,8 +38,6 @@ int main(int argc, char *args[]){
     }
     int32_t pr = cp["-pr"].default_value(25).check_range(0,100).int_value();
     predator.set_randomness(pr);
-    predator.track_history();
-    m.add_agent(predator);
     Cell_group cg_gates = world.create_cell_group( world_name + "_gates" );
     Graph gates_graph(cg_gates);
     Graph gate_connections(world_cells);
@@ -52,12 +50,16 @@ int main(int argc, char *args[]){
     Habit_planner api(world, cg_gates, start, goal,planning_iterations, rc, k);
     if (cp["-pt"].present()) m.add_agent(apt);
     else m.add_agent(api);
+    m.add_agent(predator);
     m.iterations = steps;
-    Simulation c(m, {width, height}, episodes);
-    if (show)
+
+    if (show) {
+        Simulation c(m, {width, height}, episodes);
         c.run();
-    else
-        c.run_silent(false);
-    cout << ",";
-    print_history(predator.history);
+    }
+    else {
+        m.start_episode();
+        while (m.update());
+        m.end_episode();
+    }
 }

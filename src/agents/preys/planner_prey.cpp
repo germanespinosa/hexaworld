@@ -6,7 +6,6 @@ using namespace std;
 const cell_world::Cell &Planner_prey::start(uint32_t iteration) {
     contact = false;
     result = Unknown;
-    set_status(Action_pending);
     set_goal(goal);
     return start_cell;
 }
@@ -40,6 +39,6 @@ void Planner_prey::set_move(const cell_world::Move &move) {
     next_move = move;
 }
 
-void Planner_prey::end(Episode_result r, uint32_t l) {
+void Planner_prey::end(Episode_result r, uint32_t l, const cell_world::History &) {
     result = r;
 }

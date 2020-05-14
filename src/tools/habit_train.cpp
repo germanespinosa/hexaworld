@@ -52,21 +52,26 @@ int main(int argc, char *args[]){
     uint32_t success = 0;
     if (threads>world_habits.size()) threads = world_habits.size();
     for (uint32_t i = 0; i < threads; i++)
-        threads_data.emplace_back(world_cells, episodes,steps,episode,success, world_graph);
-
-    for (uint32_t i = 0; i< world_habits.size();i++){
+        threads_data.emplace_back(world_cells, episodes, steps, episode, success, world_graph);
+    for (uint32_t i = 0; i < world_habits.size(); i++) {
         threads_data[i % threads].habits.push_back(world_habits[i]);
     }
     if (cp["-debug"].present()) {
         threads_data[0].debug = true;
         run_training(0);
     } else {
-        vector<thread> t;
-        for (uint32_t i = 0; i < threads; i++)
-            t.emplace_back(run_training, i);
-        double elapsed = show_progress(episodes, episode);
-        for (auto &th: t)th.join();
-        cout << "\rSuccess rate: " << (double) success / (double) episodes * 100.0 << "%" << endl << "Total execution time: " << Stop_watch::to_string(elapsed) << endl;
+        Stop_watch iteration_watch;
+        if (threads > 1) {
+            vector<thread> t;
+            for (uint32_t i = 0; i < threads; i++)
+                t.emplace_back(run_training, i);
+            show_progress(episodes, episode);
+            for (auto &th: t)th.join();
+        } else {
+            run_training(0);
+        }
+        double elapsed = iteration_watch.elapsed();
+        cout << "Success rate: " << (double) success / (double) episodes * 100.0 << " execution time: " << Stop_watch::to_string(elapsed) << "(" <<(double)episode/elapsed << " episodes per sec.)" << endl;
     }
     for(auto &thread_data:threads_data) for(auto &habit:thread_data.habits) habit.save(world_name);
 }
@@ -76,8 +81,8 @@ void run_training(uint32_t thread){
     Predator predator(data.graph);
     Habit_training_prey ht(data.habits, rc,.9);
     Model m(data.cells);
-    m.add_agent(predator);
     m.add_agent(ht);
+    m.add_agent(predator);
     for (;;) {
         mtx.lock();
         if (data.episode < data.episodes) {
@@ -117,7 +122,6 @@ double show_progress(uint32_t episodes, uint32_t &episode){
         }
         if (episode >= episodes) break;
     }
-    //for (uint32_t i =0; i<threads; i++) t[i].join();
     double elapsed = iteration_watch.elapsed();
     cout << "\r|===================================================| 100% (" << episodes << "/" << episodes << ")- " << (int)elapsed << "s (" <<(double)episode/elapsed << " episodes per sec.)" << endl;
     return iteration_watch.elapsed();

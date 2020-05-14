@@ -10,19 +10,15 @@ else
     R=$#
     start=`date +%s`
     echo "World $world started"
-    echo "seed, starting_position, habit_result, habit_len, habit_reward, prey_trajectory, predator_trajectory" > ${7}${world}.log
+    echo "{ 'episodes': [" > ${7}${world}.log
     for ((I=8;I<=$R;I++))
     do
         tuple=${!I}
         x=$(echo "$tuple" | cut -d';' -f 1 | cut -d'(' -f 2)
         y=$(echo "$tuple" | cut -d';' -f 2 | cut -d')' -f 1)
-        ./run_episode $3 $world ${7}${world} $4 $5 $x $y $6 &
-        pids[$((I-8))]=$!
+        ./run_episode $3 $world ${7}${world} $4 $5 $x $y $6
     done
-
-    for pid in ${pids[*]}; do
-        wait $pid
-    done
+    echo "]}" >> ${7}${world}.log
     end=`date +%s`
     runtime=$((end-start))
 

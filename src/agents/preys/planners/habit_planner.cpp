@@ -52,6 +52,7 @@ void Habit_planner::plan() {
 cell_world::Move Habit_planner::get_best_move() {
     if (_last_destination != Not_found) _world[_last_destination].icon = Icon::No_icon;
     uint32_t option = Chance::pick_best(1,rewards);
+    reward_history.push_back(rewards[option]);
     _last_destination = options[option].get().destination.id;
     _world[_last_destination].icon = Icon::Custom_icon_1;
     return options[option].get().policy(cell());

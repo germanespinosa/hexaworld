@@ -19,5 +19,6 @@ private:
     cell_world::Coordinates _predator_start_location;
     uint32_t _current_iteration;
     int32_t _last_contact;
-    bool _generate_particle();
+    bool _generate_particle_no_observations();
+    bool _generate_particle_observations();
 };

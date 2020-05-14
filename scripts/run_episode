@@ -1,21 +1,19 @@
 #!/bin/bash
-if (($# < 7))
-then
+if (($# < 7)); then
   echo "usage:"
   echo "   run_episode [repetitions] [world_name] [log_file] [planning_iteration] [k] [pred_starting_pos_x] [pred_starting_pos_y]"
 else
   R=$1
-  nx=$(($6-7))
-  ny=$((-($7-7)))
-  for ((I=1;I<=$R;I++))
-  do
-      echo "./habit $2 -seed $I -pi $4 -k $5 -slx $nx -sly $ny -pr $8"
-      HABIT=$(./habit $2 -seed $I -pi $4 -k $5 -slx $nx -sly $ny -pr $8)
-      #HABIT=$(./habit $2 -pi $4 -k $5 -slx $nx -sly $ny)
-      if [ $? -ne 0 ]; then
-        echo "FAILED: ./habit $2 -seed $I -pi $4 -k $5 -slx $nx -sly $ny"
-      else
-        echo "$I,($6;$7),$HABIT" >> ${3}.log
-      fi
+  nx=$(($6 - 7))
+  ny=$((-($7 - 7)))
+  for ((I = 1; I <= $R; I++)); do
+    echo "./habit $2 -seed $I -pi $4 -k $5 -slx $nx -sly $ny -pr $8"
+    HABIT=$(./habit $2 -seed $I -pi $4 -k $5 -slx $nx -sly $ny -pr $8)
+    #HABIT=$(./habit $2 -pi $4 -k $5 -slx $nx -sly $ny)
+    if [ $? -ne 0 ]; then
+      echo "FAILED: ./habit $2 -seed $I -pi $4 -k $5 -slx $nx -sly $ny -pr $8" >&2
+    else
+      echo "{ 'seed': $I, 'predator_start_location': {'x': $6,'y': $7},'result': $HABIT }," >>${3}.log
+    fi
   done
 fi

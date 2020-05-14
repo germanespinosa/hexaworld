@@ -28,16 +28,33 @@ Planner::Planner(World &w, const Cell &start, const Cell &goal, uint32_t plannin
 }
 
 
-void Planner::end(Episode_result r , uint32_t l) {
+void Planner::end(Episode_result r , uint32_t l, const cell_world::History &h) {
     auto &prey_cell = cell();
-    _history.push_back(prey_cell.coordinates);
-    cout << (r == Success ? 1 : 0) << "," << l << "," << _reward_config.value(r,l) << ",";
-    print_history(_history);
+    cout << "{ 'result': " << (r == Success ? 1 : 0) << ", 'lenght': " << l << ", 'reward': " << _reward_config.value(r,l) ;
+    cout << ", 'trajectories': [";
+    for (uint32_t i = 0; i<h.size(); i++){
+        if (i>0) cout << ",";
+        cout << "[";
+        bool sep = false;
+        for (auto c : h[i]){
+            if (sep) cout << ",";
+            cout << "{ 'x': "<< (int) c.x << ", 'y': "<< (int) c.y <<" }" ;
+            sep = true;
+        }
+        cout << "]";
+    }
+    cout << "], 'estimated_rewards': [ " ;
+    bool sep = false;
+    for (auto r : reward_history){
+        if (sep) cout << ", ";
+        cout << r  ;
+        sep = true;
+    }
+    cout << "]}";
 }
 
 void Planner::update(const State &state) {
     auto &prey_cell = cell();
-    _history.push_back(prey_cell.coordinates);
     // time to plan
     if (!state.agents_data.empty()) {
         set.update_state(state.iteration, data.cell.coordinates, state.agents_data[0].cell.coordinates);
@@ -56,7 +73,7 @@ void Planner::update(const State &state) {
 }
 
 const Cell &Planner::start(uint32_t steps) {
-    _history.clear();
+    reward_history.clear();
     set_goal(goal);
     return _start;
 }
