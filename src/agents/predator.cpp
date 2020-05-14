@@ -7,13 +7,14 @@ using namespace std;
 
 static uint32_t _randomness = 0;
 
-Predator::Predator(Graph &graph)
+Predator::Predator(Graph &graph, Graph &visibility)
     : _fixed_start (false)
     , _contact(false)
     , _chasing (false)
     , _graph(graph)
     , _next_move({0,0})
     , _prev_move({0,0})
+    , _inverted_visibility(visibility.invert())
     , Agent({"predator", 1}) {
 }
 

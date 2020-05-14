@@ -2,7 +2,7 @@
 #include <cell_world.h>
 
 struct Predator : cell_world::Agent {
-    explicit Predator(cell_world::Graph &);
+    explicit Predator(cell_world::Graph &, cell_world::Graph &);
     const cell_world::Cell &start_episode(uint32_t) override;
     void update_state(const cell_world::State &) override;
     cell_world::Coordinates get_move() override ;
@@ -12,6 +12,7 @@ struct Predator : cell_world::Agent {
     static void set_randomness(uint32_t);
     bool _contact;
 private:
+    cell_world::Graph _inverted_visibility;
     bool _fixed_start;
     cell_world::Cell _start;
     bool _chasing;
