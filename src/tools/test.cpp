@@ -21,8 +21,9 @@ int main(int argc, char *args[]){
     world.load();
     auto world_cells = world.create_cell_group();
     auto world_graph = world.create_graph();
+    Paths paths = world.create_paths(world_name, cell_world::Paths::Path_type::shortest);
     Model m(world_cells);
-    Predator predator(world_graph);
+    Predator predator(world_graph,m.visibility, paths);
     m.add_agent(predator);
     Cell_group cg_gates = world.create_cell_group( world_name + "_gates" );
     Graph gates_graph(cg_gates);

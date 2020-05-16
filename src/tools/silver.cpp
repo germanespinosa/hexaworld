@@ -27,7 +27,8 @@ int main(int argc, char *args[]){
     auto world_cells = world.create_cell_group();
     auto world_graph = world.create_graph();
     Model m(world_cells);
-    Predator predator(world_graph);
+    Paths paths = world.create_paths(world_name, cell_world::Paths::Path_type::shortest);
+    Predator predator(world_graph, m.visibility, paths);
     m.add_agent(predator);
     Cell_group cg_gates = world.create_cell_group( world_name + "_gates" );
     Graph gates_graph(cg_gates);
@@ -36,8 +37,8 @@ int main(int argc, char *args[]){
     Map map(world_cells);
     auto goal = map[{0,-7}];
     auto start = map[{0,7}];
-    Action_planner apt(world, start,goal,time, rc,k);
-    Action_planner api(world, start,goal, planning_iterations, rc,k);
+    Action_planner apt(world, start,goal,time, rc,k,paths);
+    Action_planner api(world, start,goal, planning_iterations, rc,k,paths);
     if (cp["-pt"].present()) m.add_agent(apt);
     else m.add_agent(api);
     m.iterations = steps;

@@ -14,9 +14,10 @@ double show_progress(uint32_t episodes, uint32_t &episode);
 
 
 struct Thread_data{
-    Thread_data(Cell_group c,uint32_t es,uint32_t s,uint32_t &e,uint32_t &su, Graph &g):
-            cells(c), episodes(es), steps(s), episode(e), success(su), graph(g){};
+    Thread_data(Cell_group c, Paths &p, uint32_t es,uint32_t s,uint32_t &e,uint32_t &su, Graph &g):
+            cells(c), paths(p), episodes(es), steps(s), episode(e), success(su), graph(g){};
     Cell_group cells;
+    Paths &paths;
     uint32_t episodes;
     uint32_t steps;
     uint32_t &episode;
@@ -41,6 +42,7 @@ int main(int argc, char *args[]){
     string world_name (cp[1]);
     World world(world_name);
     world.load();
+    Paths paths = world.create_paths(world_name, cell_world::Paths::Path_type::shortest);
     create_folder(world_name);
     Cell_group world_cells = world.create_cell_group();
     Graph world_graph = world.connection_pattern.get_graph(world_cells);
@@ -52,7 +54,7 @@ int main(int argc, char *args[]){
     uint32_t success = 0;
     if (threads>world_habits.size()) threads = world_habits.size();
     for (uint32_t i = 0; i < threads; i++)
-        threads_data.emplace_back(world_cells, episodes, steps, episode, success, world_graph);
+        threads_data.emplace_back(world_cells, paths, episodes, steps, episode, success, world_graph);
     for (uint32_t i = 0; i < world_habits.size(); i++) {
         threads_data[i % threads].habits.push_back(world_habits[i]);
     }
@@ -78,9 +80,9 @@ int main(int argc, char *args[]){
 
 void run_training(uint32_t thread){
     auto &data = threads_data[thread];
-    Predator predator(data.graph);
-    Habit_training_prey ht(data.habits, rc,.9);
     Model m(data.cells);
+    Predator predator(data.graph, m.visibility, data.paths);
+    Habit_training_prey ht(data.habits, rc,.9);
     m.add_agent(ht);
     m.add_agent(predator);
     for (;;) {

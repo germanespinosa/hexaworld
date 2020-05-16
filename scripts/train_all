@@ -19,4 +19,4 @@ do
   done
 done
 
-worker -w 1 -c "Done!"
+worker -w 1 -c "echo Done!"

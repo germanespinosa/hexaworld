@@ -7,7 +7,7 @@ using namespace std;
 
 static uint32_t _randomness = 0;
 
-Predator::Predator(Graph &graph, Graph &visibility)
+Predator::Predator(Graph &graph, Graph &visibility, cell_world::Paths &paths)
     : _fixed_start (false)
     , _contact(false)
     , _chasing (false)
@@ -15,6 +15,8 @@ Predator::Predator(Graph &graph, Graph &visibility)
     , _next_move({0,0})
     , _prev_move({0,0})
     , _inverted_visibility(visibility.invert())
+    , _map(_graph.nodes)
+    , _paths(paths)
     , Agent({"predator", 1}) {
 }
 
@@ -24,7 +26,7 @@ const Cell &Predator::start_episode(uint32_t) {
     _chasing = false;
     data.icon = Icon::Predator_icon;
     if (_fixed_start) return _start;
-    return _graph.nodes[Chance::dice(_graph.nodes.size())];
+    return _graph.nodes.random_cell();
 }
 
 void Predator::update_state(const State &state) {
@@ -37,26 +39,24 @@ void Predator::update_state(const State &state) {
         _contact = true;
     } else {
         _contact = false;
+        if (predator_cell == _last_prey_cell) _chasing = false;
     }
 
-    if (predator_cell == _last_prey_cell) _chasing = false;
-
-    if (_chasing && Chance::dice(100)>_randomness){
+    if (Chance::dice(100)>_randomness){
+        if (!_chasing) {
+            _last_prey_cell = _inverted_visibility[predator_cell].random_cell();
+        }
         auto nc = cell();
-        auto dice = Chance::dice(2);
-        do {
-            auto c = nc;
-            vector<double> distances = _graph[c].get_distances(_last_prey_cell);
-            uint32_t mini = 0;
-            for (uint32_t i = 1; i < distances.size(); i++) if (distances[i] < distances[mini]) mini = i;
-            nc = _graph[c][mini];
-        } while (dice-- && !(_contact && _last_prey_cell == nc));
-        _next_move = nc.coordinates-cell().coordinates;
+        _next_move = _paths.get_move(nc,_last_prey_cell);
+        if (Chance::dice(2))
+        {
+            nc = _map [nc.coordinates+_next_move];
+            _next_move += _paths.get_move(nc,_last_prey_cell);
+        }
     }else {
-        auto &con = _graph[cell()];
-        Connection_pattern cp = Connection_pattern::get_pattern(cell(), con);
+        Connection_pattern cp = Connection_pattern::get_pattern(cell(), _graph[predator_cell]);
         do {
-            _next_move = cp[Chance::dice(cp.size())];
+            _next_move = cp.random_move();
         } while ( _next_move == _prev_move && cp.size()>1); //going backwards and there are options
     }
 

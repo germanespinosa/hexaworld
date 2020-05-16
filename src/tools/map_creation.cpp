@@ -36,8 +36,10 @@ int main (int argc, char *args[]) {
     for ( int8_t y = -10 ; y <= 10; y++ ){
         for ( int8_t x = -20 ; x <= 40; x++ ){
             Coordinates coordinates{x,y};
-            if (is_valid(coordinates,size))
-                world.add({Circle, (uint32_t)world.size(), coordinates, get_location(coordinates), 0, false });
+            if (is_valid(coordinates,size)) {
+                Cell c(Circle, coordinates, get_location(coordinates), 0, false);
+                world.add(c);
+            }
         }
     }
     //set occlusions

@@ -49,7 +49,6 @@ endif()
 add_executable( viewer src/tools/habit_viewer.cpp)
 target_link_libraries( viewer hexaworld )
 
-
 add_executable( map_creation src/tools/map_creation.cpp )
 target_link_libraries( map_creation hexaworld )
 
@@ -76,6 +75,9 @@ target_link_libraries( from_occlussions hexaworld )
 
 add_executable( find_point_of_interest src/tools/find_point_of_interest.cpp )
 target_link_libraries( find_point_of_interest hexaworld )
+
+add_executable( create_paths src/tools/create_paths.cpp )
+target_link_libraries( create_paths hexaworld )
 
 ###
 ### COPY WORLDS

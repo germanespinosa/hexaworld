@@ -12,6 +12,10 @@ using namespace std;
 int main(int argc, char *args[]){
     Cmd_parameters cp(argc,args);
     cp[1].check_present().check_file_exist(".world");
+    Paths::Path_type path_type = Paths::Path_type::euclidean;
+    if (cp["-path"].value("shortest") == "shortest"){
+        path_type=Paths::Path_type::shortest;
+    }
     bool show = cp["-show"].present();
     int64_t p_seed = cp["-seed"].default_value(-1).check_range(-1,65535).int_value();
     uint16_t steps = cp["-steps"].int_value(80);
@@ -28,7 +32,8 @@ int main(int argc, char *args[]){
     auto world_cells = world.create_cell_group();
     auto world_graph = world.create_graph();
     Model m(world_cells);
-    Predator predator(world_graph);
+    Paths paths = world.create_paths(world_name, path_type);
+    Predator predator(world_graph, m.visibility, paths);
     if (cp["-slx"].present() && cp["-sly"].present()){
         Map m(world_cells);
         Coordinates coo ;
@@ -46,8 +51,8 @@ int main(int argc, char *args[]){
     Map map(world_cells);
     auto goal = map[{0,-7}];
     auto start = map[{0,7}];
-    Habit_planner apt(world, cg_gates, start, goal,time, rc, k);
-    Habit_planner api(world, cg_gates, start, goal,planning_iterations, rc, k);
+    Habit_planner apt(world, cg_gates, start, goal,time, rc, k, paths);
+    Habit_planner api(world, cg_gates, start, goal,planning_iterations, rc, k, paths);
     if (cp["-pt"].present()) m.add_agent(apt);
     else m.add_agent(api);
     m.add_agent(predator);

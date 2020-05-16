@@ -5,12 +5,13 @@ using namespace cell_world;
 
 void Prey::update_state(const State &s) {
     if (!_ready) throw logic_error("Goal not set");
-    if (cell() == _goal){
+    auto prey_cell = cell();
+    if (prey_cell == _goal){
         _result = Success;
         set_status(Finished);
         return;
     }
-    if ( !s.agents_data.empty() && cell() == s.agents_data[0].cell){
+    if ( !s.agents_data.empty() && prey_cell == s.agents_data[0].cell){
         _result = Fail;
         set_status(Finished);
         return;

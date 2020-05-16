@@ -3,10 +3,11 @@
 using namespace cell_world;
 using namespace std;
 
-Particle_filter::Particle_filter(cell_world::Cell_group c, cell_world::Graph g, const Cell &goal, const Reward_config &rc ):
+Particle_filter::Particle_filter(cell_world::Cell_group c, cell_world::Graph g, const Cell &goal, const Reward_config &rc, Paths &paths ):
         Model(c),
         prey(goal),
-        predator(g),
+        paths(paths),
+        predator(g, visibility, paths),
         hits(c.size(),0),
         _last_contact(Not_found){
     add_agent(prey);
@@ -17,8 +18,8 @@ Model &Particle_filter::get_valid_model () {
     if (status == Status::Running) end_episode();
     uint32_t particle_index = Chance::dice(particles.size());
     auto particle = particles[particle_index];
-    prey.set_start_cell(_map[_current_prey_coordinates]);
-    predator.set_fixed_start(_map[particle]);
+    prey.set_start_cell(map[_current_prey_coordinates]);
+    predator.set_fixed_start(map[particle]);
     start_episode(_current_iteration);
     return *this;
 }
@@ -29,22 +30,22 @@ void Particle_filter::create_particles(uint32_t k) {
     if (_last_contact == _current_iteration) {
         particles.push_back(_predator_start_location);
     } else {
-        prey.set_start_cell(_map[_prey_start_location]);
+        prey.set_start_cell(map[_prey_start_location]);
         if (_last_contact == Not_found) {
             predator.set_random_start();
             for (uint32_t i = 0; i < k || particles.empty(); i++) {
                 if (_generate_particle_no_observations()) {
                     auto c = predator.cell().coordinates;
-                    hits[_map[c].id]++;
+                    hits[map[c].id]++;
                     particles.push_back(c);
                 }
             }
         } else {
-            predator.set_fixed_start(_map[_predator_start_location]);
+            predator.set_fixed_start(map[_predator_start_location]);
             for (uint32_t i = 0; i < k || particles.empty(); i++) {
                 if (_generate_particle_observations()) {
                     auto c = predator.cell().coordinates;
-                    hits[_map[c].id]++;
+                    hits[map[c].id]++;
                     particles.push_back(c);
                 }
             }
@@ -63,7 +64,7 @@ bool Particle_filter::_generate_particle_no_observations() {
             return false; // this should never happen
             break;
         }
-        if (_visibility[prey.data.cell].contains(predator.data.cell)){
+        if (visibility[prey.data.cell].contains(predator.data.cell)){
             end_episode();
             return false;
         }
@@ -81,7 +82,7 @@ bool Particle_filter::_generate_particle_observations() {
             end_episode();
             return false;
         }
-        if (_visibility[prey.data.cell].contains(predator.data.cell)){
+        if (visibility[prey.data.cell].contains(predator.data.cell)){
             end_episode();
             return false;
         }
@@ -92,7 +93,7 @@ bool Particle_filter::_generate_particle_observations() {
 void Particle_filter::update_state(uint32_t i, cell_world::Coordinates prey_coordinates) {
     if (i == 0) {
         _prey_start_location = prey_coordinates;
-        prey.set_start_cell(_map[_prey_start_location]);
+        prey.set_start_cell(map[_prey_start_location]);
     } else {
         auto move = prey_coordinates-_current_prey_coordinates;
         trajectory.push_back(move);

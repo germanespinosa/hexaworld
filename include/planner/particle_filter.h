@@ -3,10 +3,11 @@
 #include <cell_world.h>
 
 struct Particle_filter: cell_world::Model{
-    Particle_filter(cell_world::Cell_group, cell_world::Graph, const cell_world::Cell &, const Reward_config &);
+    Particle_filter(cell_world::Cell_group, cell_world::Graph, const cell_world::Cell &, const Reward_config &, cell_world::Paths &);
     void update_state(uint32_t ,cell_world::Coordinates);
     void update_state(uint32_t ,cell_world::Coordinates, cell_world::Coordinates );
     cell_world::Model &get_valid_model();
+    cell_world::Paths &paths;
     Predator predator;
     Planner_prey prey;
     std::vector<cell_world::Move> trajectory;

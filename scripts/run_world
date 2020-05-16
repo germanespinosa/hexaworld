@@ -3,22 +3,24 @@
 if (($# < 6))
 then
   echo "usage:"
-  echo "   run_world [sim_number] [entropy] [repetitions] [planning_iteration] [k] [pred_starting_pos1] [pred_starting_pos2] [pred_starting_pos3] [pred_starting_pos4]... "
+  echo "   run_world [sim_number] [entropy] [repetitions] [planning_iteration] [particles] [path_type] [pred_starting_pos1] [pred_starting_pos2] [pred_starting_pos3] [pred_starting_pos4]... "
   echo "   pred_starting_pos format: (x;y) "
 else
-    world="OcclusionCoordinates_$1_$2"
+    world="world_$1_$2"
+    log_file=$(echo "${7}/${world}.log")
     R=$#
     start=`date +%s`
     echo "World $world started"
-    echo "{ 'episodes': [" > ${7}${world}.log
-    for ((I=8;I<=$R;I++))
+    cn=$(./get_commit_number)
+    echo "{ 'result_set_name': '$7', 'code_version': { $cn }, 'episodes': [" > $log_file
+    for ((I=9;I<=$R;I++))
     do
         tuple=${!I}
         x=$(echo "$tuple" | cut -d';' -f 1 | cut -d'(' -f 2)
         y=$(echo "$tuple" | cut -d';' -f 2 | cut -d')' -f 1)
-        ./run_episode $3 $world ${7}${world} $4 $5 $x $y $6
+        ./run_episode $3 $world $log_file $4 $5 $x $y $6 $8
     done
-    echo "]}" >> ${7}${world}.log
+    echo "]}" >> $log_file
     end=`date +%s`
     runtime=$((end-start))
 

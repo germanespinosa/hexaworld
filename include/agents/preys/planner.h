@@ -7,8 +7,8 @@
 #include <agents/prey.h>
 
 struct Planner : Prey {
-    Planner(cell_world::World &, const cell_world::Cell & , const cell_world::Cell &, double, Reward_config, uint32_t);
-    Planner(cell_world::World &, const cell_world::Cell & , const cell_world::Cell &, uint32_t, Reward_config, uint32_t);
+    Planner(cell_world::World &, const cell_world::Cell & , const cell_world::Cell &, double, Reward_config, uint32_t, cell_world::Paths &);
+    Planner(cell_world::World &, const cell_world::Cell & , const cell_world::Cell &, uint32_t, Reward_config, uint32_t, cell_world::Paths &);
     void update(const cell_world::State &) override;
     const cell_world::Cell &start(uint32_t) override;
     void end(Episode_result, uint32_t, const cell_world::History &) override;

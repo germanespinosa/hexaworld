@@ -3,15 +3,15 @@
 using namespace std;
 using namespace cell_world;
 
-Habit_planner::Habit_planner( World &world, const Cell_group &gates, const Cell &start, const Cell &goal, double time, Reward_config rc, uint32_t k) :
-    Planner( world, start, goal, time, rc, k),
+Habit_planner::Habit_planner( World &world, const Cell_group &gates, const Cell &start, const Cell &goal, double time, Reward_config rc, uint32_t k, cell_world::Paths &p) :
+    Planner( world, start, goal, time, rc, k,p),
     _habit_set(world, gates),
     _last_destination(Not_found)
 {
 }
 
-Habit_planner::Habit_planner( World &world, const Cell_group &gates, const Cell &start, const Cell &goal, uint32_t i, Reward_config rc, uint32_t k) :
-        Planner( world, start, goal, i, rc, k),
+Habit_planner::Habit_planner( World &world, const Cell_group &gates, const Cell &start, const Cell &goal, uint32_t i, Reward_config rc, uint32_t k, cell_world::Paths &p) :
+        Planner( world, start, goal, i, rc, k,p),
         _habit_set(world, gates),
         _last_destination(Not_found)
 {

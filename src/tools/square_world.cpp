@@ -20,7 +20,8 @@ int main (int argc, char *args[]) {
     Cell_group cg = world.create_cell_group();
     Graph graph = world.create_graph();
     Graph vi = Visibility::create_graph(cg);
-    Predator predator(graph);
+    Paths paths = world.create_paths(world_name, cell_world::Paths::Path_type::shortest);
+    Predator predator(graph,vi, paths);
     Map map(graph.nodes);
     Option option{graph,map[{0,7}],};
     Habit habit(option);

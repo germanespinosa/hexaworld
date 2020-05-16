@@ -1,38 +1,58 @@
 #!/bin/bash
-if (($# < 3))
+if (($# < 6))
 then
   echo "usage:"
-  echo "   run_all [repetitions] [planning_iteration] [k] [randomness] [prefix]"
+  echo "   run_all experiments_file experiment_name repetitions planning_iterations particles randomness path_type"
 else
+  experiments_file=$1
+  experiment_name=$2
+  repetitions=$3
+  planning_iteration=$4
+  particles=$5
+  randomness=$6
+  path_type=$7
+  results_folder=$(echo "/home/german/simulation/results")
+
+  if [[ ! -f $experiments_file ]]
+  then
+      echo "Can't process. Experiment file '$experiments_file' not found."
+      exit
+  fi
+
+  if [[ -d $results_folder/$experiment_name ]]
+  then
+      echo "Can't process. Result folder '$results_folder/$experiment_name' already exists."
+      exit
+  fi
   start=`date +%s`
-  #hi spread
-#worker -w 18 -c "./run_world 3 4 $1 $2 $3 $4 ${5}_ '(0;0)' '(12;7)' '(14;10)' '(1;1)' '(13;9)'"
-#worker -w 18 -c "./run_world 3 5 $1 $2 $3 $4 ${5}_ '(0;0)' '(12;7)' '(14;10)' '(1;1)' '(13;9)'"
-#worker -w 18 -c "./run_world 5 5 $1 $2 $3 $4 ${5}_ '(0;0)' '(10;8)' '(7;11)' '(12;9)' '(11;0)'"
-#worker -w 18 -c "./run_world 9 4 $1 $2 $3 $4 ${5}_ '(0;0)' '(11;4)' '(10;14)' '(4;11)' '(0;8)'"
-#worker -w 18 -c "./run_world 9 5 $1 $2 $3 $4 ${5}_ '(0;0)' '(11;4)' '(10;14)' '(4;11)' '(0;8)'"
-#worker -w 18 -c "./run_world 10 4 $1 $2 $3 $4 ${5}_ '(0;0)' '(3;8)' '(1;12)' '(10;14)' '(9;14)'"
-#worker -w 18 -c "./run_world 10 6 $1 $2 $3 $4 ${5}_ '(0;0)' '(3;8)' '(1;12)' '(10;14)' '(9;14)'"
-worker -w 18 -c "./run_world 12 4 $1 $2 $3 $4 ${5}_ '(0;0)' '(9;13)' '(12;3)' '(8;4)' '(0;13)'"
-#worker -w 18 -c "./run_world 14 6 $1 $2 $3 $4 ${5}_ '(0;0)' '(13;0)' '(6;14)' '(1;8)' '(14;1)'"
-#worker -w 18 -c "./run_world 15 4 $1 $2 $3 $4 ${5}_ '(0;0)' '(8;7)' '(14;1)' '(0;1)' '(3;6)'"
-#worker -w 18 -c "./run_world 17 4 $1 $2 $3 $4 ${5}_ '(0;0)' '(8;10)' '(2;1)' '(0;13)' '(12;1)'"
-#worker -w 18 -c "./run_world 17 6 $1 $2 $3 $4 ${5}_ '(0;0)' '(8;10)' '(2;1)' '(0;13)' '(12;1)'"
-#worker -w 18 -c "./run_world 18 4 $1 $2 $3 $4 ${5}_ '(0;0)' '(0;7)' '(6;7)' '(1;8)' '(1;1)'"
-#  #lo spread
-#worker -w 18 -c "./run_world 0 5 $1 $2 $3 $4 ${5}_ '(0;0)' '(14;1)' '(7;9)' '(14;9)' '(6;4)'"
-#worker -w 18 -c "./run_world 1 5 $1 $2 $3 $4 ${5}_ '(0;0)' '(2;13)' '(9;7)' '(13;12)' '(1;12)'"
-#worker -w 18 -c "./run_world 4 6 $1 $2 $3 $4 ${5}_ '(0;0)' '(8;6)' '(4;13)' '(12;14)' '(12;1)'"
-#worker -w 18 -c "./run_world 6 6 $1 $2 $3 $4 ${5}_ '(0;0)' '(7;11)' '(11;1)' '(10;4)' '(13;1)'"
-#worker -w 18 -c "./run_world 7 5 $1 $2 $3 $4 ${5}_ '(0;0)' '(8;14)' '(11;14)' '(6;10)' '(2;7)'"
-#worker -w 18 -c "./run_world 8 6 $1 $2 $3 $4 ${5}_ '(0;0)' '(10;9)' '(12;5)' '(13;7)' '(1;3)'"
-#worker -w 18 -c "./run_world 9 6 $1 $2 $3 $4 ${5}_ '(0;0)' '(11;4)' '(10;14)' '(4;11)' '(0;8)'"
-#worker -w 18 -c "./run_world 10 5 $1 $2 $3 $4 ${5}_ '(0;0)' '(3;8)' '(1;12)' '(10;14)' '(9;14)'"
-#worker -w 18 -c "./run_world 16 4 $1 $2 $3 $4 ${5}_ '(0;0)' '(1;5)' '(3;9)' '(4;10)' '(9;14)'"
-#worker -w 18 -c "./run_world 18 6 $1 $2 $3 $4 ${5}_ '(0;0)' '(0;7)' '(6;7)' '(1;8)' '(1;1)'"
-worker -w 1 -c "echo"
+  file_prefix=$(echo "$results_folder/$experiment_name")
+  mkdir $file_prefix 2> /dev/null
+
+  echo "./run_all $experiments_file $experiment_name $repetitions $planning_iteration $particles $randomness $path_type" > ${file_prefix}/script.sh
+
+  cp $experiments_file $file_prefix
+
+  while IFS="" read -r p || [ -n "$p" ]
+  do
+    simulation=$(echo $p | cut -d' ' -f 1)
+    entropy=$(echo $p | cut -d' ' -f 2)
+    start_locations=$(echo $p | cut -d'"' -f 2)
+    worker -w 18 -c "./run_world $simulation $entropy $repetitions $planning_iteration $particles $randomness $file_prefix $path_type $start_locations"
+    cp world_${simulation}_${entropy}.csv $file_prefix
+  done < $experiments_file
+
+  worker -w 1 -c "echo"
 
   end=`date +%s`
   runtime=$((end-start))
+
+  cd ../../visualizer
+  python3 survival.py $experiment_name
+  cd - > /dev/null
+  cd $results_folder
+  git add --all
+  git commit --all --message "none"
+  git push
+  cd -
   echo "Done. Exec time: $runtime"
 fi

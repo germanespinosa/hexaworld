@@ -3,8 +3,8 @@
 using namespace cell_world;
 using namespace std;
 
-Planner::Planner(World &w, const Cell &start, const Cell &goal, double planning_time, Reward_config reward_config, uint32_t k):
-        set(w.create_cell_group(),w.create_graph(), goal,reward_config),
+Planner::Planner(World &w, const Cell &start, const Cell &goal, double planning_time, Reward_config reward_config, uint32_t k, Paths &paths):
+        set(w.create_cell_group(),w.create_graph(), goal,reward_config, paths),
         _planning_iterations(Not_found),
         _graph(w.create_graph()),
         _start(start),
@@ -15,8 +15,8 @@ Planner::Planner(World &w, const Cell &start, const Cell &goal, double planning_
         _particle_count(k){
 }
 
-Planner::Planner(World &w, const Cell &start, const Cell &goal, uint32_t planning_iterations, Reward_config reward_config, uint32_t k):
-        set(w.create_cell_group(),w.create_graph(), goal,reward_config),
+Planner::Planner(World &w, const Cell &start, const Cell &goal, uint32_t planning_iterations, Reward_config reward_config, uint32_t k, Paths &paths):
+        set(w.create_cell_group(),w.create_graph(), goal,reward_config, paths),
         _planning_iterations(planning_iterations),
         _graph(w.create_graph()),
         _start(start),
