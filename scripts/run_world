@@ -8,6 +8,7 @@ then
 else
     world="world_$1_$2"
     log_file=$(echo "${7}/${world}.log")
+    error_file=$(echo "${7}/errors.err")
     R=$#
     start=`date +%s`
     echo "World $world started"
@@ -18,7 +19,7 @@ else
         tuple=${!I}
         x=$(echo "$tuple" | cut -d';' -f 1 | cut -d'(' -f 2)
         y=$(echo "$tuple" | cut -d';' -f 2 | cut -d')' -f 1)
-        ./run_episode $3 $world $log_file $4 $5 $x $y $6 $8
+        ./run_episode $3 $world $log_file $4 $5 $x $y $6 $8 2>> $error_file
     done
     echo "]}" >> $log_file
     end=`date +%s`

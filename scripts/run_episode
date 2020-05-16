@@ -9,9 +9,8 @@ else
   for ((I = 1; I <= $R; I++)); do
     echo "./habit $2 -seed $I -pi $4 -k $5 -slx $nx -sly $ny -pr $8 -path $9"
     HABIT=$(./habit $2 -seed $I -pi $4 -k $5 -slx $nx -sly $ny -pr $8 -path $9)
-    #HABIT=$(./habit $2 -pi $4 -k $5 -slx $nx -sly $ny)
     if [ $? -ne 0 ]; then
-      echo "FAILED: ./habit $2 -seed $I -pi $4 -k $5 -slx $nx -sly $ny -pr $8" >&2
+      echo "FAILED: ./habit $2 -seed $I -pi $4 -k $5 -slx $nx -sly $ny -pr $8 -path $9 ($6;$7)" >&2
     else
       echo "{ 'seed': $I, 'predator_start_location': {'x': $6,'y': $7},'result': $HABIT }," >>${3}
     fi
