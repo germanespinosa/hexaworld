@@ -1,11 +1,11 @@
 #!/bin/bash
-./run_all experiment.txt euclidean_25 50 5000 1000 25 euclidean
 ./run_all experiment.txt shortest_25 50 5000 1000 25 shortest
+./run_all experiment.txt euclidean_25 50 5000 1000 25 euclidean
+./run_all experiment.txt shortest_00 50 5000 1000 0 shortest
 ./run_all experiment.txt shortest_20 50 5000 1000 20 shortest
 ./run_all experiment.txt shortest_15 50 5000 1000 15 shortest
 ./run_all experiment.txt shortest_10 50 5000 1000 10 shortest
 ./run_all experiment.txt shortest_05 50 5000 1000 5 shortest
-./run_all experiment.txt shortest_00 50 5000 1000 0 shortest
 ./run_all experiment.txt euclidean_20 50 5000 1000 20 euclidean
 ./run_all experiment.txt euclidean_15 50 5000 1000 15 euclidean
 ./run_all experiment.txt euclidean_10 50 5000 1000 10 euclidean

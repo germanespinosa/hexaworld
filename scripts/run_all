@@ -47,7 +47,7 @@ else
   runtime=$((end-start))
 
   cd ../../visualizer
-  python3 survival.py $experiment_name
+  python3 survival.py $experiment_name > ${file_prefix}/summary.txt
   cd - > /dev/null
   cd $results_folder
   git add --all
