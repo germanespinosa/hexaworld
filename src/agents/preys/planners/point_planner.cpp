@@ -1,9 +1,9 @@
-#include <agents/preys/planners/habit_planner.h>
+#include <agents/preys/planners/point_planner.h>
 
 using namespace std;
 using namespace cell_world;
 
-Habit_planner::Habit_planner( World &world, const Cell_group &gates, const Cell &start, const Cell &goal, Planning_strategy ps, Planning_unit pu, uint32_t i, Reward_config rc, uint32_t k, cell_world::Paths &p) :
+Point_planner::Point_planner(World &world, const Cell_group &gates, const Cell &start, const Cell &goal, Planning_strategy ps, Planning_unit pu, uint32_t i, Reward_config rc, uint32_t k, cell_world::Paths &p) :
         Planner( world, start, goal,pu, i, rc, k,p),
         planning_strategy(ps),
         _habit_set(world, gates),
@@ -11,13 +11,13 @@ Habit_planner::Habit_planner( World &world, const Cell_group &gates, const Cell 
 {
 }
 
-void Habit_planner::update_state(uint32_t &) {
+void Point_planner::update_state(uint32_t &) {
     options = _habit_set[cell()];
     rewards = vector<double>(options.size(),0);
     visits = vector<uint32_t>(options.size(),0);
 }
 
-void Habit_planner::plan() {
+void Point_planner::plan() {
     Model &model = set.get_valid_model();
     uint32_t option = Chance::dice(options.size());
     auto prey_cell = set.prey.cell();
@@ -45,7 +45,7 @@ void Habit_planner::plan() {
     visits[option]++;
 }
 
-cell_world::Move Habit_planner::get_best_move() {
+cell_world::Move Point_planner::get_best_move() {
     if (_last_destination != Not_found) _world[_last_destination].icon = Icon::No_icon;
     uint32_t option = Chance::pick_best(1,rewards);
     reward_history.push_back(rewards[option]);

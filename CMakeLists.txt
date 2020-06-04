@@ -18,7 +18,7 @@ add_library( hexaworld
         include/planner/particle_filter.h
         include/agents/preys/planner_prey.h
         include/agents/preys/planners/action_planner.h
-        include/agents/preys/planners/habit_planner.h
+        include/agents/preys/planners/point_planner.h
         include/agents/prey.h
         src/utils.cpp
         src/reward_config.cpp
@@ -31,7 +31,7 @@ add_library( hexaworld
         src/planner/particle_filter.cpp
         src/agents/preys/planners/action_planner.cpp
         src/agents/preys/planner_prey.cpp
-        src/agents/preys/planners/habit_planner.cpp
+        src/agents/preys/planners/point_planner.cpp
         src/agents/prey.cpp)
 
 
@@ -51,9 +51,6 @@ target_link_libraries( viewer hexaworld )
 
 add_executable( map_creation src/tools/map_creation.cpp )
 target_link_libraries( map_creation hexaworld )
-
-add_executable( silver src/tools/silver.cpp)
-target_link_libraries( silver hexaworld )
 
 add_executable( habit src/tools/habit.cpp)
 target_link_libraries( habit hexaworld )

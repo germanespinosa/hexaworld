@@ -2,7 +2,7 @@
 #include <iostream>
 #include "utils.h"
 #include "agents/predator.h"
-#include "agents/preys/planners/habit_planner.h"
+#include "agents/preys/planners/point_planner.h"
 //11 60 90
 using namespace cell_world;
 using namespace std;
@@ -76,7 +76,7 @@ int main(int argc, char *args[]){
         start = map[coo];
     }
 
-    Habit_planner api(world, cg_gates, start, goal, ps, pu, pa, rc, k, paths);
+    Point_planner api(world, cg_gates, start, goal, ps, pu, pa, rc, k, paths);
 
     m.add_agent(api);
     m.add_agent(predator);
