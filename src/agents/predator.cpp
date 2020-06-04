@@ -41,9 +41,14 @@ void Predator::update_state(const State &state) {
 
     if ( visible ) {
         _last_prey_cell = prey_cell;
+        value = 100 / ( 1 + _last_prey_cell.location.dist(predator_cell.location));
     } else {
-        if (_visibility[predator_cell].contains(_last_prey_cell))
+        if (_visibility[predator_cell].contains(_last_prey_cell)) {
             _last_prey_cell = _inverted_visibility[predator_cell].random_cell();
+            value = 0;
+        } else {
+            value = 100 / ( 1 + _last_prey_cell.location.dist(predator_cell.location));
+        }
     }
     if (Chance::dice(100)>_randomness){
         auto nc = cell();
