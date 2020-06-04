@@ -3,27 +3,42 @@
 if (($# < 6))
 then
   echo "usage:"
-  echo "   run_world [sim_number] [entropy] [repetitions] [planning_iteration] [particles] [path_type] [pred_starting_pos1] [pred_starting_pos2] [pred_starting_pos3] [pred_starting_pos4]... "
+  echo "   run_world [sim_number] [entropy] [repetitions] [planning_iterations] [particles] [randomness] [experiment_name] [path_type] [pred_starting_pos1] [pred_starting_pos2] [pred_starting_pos3] [pred_starting_pos4]... "
   echo "   pred_starting_pos format: (x;y) "
 else
-    world="world_$1_$2"
-    log_file=$(echo "${7}/${world}.log")
-    error_file=$(echo "${7}/errors.err")
-    R=$#
-    start=`date +%s`
-    echo "World $world started"
-    cn=$(./get_commit_number)
-    echo "{ 'result_set_name': '$7', 'code_version': { $cn }, 'episodes': [" > $log_file
-    for ((I=9;I<=$R;I++))
-    do
-        tuple=${!I}
-        x=$(echo "$tuple" | cut -d';' -f 1 | cut -d'(' -f 2)
-        y=$(echo "$tuple" | cut -d';' -f 2 | cut -d')' -f 1)
-        ./run_episode $3 $world $log_file $4 $5 $x $y $6 $8 2>> $error_file
-    done
-    echo "]}" >> $log_file
-    end=`date +%s`
-    runtime=$((end-start))
-
-    echo "World $world completed. Exec time $runtime"
+  world="world_$1_$2"
+  repetitions=$3
+  log_file="${7}/${world}.json"
+  error_file="${7}/errors.err"
+  start=$(date +%s)
+  particles=$5
+  randomness=$6
+  planning_iterations=$4
+  path_type=$8
+  echo "World $world started"
+  cn=$(./get_commit_number)
+  world_info=$(./get_world_info "$world")
+  echo "{ \"result_set_name\": \"$7\", \"code_version\": { $cn }, \"world_info\": $world_info , \"episodes\": [" > "$log_file"
+  arguments=$#
+  spawn_location_count=$((arguments - 8))
+  spawn_locations=""
+  for ((I=9;I<=$#;I++))
+  do
+    item=$((I - 8))
+    tuple=${!I}
+    x=$(echo "$tuple" | cut -d';' -f 1 | cut -d'(' -f 2)
+    y=$(echo "$tuple" | cut -d';' -f 2 | cut -d')' -f 1)
+    spawn_locations="${spawn_locations}[${x},${y}]"
+    ./run_episode $repetitions $world $planning_iterations $particles $x $y $randomness $path_type >> "$log_file" 2>> "$error_file"
+    worker -s "World $world status: $item of $spawn_location_count completed."
+    if (( I < $# )); then
+      spawn_locations="${spawn_locations},"
+      printf "," >> "$log_file"
+    fi
+  done
+  worker -s "done!"
+  echo "], \"spawn_locations\": [ $spawn_locations ]}" >> "$log_file"
+  end=$(date +%s)
+  runtime=$((end-start))
+  echo "World $world completed. Exec time $runtime"
 fi

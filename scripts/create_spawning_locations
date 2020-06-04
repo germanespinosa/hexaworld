@@ -1,0 +1,11 @@
+#!/bin/bash
+
+experiments_file=$1
+
+while IFS="" read -r p || [ -n "$p" ]
+do
+  simulation=$(echo $p | cut -d' ' -f 1)
+  entropy=$(echo $p | cut -d' ' -f 2)
+  spawn_locations=$(./create_spawn_locations world_${simulation}_${entropy})
+  echo "$simulation $entropy $spawn_locations"
+done < $experiments_file

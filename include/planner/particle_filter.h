@@ -14,6 +14,7 @@ struct Particle_filter: cell_world::Model{
     std::vector<cell_world::Coordinates> particles;
     void create_particles (uint32_t );
     std::vector<uint32_t> hits;
+    void start();
 private:
     cell_world::Coordinates _current_prey_coordinates;
     cell_world::Coordinates _prey_start_location;

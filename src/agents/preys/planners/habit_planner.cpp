@@ -3,15 +3,9 @@
 using namespace std;
 using namespace cell_world;
 
-Habit_planner::Habit_planner( World &world, const Cell_group &gates, const Cell &start, const Cell &goal, double time, Reward_config rc, uint32_t k, cell_world::Paths &p) :
-    Planner( world, start, goal, time, rc, k,p),
-    _habit_set(world, gates),
-    _last_destination(Not_found)
-{
-}
-
-Habit_planner::Habit_planner( World &world, const Cell_group &gates, const Cell &start, const Cell &goal, uint32_t i, Reward_config rc, uint32_t k, cell_world::Paths &p) :
-        Planner( world, start, goal, i, rc, k,p),
+Habit_planner::Habit_planner( World &world, const Cell_group &gates, const Cell &start, const Cell &goal, Planning_strategy ps, Planning_unit pu, uint32_t i, Reward_config rc, uint32_t k, cell_world::Paths &p) :
+        Planner( world, start, goal,pu, i, rc, k,p),
+        planning_strategy(ps),
         _habit_set(world, gates),
         _last_destination(Not_found)
 {
@@ -27,7 +21,6 @@ void Habit_planner::plan() {
     Model &model = set.get_valid_model();
     uint32_t option = Chance::dice(options.size());
     auto prey_cell = set.prey.cell();
-    auto cur_cell = cell();
     auto move = options[option].get().policy(prey_cell);
     set.prey.set_move(move);
     auto habits = options;
@@ -40,7 +33,10 @@ void Habit_planner::plan() {
             current_habit = Chance::dice(habits.size());
             destination = habits[current_habit].get().destination;
         }
-        move = habits[current_habit].get().policy(cell);
+        if (planning_strategy==Planning_strategy::micro_habits)
+            move = habits[current_habit].get().policy(cell);
+        else
+            move = _paths.get_move(cell,destination);
         set.prey.set_move(move);
     }
     model.end_episode();

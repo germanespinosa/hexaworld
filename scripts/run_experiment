@@ -1,0 +1,93 @@
+#!/bin/bash
+if (($# < 2)); then
+  exit
+fi
+
+function create_world_file() {
+  world_folder="$results_folder/$1/$2"
+  mkdir "$world_folder" -p
+  ./get_world_info "$2" >> "$world_folder/world.json"
+}
+
+function launch_experiment() {
+  experiment_name=$1
+  shift
+  world_name=$1
+  shift
+  group_name=$1
+  shift
+  set_name=$1
+  shift
+  results_folder="/home/german/simulation/results/$experiment_name"
+  set_folder="$results_folder/$group_name/$world_name/$set_name"
+  mkdir "$set_folder" -p
+
+  result_file=${set_folder}/episodes.json
+  configuration="$@"
+  command="./habit $world_name $configuration"
+  worker -c "$workers" "$command" "$result_file" "$results_folder/errors.err"
+#  result=$($command)
+#  if [ $? -ne 0 ]; then
+#    echo "FAILED: $command" >> "$results_folder/errors.err"
+#  else
+#    printf "{ \"experiment_name\": %s, \"group_name\": %s, \"world_name\": %s, \"set_name\": %s, \"command\": \"%s\", \"episodes\": %s }" "$experiment_name" "$group_name" "$world_name" "$set_name" "$command" "$result" > "$result_file"
+#  fi
+
+}
+
+
+settings_file=$1
+experiment_name=$2
+
+if [[ ! -f $settings_file ]]
+then
+    echo "Can't process. Experiment file '$settings_file' not found."
+    exit
+fi
+
+results_folder="/home/german/simulation/results/$experiment_name"
+
+if [[ -d $results_folder ]]
+then
+    echo "Can't process. Result folder '$results_folder' already exists."
+    exit
+fi
+
+command="run_experiment $@"
+
+shift
+shift
+experiment_configuration=$(echo "$@")
+iterations=$(params iterations 1 $experiment_configuration)
+workers=$(params workers 18 $experiment_configuration)
+
+start=$(date +%s)
+mkdir "$results_folder"
+
+cp "$settings_file" "$results_folder/settings.json"
+settings_file=$results_folder/settings.json
+
+
+cn=$(./get_commit_number)
+setting_count=$(python3 -c "import sys, json; print(len(json.load(sys.stdin)))" < "$settings_file")
+echo "Running experiment $experiment_name ($iterations iterations in $setting_count worlds on $workers threads):"
+printf "Creating folder structure..."
+while IFS= read -r world
+do
+  create_world_file $world
+done <<< $(json -f settings.json -l -v "value['group'] + ' ' + value['world']" | unique)
+
+simulations=0
+setting_ind=0
+while IFS= read -r setting
+do
+  setting_ind=$((setting_ind + 1))
+  simulations=$((simulations + iterations))
+  launch_experiment $experiment_name $setting $experiment_configuration -seed 0
+  end=$(date +%s)
+  runtime=$((end-start))
+  gauge -s 80 -w "$setting_count" -p $setting_ind -n "$setting ($runtime seconds)" -d &
+done <<< $(json -f "$settings_file" -l -v "value['world']+' '+value['group']+' '+value['set']+' '+ value['configuration']+' '")
+worker -c 1 "sleep .1"
+gauge -s 80 -w "$setting_count" -p "$setting_count" -n  "- $simulations simulations complete in $runtime seconds ($((simulations/runtime)) simulations per sec.)"
+echo "{ \"experiment_name\": \"$experiment_name\", \"command\": \"$command\", \"code_version\": { $cn }, \"date_time\": \"$(date +'%Y-%m-%d %H:%M:%S')\", \"execution_time\": $runtime }" > "${results_folder}"/experiment.json

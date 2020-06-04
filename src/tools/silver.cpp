@@ -37,14 +37,13 @@ int main(int argc, char *args[]){
     Map map(world_cells);
     auto goal = map[{0,-7}];
     auto start = map[{0,7}];
-    Action_planner apt(world, start,goal,time, rc,k,paths);
-    Action_planner api(world, start,goal, planning_iterations, rc,k,paths);
-    if (cp["-pt"].present()) m.add_agent(apt);
-    else m.add_agent(api);
-    m.iterations = steps;
-    Simulation c(m, {width, height}, episodes);
-    if (show)
-        c.run();
-    else
-        c.run_silent(false);
+//    Action_planner api(world, start,goal, pu, pa, rc,k,paths);
+//    if (cp["-pt"].present()) m.add_agent(apt);
+//    else m.add_agent(api);
+//    m.iterations = steps;
+//    Simulation c(m, {width, height}, episodes);
+//    if (show)
+//        c.run();
+//    else
+//        c.run_silent(false);
 }

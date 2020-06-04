@@ -3,7 +3,7 @@
 using namespace cell_world;
 using namespace std;
 
-Particle_filter::Particle_filter(cell_world::Cell_group c, cell_world::Graph g, const Cell &goal, const Reward_config &rc, Paths &paths ):
+Particle_filter::Particle_filter(cell_world::Cell_group c, cell_world::Graph g, const Cell &goal, const Reward_config &rc, Paths &paths):
         Model(c),
         prey(goal),
         paths(paths),
@@ -26,6 +26,7 @@ Model &Particle_filter::get_valid_model () {
 
 void Particle_filter::create_particles(uint32_t k) {
     particles.clear();
+    if (k==0) return;
     for (auto &h:hits) h=0;
     if (_last_contact == _current_iteration) {
         particles.push_back(_predator_start_location);
@@ -69,6 +70,10 @@ bool Particle_filter::_generate_particle_no_observations() {
             return false;
         }
     }
+    if (visibility[prey.data.cell].contains(predator.data.cell)){
+        end_episode();
+        return false;
+    }
     return true;
 }
 
@@ -88,6 +93,12 @@ bool Particle_filter::_generate_particle_observations() {
         }
     }
     return true;
+}
+
+void Particle_filter::start(){
+    trajectory.clear();
+    predator.set_random_start();
+    _last_contact = Not_found;
 }
 
 void Particle_filter::update_state(uint32_t i, cell_world::Coordinates prey_coordinates) {

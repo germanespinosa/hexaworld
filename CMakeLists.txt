@@ -79,6 +79,12 @@ target_link_libraries( find_point_of_interest hexaworld )
 add_executable( create_paths src/tools/create_paths.cpp )
 target_link_libraries( create_paths hexaworld )
 
+add_executable( create_spawn_locations src/tools/create_spawn_locations.cpp )
+target_link_libraries( create_spawn_locations hexaworld )
+
+add_executable( get_world_info src/tools/get_world_info.cpp)
+target_link_libraries( get_world_info hexaworld )
+
 ###
 ### COPY WORLDS
 ###

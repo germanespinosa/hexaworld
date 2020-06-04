@@ -9,4 +9,4 @@ A=$(git show | grep commit)
 cellworld_version=$(echo $(echo "$A" | cut -d' ' -f 2 ))
 cd - >> /dev/null
 
-printf "'hexaworld_commit': '$hexaworld_version', 'cellworld_commit': '$cellworld_version'"
+printf "\"hexaworld_commit\": \"$hexaworld_version\", \"cellworld_commit\": \"$cellworld_version\""

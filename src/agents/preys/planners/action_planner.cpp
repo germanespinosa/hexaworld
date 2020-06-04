@@ -3,11 +3,8 @@
 using namespace cell_world;
 using namespace std;
 
-Action_planner::Action_planner( World &w, const Cell &s, const Cell &g, double time, Reward_config rc, uint32_t k, cell_world::Paths &p):
-Planner( w , s , g , time , rc, k,p ){}
-
-Action_planner::Action_planner( World &w, const Cell &s, const Cell &g, uint32_t i, Reward_config rc, uint32_t k, cell_world::Paths &p):
-        Planner( w , s , g , i , rc, k, p ){}
+Action_planner::Action_planner( World &w, const Cell &s, const Cell &g, Planning_unit pu, uint32_t i, Reward_config rc, uint32_t k, cell_world::Paths &p):
+        Planner( w , s , g , pu, i , rc, k, p ){}
 
 void Action_planner::plan() {
     Model &model = set.get_valid_model();

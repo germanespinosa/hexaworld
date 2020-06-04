@@ -44,6 +44,7 @@ private:
 struct Stop_watch{
     Stop_watch();
     bool time_out (double);
+    bool time_out (uint32_t);
     void stop();
     double elapsed();
     double tick();

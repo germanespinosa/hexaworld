@@ -227,6 +227,11 @@ bool Stop_watch::time_out(double period) {
     return _running && e >= period;
 }
 
+bool Stop_watch::time_out(uint32_t milliseconds) {
+    clock_t stop_clock = clock();
+    return (clock() - _clock) * 1000 / CLOCKS_PER_SEC > milliseconds;
+}
+
 void Stop_watch::reset() {
     _clock = clock();
     _running = true;

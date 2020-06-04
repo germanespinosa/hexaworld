@@ -12,10 +12,10 @@ struct Predator : cell_world::Agent {
     static void set_randomness(uint32_t);
     bool _contact;
 private:
+    cell_world::Graph _visibility;
     cell_world::Graph _inverted_visibility;
     bool _fixed_start;
     cell_world::Cell _start;
-    bool _chasing;
     cell_world::Cell _last_prey_cell;
     cell_world::Graph _graph;
     cell_world::Map _map;
