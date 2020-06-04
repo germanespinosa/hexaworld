@@ -3,8 +3,8 @@
 using namespace std;
 using namespace cell_world;
 
-Point_planner::Point_planner(World &world, const Cell_group &gates, const Cell &start, const Cell &goal, Planning_strategy ps, Planning_unit pu, uint32_t i, Reward_config rc, uint32_t k, cell_world::Paths &p) :
-        Planner( world, start, goal,pu, i, rc, k,p),
+Point_planner::Point_planner(World &world, const Cell_group &gates, const Cell &start, const Cell &goal, Planning_strategy ps, Planning_unit pu, uint32_t i, Reward_config rc, uint32_t k, cell_world::Paths &p, uint32_t iterations) :
+        Planner( world, start, goal,pu, i, rc, k,p, iterations),
         planning_strategy(ps),
         _habit_set(world, gates),
         _last_destination(Not_found)
@@ -48,7 +48,7 @@ void Point_planner::plan() {
 cell_world::Move Point_planner::get_best_move() {
     if (_last_destination != Not_found) _world[_last_destination].icon = Icon::No_icon;
     uint32_t option = Chance::pick_best(1,rewards);
-    reward_history.push_back(rewards[option]);
+    value = rewards[option];
     _last_destination = options[option].get().destination.id;
     _world[_last_destination].icon = Icon::Custom_icon_1;
     return options[option].get().policy(cell());

@@ -3,8 +3,8 @@
 using namespace cell_world;
 using namespace std;
 
-Particle_filter::Particle_filter(cell_world::Cell_group c, cell_world::Graph g, const Cell &goal, const Reward_config &rc, Paths &paths):
-        Model(c),
+Particle_filter::Particle_filter(cell_world::Cell_group c, cell_world::Graph g, const Cell &goal, const Reward_config &rc, Paths &paths, uint32_t iterations):
+        Model(c, iterations),
         prey(goal),
         paths(paths),
         predator(g, visibility, paths),

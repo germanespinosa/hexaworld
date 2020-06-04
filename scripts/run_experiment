@@ -88,6 +88,6 @@ do
   runtime=$((end-start))
   gauge -s 80 -w "$setting_count" -p $setting_ind -n "$setting ($runtime seconds)" -d &
 done <<< $(json -f "$settings_file" -l -v "value['world']+' '+value['group']+' '+value['set']+' '+ value['configuration']+' '")
-worker -c 1 "sleep .1"
+worker -c 1 "sleep 1"
 gauge -s 80 -w "$setting_count" -p "$setting_count" -n  "- $simulations simulations complete in $runtime seconds ($((simulations/runtime)) simulations per sec.)"
 echo "{ \"experiment_name\": \"$experiment_name\", \"command\": \"$command\", \"code_version\": { $cn }, \"date_time\": \"$(date +'%Y-%m-%d %H:%M:%S')\", \"execution_time\": $runtime }" > "${results_folder}"/experiment.json

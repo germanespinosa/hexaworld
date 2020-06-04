@@ -35,5 +35,5 @@ int main(int argc, char *args[]){
     m.iterations = steps;
     Simulation c(m, {width, height}, episodes);
     c.run();
-    cout << m.history;
+    cout << m.log;
 }

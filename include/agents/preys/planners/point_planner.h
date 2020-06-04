@@ -12,7 +12,7 @@ enum class Planning_strategy{
 
 struct Point_planner : Planner {
     Point_planner(cell_world::World &, const cell_world::Cell_group &, const cell_world::Cell &,
-                  const cell_world::Cell &, Planning_strategy, Planning_unit, uint32_t , Reward_config, uint32_t, cell_world::Paths &);
+                  const cell_world::Cell &, Planning_strategy, Planning_unit, uint32_t , Reward_config, uint32_t, cell_world::Paths &, uint32_t);
     void plan() override ;
     void update_state(uint32_t &) override;
     cell_world::Move get_best_move() override;

@@ -3,7 +3,7 @@
 #include <cell_world.h>
 
 struct Particle_filter: cell_world::Model{
-    Particle_filter(cell_world::Cell_group, cell_world::Graph, const cell_world::Cell &, const Reward_config &, cell_world::Paths &);
+    Particle_filter(cell_world::Cell_group, cell_world::Graph, const cell_world::Cell &, const Reward_config &, cell_world::Paths &, uint32_t);
     void update_state(uint32_t ,cell_world::Coordinates);
     void update_state(uint32_t ,cell_world::Coordinates, cell_world::Coordinates );
     cell_world::Model &get_valid_model();

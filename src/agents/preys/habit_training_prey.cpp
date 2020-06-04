@@ -62,7 +62,7 @@ Coordinates Habit_training_prey::get_move() {
     return _next_move;
 }
 
-void Habit_training_prey::end(Episode_result r, uint32_t l, const cell_world::History &) {
+void Habit_training_prey::end(Episode_result r, uint32_t l) {
     if (r == Success) successes++;
     auto &habit = _habits[_current_habit];
     habit.add_reward(_start_cell_index,_start_action_index, _rewards, r, l);

@@ -41,7 +41,7 @@ int main(int argc, char *args[]){
     world.load();
     auto world_cells = world.create_cell_group();
     auto world_graph = world.create_graph();
-    Model m(world_cells);
+    Model m(world_cells, steps);
     Paths paths = world.create_paths(world_name, path_type);
     Predator predator(world_graph, m.visibility, paths);
     if (cp["-predator_x"].present() && cp["-predator_y"].present()){
@@ -76,11 +76,10 @@ int main(int argc, char *args[]){
         start = map[coo];
     }
 
-    Point_planner api(world, cg_gates, start, goal, ps, pu, pa, rc, k, paths);
+    Point_planner api(world, cg_gates, start, goal, ps, pu, pa, rc, k, paths, steps);
 
     m.add_agent(api);
     m.add_agent(predator);
-    m.iterations = steps;
 
     if (show) {
         Simulation c(m, {width, height}, episodes);
@@ -95,6 +94,7 @@ int main(int argc, char *args[]){
             m.start_episode();
             while (m.update());
             m.end_episode();
+            cout << m.log;
         }
         cout << "]";
     }

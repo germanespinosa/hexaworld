@@ -9,7 +9,6 @@ static uint32_t _randomness = 0;
 
 Predator::Predator(Graph &graph, Graph &visibility, cell_world::Paths &paths)
     : _fixed_start (false)
-    , _contact(false)
     , _graph(graph)
     , _next_move({0,0})
     , _prev_move({0,0})
@@ -32,20 +31,17 @@ const Cell &Predator::start_episode(uint32_t) {
     auto &s = _graph.nodes.random_cell();
     if (_inverted_visibility[s].size()>0)
         _last_prey_cell = _inverted_visibility[s].random_cell();
-    else
-        cout << "ERROR" << endl;
     return s;
 }
 
 void Predator::update_state(const State &state) {
-    auto predator_cell = cell();
+    auto &prey_cell = state.agents_data[0].cell;
+    auto &predator_cell = state.agents_data[1].cell;
+    bool visible = state.visible[1];
 
-    if ( !state.agents_data.empty() ) {
-        auto prey_cell = state.agents_data[0].cell;
+    if ( visible ) {
         _last_prey_cell = prey_cell;
-        _contact = true;
     } else {
-        _contact = false;
         if (_visibility[predator_cell].contains(_last_prey_cell))
             _last_prey_cell = _inverted_visibility[predator_cell].random_cell();
     }
@@ -64,7 +60,7 @@ void Predator::update_state(const State &state) {
         } while ( _next_move == _prev_move && cp.size()>1); //going backwards and there are options
     }
 
-    if (_contact)
+    if (visible)
         set_color(Yellow);
     else
         set_color(Blue);
@@ -78,7 +74,7 @@ Move Predator::get_move() {
     return _next_move;
 }
 
-void Predator::end_episode(const State &state, const cell_world::History &) {
+void Predator::end_episode(const State &state) {
 
 }
 

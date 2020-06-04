@@ -11,16 +11,7 @@ const cell_world::Cell &Planner_prey::start(uint32_t iteration) {
 }
 
 void Planner_prey::update(const cell_world::State &state) {
-    if (!state.agents_data.empty()) {
-        Coordinates c = {x:-1,y:4};
-        if (state.agents_data[0].cell.coordinates == c){
-            contact = !contact;
-            contact = !contact;
-        }
-        contact = true;
-    } else {
-        contact = false;
-    }
+    contact = state.visible[0];
     set_status(Action_ready);
 }
 
@@ -39,6 +30,6 @@ void Planner_prey::set_move(const cell_world::Move &move) {
     next_move = move;
 }
 
-void Planner_prey::end(Episode_result r, uint32_t l, const cell_world::History &) {
+void Planner_prey::end(Episode_result r, uint32_t l) {
     result = r;
 }

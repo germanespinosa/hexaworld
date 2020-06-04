@@ -3,8 +3,8 @@
 using namespace cell_world;
 using namespace std;
 
-Planner::Planner(World &w, const Cell &start, const Cell &goal, Planning_unit pu, uint32_t planning_amount, Reward_config reward_config, uint32_t k, Paths &paths):
-        set(w.create_cell_group(), w.create_graph(), goal,reward_config, paths),
+Planner::Planner(World &w, const Cell &start, const Cell &goal, Planning_unit pu, uint32_t planning_amount, Reward_config reward_config, uint32_t k, Paths &paths, uint32_t iterations):
+        set(w.create_cell_group(), w.create_graph(), goal,reward_config, paths, iterations),
         planning_unit(pu),
         _planning_amount(planning_amount),
         _graph(w.create_graph()),
@@ -17,38 +17,18 @@ Planner::Planner(World &w, const Cell &start, const Cell &goal, Planning_unit pu
 }
 
 
-void Planner::end(Episode_result r , uint32_t l, const cell_world::History &h) {
-    auto &prey_cell = cell();
-    cout << "{ \"winner\": " << (r == Success ? 0 : 1) << ", \"length\": " << l << ", \"reward\": " << _reward_config.value(r,l) ;
-    cout << ", \"trajectories\": [";
-    for (uint32_t i = 0; i<h.size(); i++){
-        if (i>0) cout << ",";
-        cout << "[";
-        bool sep = false;
-        for (auto c : h[i]){
-            if (sep) cout << ",";
-            cout << "["<< (int) c.x << ", "<< (int) c.y <<"]" ;
-            sep = true;
-        }
-        cout << "]";
-    }
-    cout << "], \"estimated_rewards\": [ " ;
-    bool sep = false;
-    for (auto r : reward_history){
-        if (sep) cout << ", ";
-        cout << r  ;
-        sep = true;
-    }
-    cout << "]}";
+void Planner::end(Episode_result r , uint32_t l) {
 }
 
 void Planner::update(const State &state) {
-    auto &prey_cell = cell();
+    auto &prey_cell = state.agents_data[0].cell;
+    auto &predator_cell = state.agents_data[1].cell;
+    bool visible = state.visible[0];
     // time to plan
-    if (!state.agents_data.empty()) {
-        set.update_state(state.iteration, data.cell.coordinates, state.agents_data[0].cell.coordinates);
+    if ( visible ) {
+        set.update_state(state.iteration, prey_cell.coordinates, predator_cell.coordinates);
     } else {
-        set.update_state(state.iteration, data.cell.coordinates);
+        set.update_state(state.iteration, prey_cell.coordinates);
     }
     // triggers planning
     set.iterations = state.iterations;
@@ -62,7 +42,6 @@ void Planner::update(const State &state) {
 }
 
 const Cell &Planner::start(uint32_t steps) {
-    reward_history.clear();
     set.start();
     set_goal(goal);
     return _start;
