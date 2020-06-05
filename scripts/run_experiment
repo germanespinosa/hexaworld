@@ -26,24 +26,32 @@ function launch_experiment() {
   configuration="$@"
   command="./habit $world_name $configuration"
   worker -c "$workers" "$command" "$result_file" "$results_folder/errors.err"
-#  result=$($command)
-#  if [ $? -ne 0 ]; then
-#    echo "FAILED: $command" >> "$results_folder/errors.err"
-#  else
-#    printf "{ \"experiment_name\": %s, \"group_name\": %s, \"world_name\": %s, \"set_name\": %s, \"command\": \"%s\", \"episodes\": %s }" "$experiment_name" "$group_name" "$world_name" "$set_name" "$command" "$result" > "$result_file"
-#  fi
-
 }
 
 
 settings_file=$1
-experiment_name=$2
+reward_config_file=$2
+experiment_name=$3
 
 if [[ ! -f $settings_file ]]
 then
     echo "Can't process. Experiment file '$settings_file' not found."
     exit
 fi
+
+if [[ ! -f $reward_config_file ]]
+then
+    echo "Can't process. Reward config file '$reward_config_file' not found."
+    exit
+fi
+
+success_reward=$(json -f "$reward_config_file" -v "value['success_reward']")
+fail_reward=$(json -f "$reward_config_file" -v "value['fail_reward']")
+default_reward=$(json -f "$reward_config_file" -v "value['default_reward']")
+step_cost=$(json -f "$reward_config_file" -v "value['step_cost']")
+discount=$(json -f "$reward_config_file" -v "value['discount']")
+
+rewards_config="-success_reward $success_reward -fail_reward $fail_reward -default_reward $default_reward -step_cost $step_cost -discount $discount"
 
 results_folder="/home/german/simulation/results/$experiment_name"
 
@@ -53,10 +61,12 @@ then
     exit
 fi
 
-command="run_experiment $@"
 
 shift
 shift
+shift
+command="run_experiment settings.json reward_config.json $experiment_name $@"
+
 experiment_configuration=$(echo "$@")
 iterations=$(params iterations 1 $experiment_configuration)
 workers=$(params workers 18 $experiment_configuration)
@@ -65,6 +75,7 @@ start=$(date +%s)
 mkdir "$results_folder"
 
 cp "$settings_file" "$results_folder/settings.json"
+cp "$reward_config_file" "$results_folder/reward_config.json"
 settings_file=$results_folder/settings.json
 
 
@@ -75,7 +86,7 @@ printf "Creating folder structure..."
 while IFS= read -r world
 do
   create_world_file $world
-done <<< $(json -f settings.json -l -v "value['group'] + ' ' + value['world']" | unique)
+done <<< $(json -f $settings_file -l -v "value['group'] + ' ' + value['world']" | unique)
 
 simulations=0
 setting_ind=0
@@ -83,11 +94,11 @@ while IFS= read -r setting
 do
   setting_ind=$((setting_ind + 1))
   simulations=$((simulations + iterations))
-  launch_experiment $experiment_name $setting $experiment_configuration -seed 0
+  launch_experiment $experiment_name $setting $experiment_configuration -seed 0 $rewards_config
   end=$(date +%s)
   runtime=$((end-start))
   gauge -s 80 -w "$setting_count" -p $setting_ind -n "$setting ($runtime seconds)" -d &
 done <<< $(json -f "$settings_file" -l -v "value['world']+' '+value['group']+' '+value['set']+' '+ value['configuration']+' '")
-worker -c 1 "sleep 1"
-gauge -s 80 -w "$setting_count" -p "$setting_count" -n  "- $simulations simulations complete in $runtime seconds ($((simulations/runtime)) simulations per sec.)"
+worker -w
+gauge -s 80 -w "$setting_count" -p "$setting_count" -n "$simulations simulations complete in $runtime seconds ($((simulations/runtime)) simulations per sec.)"
 echo "{ \"experiment_name\": \"$experiment_name\", \"command\": \"$command\", \"code_version\": { $cn }, \"date_time\": \"$(date +'%Y-%m-%d %H:%M:%S')\", \"execution_time\": $runtime }" > "${results_folder}"/experiment.json

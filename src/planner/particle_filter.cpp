@@ -7,7 +7,7 @@ Particle_filter::Particle_filter(cell_world::Cell_group c, cell_world::Graph g, 
         Model(c, iterations),
         prey(goal),
         paths(paths),
-        predator(g, visibility, paths),
+        predator(g, visibility, paths, rc),
         hits(c.size(),0),
         _last_contact(Not_found){
     add_agent(prey);

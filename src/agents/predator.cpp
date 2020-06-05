@@ -7,8 +7,9 @@ using namespace std;
 
 static uint32_t _randomness = 0;
 
-Predator::Predator(Graph &graph, Graph &visibility, cell_world::Paths &paths)
-    : _fixed_start (false)
+Predator::Predator(Graph &graph, Graph &visibility, cell_world::Paths &paths, const Reward_config &rc)
+    : _reward_config(rc)
+    , _fixed_start (false)
     , _graph(graph)
     , _next_move({0,0})
     , _prev_move({0,0})
@@ -41,35 +42,28 @@ void Predator::update_state(const State &state) {
 
     if ( visible ) {
         _last_prey_cell = prey_cell;
-        value = 100 / ( 1 + _last_prey_cell.location.dist(predator_cell.location));
     } else {
         if (_visibility[predator_cell].contains(_last_prey_cell)) {
             _last_prey_cell = _inverted_visibility[predator_cell].random_cell();
-            value = 0;
-        } else {
-            value = 100 / ( 1 + _last_prey_cell.location.dist(predator_cell.location));
         }
     }
-    if (Chance::dice(100)>_randomness){
-        auto nc = cell();
-        _next_move = _paths.get_move(nc,_last_prey_cell);
+    auto destination = predator_cell;
+    if (Chance::dice(100)>=_randomness){
+        _next_move = _paths.get_move(destination,_last_prey_cell);
         if (Chance::dice(2))
         {
-            nc = _map [nc.coordinates+_next_move];
-            _next_move += _paths.get_move(nc,_last_prey_cell);
+            destination = _map [predator_cell.coordinates + _next_move];
+            _next_move += _paths.get_move(destination,_last_prey_cell);
         }
+        destination = _map [predator_cell.coordinates + _next_move];
     }else {
-        Connection_pattern cp = Connection_pattern::get_pattern(cell(), _graph[predator_cell]);
         do {
-            _next_move = cp.random_move();
-        } while ( _next_move == _prev_move && cp.size()>1); //going backwards and there are options
+            destination = _graph[predator_cell].random_cell();
+            _next_move = destination.coordinates - predator_cell.coordinates;
+        } while ( _next_move == _prev_move && _graph[predator_cell].size()>1); //going backwards and there are options
     }
-
-    if (visible)
-        set_color(Yellow);
-    else
-        set_color(Blue);
-
+    double distance = destination.location.manhattan(predator_cell.location);
+    set_value (_reward_config.success_reward / (distance>0?distance:1));
     set_status(Action_ready);
     _last_prey_cell = _graph[_last_prey_cell].random_cell();
 }

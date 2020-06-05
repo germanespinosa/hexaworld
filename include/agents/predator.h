@@ -1,8 +1,9 @@
 #pragma once
 #include <cell_world.h>
+#include <reward_config.h>
 
 struct Predator : cell_world::Agent {
-    explicit Predator(cell_world::Graph &, cell_world::Graph &, cell_world::Paths &);
+    explicit Predator(cell_world::Graph &, cell_world::Graph &, cell_world::Paths &, const Reward_config &);
     const cell_world::Cell &start_episode(uint32_t) override;
     void update_state(const cell_world::State &) override;
     cell_world::Coordinates get_move() override ;
@@ -11,6 +12,7 @@ struct Predator : cell_world::Agent {
     void set_random_start();
     static void set_randomness(uint32_t);
 private:
+    Reward_config _reward_config;
     cell_world::Graph _visibility;
     cell_world::Graph _inverted_visibility;
     bool _fixed_start;

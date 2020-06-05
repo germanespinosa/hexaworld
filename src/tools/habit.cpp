@@ -10,6 +10,12 @@ using namespace std;
 
 int main(int argc, char *args[]){
     Cmd_parameters cp(argc,args);
+    Reward_config rc {cp["-success_reward"].double_value(100),
+                      cp["-failure_reward"].double_value(0),
+                      cp["-default_reward"].double_value(0),
+                      cp["-discount"].double_value(1),
+                      cp["-step_cost"].double_value(0)};
+
     uint32_t iterations = cp["-iterations"].int_value(1);
     cp[1].check_present().check_file_exist(".world");
     Paths::Path_type path_type = Paths::Path_type::euclidean;
@@ -43,7 +49,7 @@ int main(int argc, char *args[]){
     auto world_graph = world.create_graph();
     Model m(world_cells, steps);
     Paths paths = world.create_paths(world_name, path_type);
-    Predator predator(world_graph, m.visibility, paths);
+    Predator predator(world_graph, m.visibility, paths, rc);
     if (cp["-predator_x"].present() && cp["-predator_y"].present()){
         Map m(world_cells);
         Coordinates coo ;
@@ -57,7 +63,6 @@ int main(int argc, char *args[]){
     Graph gates_graph(cg_gates);
     Graph gate_connections(world_cells);
     vector<Habit> world_habits = Habit::get_habits(world_graph, gates_graph, world_name);
-    Reward_config rc {100,-100,-100, 1,0};
     Map map(world_cells);
 
     auto goal = map[{0,-7}];

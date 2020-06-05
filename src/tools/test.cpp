@@ -23,12 +23,12 @@ int main(int argc, char *args[]){
     auto world_graph = world.create_graph();
     Paths paths = world.create_paths(world_name, cell_world::Paths::Path_type::shortest);
     Model m(world_cells);
-    Predator predator(world_graph,m.visibility, paths);
+    Reward_config rc {100,-100,-80, 1,0};
+    Predator predator(world_graph,m.visibility, paths, rc);
     m.add_agent(predator);
     Cell_group cg_gates = world.create_cell_group( world_name + "_gates" );
     Graph gates_graph(cg_gates);
     Graph gate_connections(world_cells);
-    Reward_config rc {100,-100,-80, 1,0};
     Map map(world_cells);
     Test_prey tp (world_graph);
     m.add_agent(tp);

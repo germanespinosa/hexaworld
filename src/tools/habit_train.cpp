@@ -81,7 +81,7 @@ int main(int argc, char *args[]){
 void run_training(uint32_t thread){
     auto &data = threads_data[thread];
     Model m(data.cells);
-    Predator predator(data.graph, m.visibility, data.paths);
+    Predator predator(data.graph, m.visibility, data.paths, rc);
     Habit_training_prey ht(data.habits, rc,.9);
     m.add_agent(ht);
     m.add_agent(predator);

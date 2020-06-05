@@ -64,9 +64,6 @@ target_link_libraries( map_editor hexaworld )
 add_executable( train_habit src/tools/habit_train.cpp)
 target_link_libraries( train_habit hexaworld )
 
-add_executable( square src/tools/square_world.cpp)
-target_link_libraries( square hexaworld )
-
 add_executable( from_occlussions src/tools/from_occlussion.cpp)
 target_link_libraries( from_occlussions hexaworld )
 
