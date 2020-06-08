@@ -3,14 +3,14 @@
 #include <reward_config.h>
 
 struct Predator : cell_world::Agent {
-    explicit Predator(cell_world::Graph &, cell_world::Graph &, cell_world::Paths &, const Reward_config &);
-    const cell_world::Cell &start_episode(uint32_t) override;
+    explicit Predator(cell_world::Graph &, cell_world::Graph &, cell_world::Paths &, const Reward_config &, const cell_world::Cell &);
+    const cell_world::Cell &start_episode(unsigned int) override;
     void update_state(const cell_world::State &) override;
     cell_world::Coordinates get_move() override ;
     void end_episode(const cell_world::State &) override ;
     void set_fixed_start(const cell_world::Cell &);
     void set_random_start();
-    static void set_randomness(uint32_t);
+    static void set_randomness(unsigned int);
 private:
     Reward_config _reward_config;
     cell_world::Graph _visibility;
@@ -23,5 +23,6 @@ private:
     cell_world::Move _next_move;
     cell_world::Move _prev_move;
     cell_world::Paths &_paths;
+    const cell_world::Cell &_goal;
     friend class Particle_filter;
 };

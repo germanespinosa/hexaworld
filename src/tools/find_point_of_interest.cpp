@@ -33,14 +33,14 @@ int main (int argc, char *args[]) {
     extra_pois = cp[3].value();
     World world(world_name);
     world.load();
-    for (uint32_t i = 0; i < world.size(); i++) world[i].value = 0;
+    for (unsigned int i = 0; i < world.size(); i++) world[i].value = 0;
     Cell_group group = world.create_cell_group();
     vector<double> connectivity (group.size(),0);
     vector<double> derivative (group.size(),0);
     Graph graph = world.create_graph();
     Map map(group);
 
-    for (uint32_t i = 0; i < world.size(); i++)
+    for (unsigned int i = 0; i < world.size(); i++)
         connectivity[i] = ((double)graph[world[i]].size());
 
     Coordinates left{-1,0};
@@ -48,7 +48,7 @@ int main (int argc, char *args[]) {
     Coordinates up{0,-1};
     Coordinates down{0,1};
     double max = 0;
-    for (uint32_t i = 0; i < world.size(); i++) {
+    for (unsigned int i = 0; i < world.size(); i++) {
         if (world[i].occluded) continue;
         auto c = world[i].coordinates;
         double local = connectivity[i];
@@ -71,13 +71,13 @@ int main (int argc, char *args[]) {
 
     for (auto c:extra_pois.pattern){
         derivative[map[c].id] = 1;
-        for (uint32_t i=0;i<world.size();i++)
+        for (unsigned int i=0;i<world.size();i++)
             if(!world[i].occluded && graph.get_shortest_path(map[c],world[i]).size() == 0) world[i].occluded = true;
     }
 
     Cell_group pois;
 
-    for (uint32_t i = 0; i < world.size(); i++) {
+    for (unsigned int i = 0; i < world.size(); i++) {
         if (!world[i].occluded && derivative[i] > 0) {
             world[i].value =  1 ;
             pois.add(world[i]);
@@ -93,6 +93,6 @@ int main (int argc, char *args[]) {
         Viewer viewer(group, h);
         viewer.run();
     }
-    for (uint32_t i=0;i<world.size();i++) world[i].value = 0;
+    for (unsigned int i=0;i<world.size();i++) world[i].value = 0;
     world.save();
 }

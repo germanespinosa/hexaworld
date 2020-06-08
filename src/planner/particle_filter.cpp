@@ -3,11 +3,11 @@
 using namespace cell_world;
 using namespace std;
 
-Particle_filter::Particle_filter(cell_world::Cell_group c, cell_world::Graph g, const Cell &goal, const Reward_config &rc, Paths &paths, uint32_t iterations):
+Particle_filter::Particle_filter(cell_world::Cell_group c, cell_world::Graph g, const Cell &goal, const Reward_config &rc, Paths &paths, unsigned int iterations):
         Model(c, iterations),
         prey(goal),
         paths(paths),
-        predator(g, visibility, paths, rc),
+        predator(g, visibility, paths, rc, goal),
         hits(c.size(),0),
         _last_contact(Not_found){
     add_agent(prey);
@@ -16,7 +16,7 @@ Particle_filter::Particle_filter(cell_world::Cell_group c, cell_world::Graph g, 
 
 Model &Particle_filter::get_valid_model () {
     if (status == Status::Running) end_episode();
-    uint32_t particle_index = Chance::dice(particles.size());
+    unsigned int particle_index = Chance::dice(particles.size());
     auto particle = particles[particle_index];
     prey.set_start_cell(map[_current_prey_coordinates]);
     predator.set_fixed_start(map[particle]);
@@ -24,7 +24,7 @@ Model &Particle_filter::get_valid_model () {
     return *this;
 }
 
-void Particle_filter::create_particles(uint32_t k) {
+void Particle_filter::create_particles(unsigned int k) {
     particles.clear();
     if (k==0) return;
     for (auto &h:hits) h=0;
@@ -34,7 +34,7 @@ void Particle_filter::create_particles(uint32_t k) {
         prey.set_start_cell(map[_prey_start_location]);
         if (_last_contact == Not_found) {
             predator.set_random_start();
-            for (uint32_t i = 0; i < k || particles.empty(); i++) {
+            for (unsigned int i = 0; i < k || particles.empty(); i++) {
                 if (_generate_particle_no_observations()) {
                     auto c = predator.cell().coordinates;
                     hits[map[c].id]++;
@@ -43,7 +43,7 @@ void Particle_filter::create_particles(uint32_t k) {
             }
         } else {
             predator.set_fixed_start(map[_predator_start_location]);
-            for (uint32_t i = 0; i < k || particles.empty(); i++) {
+            for (unsigned int i = 0; i < k || particles.empty(); i++) {
                 if (_generate_particle_observations()) {
                     auto c = predator.cell().coordinates;
                     hits[map[c].id]++;
@@ -56,9 +56,9 @@ void Particle_filter::create_particles(uint32_t k) {
 
 bool Particle_filter::_generate_particle_no_observations() {
     if (status == cell_world::Model::Status::Running) end_episode();
-    uint32_t start_iteration = 0;
+    unsigned int start_iteration = 0;
     start_episode(start_iteration);
-    for (uint32_t move_index = 0; move_index < trajectory.size(); move_index++) {
+    for (unsigned int move_index = 0; move_index < trajectory.size(); move_index++) {
         prey.set_move(trajectory[move_index]);
         if (!update()) {
             end_episode();
@@ -79,9 +79,9 @@ bool Particle_filter::_generate_particle_no_observations() {
 
 bool Particle_filter::_generate_particle_observations() {
     if (status == cell_world::Model::Status::Running) end_episode();
-    uint32_t  start_iteration = _last_contact;
+    unsigned int  start_iteration = _last_contact;
     start_episode(start_iteration);
-    for (uint32_t move_index = 0; move_index < trajectory.size(); move_index++) {
+    for (unsigned int move_index = 0; move_index < trajectory.size(); move_index++) {
         prey.set_move(trajectory[move_index]);
         if (!update()) {
             end_episode();
@@ -101,7 +101,7 @@ void Particle_filter::start(){
     _last_contact = Not_found;
 }
 
-void Particle_filter::update_state(uint32_t i, cell_world::Coordinates prey_coordinates) {
+void Particle_filter::update_state(unsigned int i, cell_world::Coordinates prey_coordinates) {
     if (i == 0) {
         _prey_start_location = prey_coordinates;
         prey.set_start_cell(map[_prey_start_location]);
@@ -113,7 +113,7 @@ void Particle_filter::update_state(uint32_t i, cell_world::Coordinates prey_coor
     _current_iteration = i;
 }
 
-void Particle_filter::update_state(uint32_t i, cell_world::Coordinates prey_coordinates, cell_world::Coordinates predator_coordinates) {
+void Particle_filter::update_state(unsigned int i, cell_world::Coordinates prey_coordinates, cell_world::Coordinates predator_coordinates) {
     _prey_start_location = prey_coordinates;
     _predator_start_location = predator_coordinates;
     _current_prey_coordinates = prey_coordinates;

@@ -13,5 +13,5 @@ struct Reward_config{
     double default_reward;
     double discount;
     double step_cost;
-    double value (Episode_result, uint32_t);
+    double value (Episode_result, unsigned int);
 };

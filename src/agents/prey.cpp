@@ -27,7 +27,7 @@ void Prey::update_state(const State &s) {
     lenght++;
 }
 
-const Cell &Prey::start_episode(uint32_t i) {
+const Cell &Prey::start_episode(unsigned int i) {
     _ready = false;
     _result = Unknown;
     _start_iteration = i;
@@ -55,5 +55,5 @@ void Prey::set_goal(const cell_world::Cell &g) {
     _goal = g;
 }
 
-void Prey::end(Episode_result, uint32_t) {
+void Prey::end(Episode_result, unsigned int) {
 }

@@ -23,8 +23,8 @@ TEST_CASE("options") {
     CHECK(sws.size()==1);
 
 
-    for(uint32_t i=0;i<options.size();i++){
-        for (uint32_t j =0;j<options[i].size();j++){
+    for(unsigned int i=0;i<options.size();i++){
+        for (unsigned int j =0;j<options[i].size();j++){
             CHECK(cg_gates.contains(options[i][j]));
         }
     }
@@ -32,7 +32,7 @@ TEST_CASE("options") {
     Graph gate_domains = !options;
     vector<Habit> habits;
 
-    for (uint32_t i=0;i<gates.size();i++){
+    for (unsigned int i=0;i<gates.size();i++){
         auto &gn = gates.nodes[i];
         auto &c = gate_domains[gn];
         Graph domain(c);
@@ -41,14 +41,14 @@ TEST_CASE("options") {
         Option option(domain, gn);
         habits.emplace_back(option);
     }
-    for (uint32_t i=0;i<gates.size();i++){
+    for (unsigned int i=0;i<gates.size();i++){
         auto &gn = gates.nodes[i];
         CHECK(habits[i].destination.coordinates == gn.coordinates);
     }
-    for (uint32_t i=0;i<gates.size();i++){
+    for (unsigned int i=0;i<gates.size();i++){
         auto &gn = gates.nodes[i];
         auto &domain = habits[i];
-        for (uint32_t j=0;j<domain.size();j++) { //every cell in the domain must be connected
+        for (unsigned int j=0;j<domain.size();j++) { //every cell in the domain must be connected
             CHECK (domain[j].size()>0);
         }
     }
@@ -67,7 +67,7 @@ TEST_CASE("get_options") {
 
     Graph gates(cg_gates);
     vector<Option> options = Option::get_options(graph, gates);
-    for (uint32_t i=0;i<gates.size();i++){
+    for (unsigned int i=0;i<gates.size();i++){
         auto &gn = gates.nodes[i];
         CHECK(options[i].destination.coordinates == gn.coordinates);
     }
@@ -75,10 +75,10 @@ TEST_CASE("get_options") {
     for (auto &o:options){
         habits.emplace_back(o);
     }
-    for (uint32_t i=0;i<gates.size();i++){
+    for (unsigned int i=0;i<gates.size();i++){
         auto &gn = gates.nodes[i];
         auto &domain = habits[i];
-        for (uint32_t j=0;j<domain.size();j++) { //every cell in the domain must be connected
+        for (unsigned int j=0;j<domain.size();j++) { //every cell in the domain must be connected
             CHECK (domain[j].size()>0);
         }
     }
@@ -98,10 +98,10 @@ TEST_CASE("get_habits") {
     vector<Habit> habits = Habit::get_habits(graph, gates);
     CHECK(habits[0].size()==198);
     CHECK(habits[1].size()==198);
-    for (uint32_t i=0;i<gates.size();i++){
+    for (unsigned int i=0;i<gates.size();i++){
         auto &gn = gates.nodes[i];
         auto &domain = habits[i];
-        for (uint32_t j=0;j<domain.size();j++) { //every cell in the domain must be connected
+        for (unsigned int j=0;j<domain.size();j++) { //every cell in the domain must be connected
             CHECK (domain[j].size()>0);
         }
     }

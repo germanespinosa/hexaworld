@@ -12,7 +12,7 @@ int main(int argc, char *args[]){
     cp[1].check_present().check_file_exist(".world");
     int64_t p_seed = cp["-seed"].default_value(-1).check_range(-1,65535).int_value();
     uint16_t steps = cp["-steps"].int_value(80);
-    uint32_t episodes = cp["-episodes"].int_value(1);
+    unsigned int episodes = cp["-episodes"].int_value(1);
     int width = cp["-width"].int_value(1024);
     int height = cp["-height"].int_value(768);
     set_seed(p_seed);
@@ -24,7 +24,7 @@ int main(int argc, char *args[]){
     Paths paths = world.create_paths(world_name, cell_world::Paths::Path_type::shortest);
     Model m(world_cells);
     Reward_config rc {100,-100,-80, 1,0};
-    Predator predator(world_graph,m.visibility, paths, rc);
+    Predator predator(world_graph,m.visibility, paths, rc, world_cells[0]);
     m.add_agent(predator);
     Cell_group cg_gates = world.create_cell_group( world_name + "_gates" );
     Graph gates_graph(cg_gates);

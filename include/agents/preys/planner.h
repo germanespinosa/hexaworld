@@ -13,12 +13,12 @@ enum class Planning_unit{
 
 
 struct Planner : Prey {
-    Planner(cell_world::World &, const cell_world::Cell & , const cell_world::Cell &, Planning_unit, uint32_t, Reward_config, uint32_t, cell_world::Paths &, uint32_t);
+    Planner(cell_world::World &, const cell_world::Cell & , const cell_world::Cell &, Planning_unit, unsigned int, Reward_config, unsigned int, cell_world::Paths &, unsigned int);
     void update(const cell_world::State &) override;
-    const cell_world::Cell &start(uint32_t) override;
-    void end(Episode_result, uint32_t) override;
+    const cell_world::Cell &start(unsigned int) override;
+    void end(Episode_result, unsigned int) override;
     cell_world::Move get_move() override;
-    virtual void update_state(uint32_t &) = 0;
+    virtual void update_state(unsigned int &) = 0;
     virtual void plan() = 0;
     virtual cell_world::Move get_best_move() = 0;
     Particle_filter set;
@@ -31,7 +31,7 @@ protected:
     cell_world::World &_world;
     cell_world::Paths _paths;
 private:
-    uint32_t _particle_count;
+    unsigned int _particle_count;
     void _planning_job();
-    uint32_t _planning_amount;
+    unsigned int _planning_amount;
 };

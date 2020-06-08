@@ -5,10 +5,10 @@
 
 struct Planner_prey: Prey {
     explicit Planner_prey(const cell_world::Cell &);
-    const cell_world::Cell &start(uint32_t) override;
+    const cell_world::Cell &start(unsigned int) override;
     void update(const cell_world::State &) override;
     cell_world::Move get_move() override;
-    void end(Episode_result, uint32_t) override;
+    void end(Episode_result, unsigned int) override;
 
     void set_move(const cell_world::Move &);
     void set_start_cell(const cell_world::Cell &);

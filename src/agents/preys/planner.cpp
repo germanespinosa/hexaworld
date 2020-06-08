@@ -3,7 +3,7 @@
 using namespace cell_world;
 using namespace std;
 
-Planner::Planner(World &w, const Cell &start, const Cell &goal, Planning_unit pu, uint32_t planning_amount, Reward_config reward_config, uint32_t k, Paths &paths, uint32_t iterations):
+Planner::Planner(World &w, const Cell &start, const Cell &goal, Planning_unit pu, unsigned int planning_amount, Reward_config reward_config, unsigned int k, Paths &paths, unsigned int iterations):
         set(w.create_cell_group(), w.create_graph(), goal,reward_config, paths, iterations),
         planning_unit(pu),
         _planning_amount(planning_amount),
@@ -17,7 +17,17 @@ Planner::Planner(World &w, const Cell &start, const Cell &goal, Planning_unit pu
 }
 
 
-void Planner::end(Episode_result r , uint32_t l) {
+void Planner::end(Episode_result r , unsigned int l) {
+    switch (_result) {
+        case Success:
+            set_value(_reward_config.success_reward);
+            break;
+        case Fail:
+            set_value(_reward_config.failure_reward);
+            break;
+        default:
+            set_value(_reward_config.default_reward);
+    }
 }
 
 void Planner::update(const State &state) {
@@ -34,14 +44,14 @@ void Planner::update(const State &state) {
     set.iterations = state.iterations;
     update_state(_particle_count);
     set.create_particles(_particle_count);
-    uint32_t max = 0;
+    unsigned int max = 0;
     for (auto h:set.hits) if (h>max) max = h;
-    for (uint32_t i =0; i<set.hits.size();i++)
+    for (unsigned int i =0; i<set.hits.size();i++)
         _world[i].value = (double)set.hits[i] / double(max);
     set_status(Action_ready);
 }
 
-const Cell &Planner::start(uint32_t steps) {
+const Cell &Planner::start(unsigned int steps) {
     set.start();
     set_goal(goal);
     return _start;
@@ -57,7 +67,7 @@ cell_world::Move Planner::get_move() {
             return _paths.get_move(cell(),goal); //shortest path to the goal
     } else {
         if (_planning_amount)
-            for (uint32_t i = 0; i < _planning_amount; i++) plan();
+            for (unsigned int i = 0; i < _planning_amount; i++) plan();
         else
             return _paths.get_move(cell(),goal); //shortest path to the goal
     }

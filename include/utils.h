@@ -35,7 +35,7 @@ private:
 struct Cmd_parameters{
     Cmd_parameters(int, char **);
     Cmd_parameter operator [](const std::string&);
-    Cmd_parameter operator [](uint32_t);
+    Cmd_parameter operator [](unsigned int);
 private:
     int argc;
     char **args;
@@ -44,7 +44,7 @@ private:
 struct Stop_watch{
     Stop_watch();
     bool time_out (double);
-    bool time_out (uint32_t);
+    bool time_out (unsigned int);
     void stop();
     double elapsed();
     double tick();
@@ -56,7 +56,7 @@ struct Stop_watch{
 
 void print_hexaworld_help();
 void print_hexamap_help();
-void set_seed (int32_t seed);
+void set_seed (int seed);
 void create_folder(std::string );
 double round(double,int);
 void print_history(std::vector<cell_world::Coordinates> history);

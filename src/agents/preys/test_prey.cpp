@@ -11,7 +11,7 @@ Test_prey::Test_prey(Graph &graph) :
         _clean(false){
 }
 
-const Cell &Test_prey::start(uint32_t) {
+const Cell &Test_prey::start(unsigned int) {
     set_goal(_map[{0,-7}]);
     return _cg.nodes.random_cell();
 }

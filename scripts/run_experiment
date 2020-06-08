@@ -102,3 +102,10 @@ done <<< $(json -f "$settings_file" -l -v "value['world']+' '+value['group']+' '
 worker -w
 gauge -s 80 -w "$setting_count" -p "$setting_count" -n "$simulations simulations complete in $runtime seconds ($((simulations/runtime)) simulations per sec.)"
 echo "{ \"experiment_name\": \"$experiment_name\", \"command\": \"$command\", \"code_version\": { $cn }, \"date_time\": \"$(date +'%Y-%m-%d %H:%M:%S')\", \"execution_time\": $runtime }" > "${results_folder}"/experiment.json
+
+echo "Generating heat-maps"
+python3 ../../visualizer/process_results.py "$results_folder"
+cd ../../results
+
+echo "Updating github repository"
+git add --all; git commit --all --message "$experiment_name added"; git push > /dev/null

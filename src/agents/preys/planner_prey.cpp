@@ -3,7 +3,7 @@
 using namespace cell_world;
 using namespace std;
 
-const cell_world::Cell &Planner_prey::start(uint32_t iteration) {
+const cell_world::Cell &Planner_prey::start(unsigned int iteration) {
     contact = false;
     result = Unknown;
     set_goal(goal);
@@ -30,6 +30,6 @@ void Planner_prey::set_move(const cell_world::Move &move) {
     next_move = move;
 }
 
-void Planner_prey::end(Episode_result r, uint32_t l) {
+void Planner_prey::end(Episode_result r, unsigned int l) {
     result = r;
 }

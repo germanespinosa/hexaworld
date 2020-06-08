@@ -14,7 +14,7 @@ void print_history(vector<Coordinates> history){
     }
 }
 
-void set_seed (int32_t seed){
+void set_seed (int seed){
     if (seed>0)
         srand(seed);
     else
@@ -77,7 +77,7 @@ Cmd_parameter Cmd_parameters::operator[](const std::string& name) {
     return cp;
 }
 
-Cmd_parameter Cmd_parameters::operator[](uint32_t index) {
+Cmd_parameter Cmd_parameters::operator[](unsigned int index) {
     Cmd_parameter cp;
     cp._name = "position " + std::to_string(index);
     if (index>=argc) return cp;
@@ -227,7 +227,7 @@ bool Stop_watch::time_out(double period) {
     return _running && e >= period;
 }
 
-bool Stop_watch::time_out(uint32_t milliseconds) {
+bool Stop_watch::time_out(unsigned int milliseconds) {
     clock_t stop_clock = clock();
     return (clock() - _clock) * 1000 / CLOCKS_PER_SEC > milliseconds;
 }

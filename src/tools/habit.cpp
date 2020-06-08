@@ -16,7 +16,7 @@ int main(int argc, char *args[]){
                       cp["-discount"].double_value(1),
                       cp["-step_cost"].double_value(0)};
 
-    uint32_t iterations = cp["-iterations"].int_value(1);
+    unsigned int iterations = cp["-iterations"].int_value(1);
     cp[1].check_present().check_file_exist(".world");
     Paths::Path_type path_type = Paths::Path_type::euclidean;
     if (cp["-Navigation_strategy"].value("shortest") == "shortest"){
@@ -25,15 +25,15 @@ int main(int argc, char *args[]){
     bool show = cp["-show"].present();
     int64_t p_seed = cp["-seed"].default_value(-1).check_range(-1,65535).int_value();
     uint16_t steps = cp["-steps"].int_value(80);
-    uint32_t episodes = cp["-episodes"].int_value(1);
-    uint32_t k = cp["-particles"].int_value(10000);
+    unsigned int episodes = cp["-episodes"].int_value(1);
+    unsigned int k = cp["-particles"].int_value(10000);
     int width = cp["-width"].int_value(1024);
     int height = cp["-height"].int_value(768);
-    uint32_t planning_roll_outs = cp["-planning_roll_outs"].int_value(5000);
-    uint32_t planning_time = cp["-planning_time"].double_value(1);
+    unsigned int planning_roll_outs = cp["-planning_roll_outs"].int_value(5000);
+    unsigned int planning_time = cp["-planning_time"].double_value(1);
 
     Planning_unit pu = Planning_unit::roll_outs;
-    uint32_t pa = planning_roll_outs;
+    unsigned int pa = planning_roll_outs;
     if (cp["-planning_time"].present()) {
         pu = Planning_unit::milliseconds;
         pa = planning_time;
@@ -49,20 +49,7 @@ int main(int argc, char *args[]){
     auto world_graph = world.create_graph();
     Model m(world_cells, steps);
     Paths paths = world.create_paths(world_name, path_type);
-    Predator predator(world_graph, m.visibility, paths, rc);
-    if (cp["-predator_x"].present() && cp["-predator_y"].present()){
-        Map m(world_cells);
-        Coordinates coo ;
-        coo.x = (int8_t) (cp["-predator_x"].int_value());
-        coo.y = (int8_t) (cp["-predator_y"].int_value());
-        predator.set_fixed_start(m[coo]);
-    }
-    int32_t pr = cp["-predator_randomness"].default_value(25).check_range(0,100).int_value();
-    predator.set_randomness(pr);
-    Cell_group cg_gates = world.create_cell_group( world_name + "_gates" );
-    Graph gates_graph(cg_gates);
-    Graph gate_connections(world_cells);
-    vector<Habit> world_habits = Habit::get_habits(world_graph, gates_graph, world_name);
+
     Map map(world_cells);
 
     auto goal = map[{0,-7}];
@@ -72,6 +59,20 @@ int main(int argc, char *args[]){
         coo.y = (int8_t) (cp["-goal_y"].int_value());
         goal = map[coo];
     }
+
+    Predator predator(world_graph, m.visibility, paths, rc, goal);
+    if (cp["-predator_x"].present() && cp["-predator_y"].present()){
+        Coordinates coo ;
+        coo.x = (int8_t) (cp["-predator_x"].int_value());
+        coo.y = (int8_t) (cp["-predator_y"].int_value());
+        predator.set_fixed_start(map[coo]);
+    }
+    int pr = cp["-predator_randomness"].default_value(25).check_range(0,100).int_value();
+    predator.set_randomness(pr);
+    Cell_group cg_gates = world.create_cell_group( world_name + "_gates" );
+    Graph gates_graph(cg_gates);
+    Graph gate_connections(world_cells);
+    vector<Habit> world_habits = Habit::get_habits(world_graph, gates_graph, world_name);
 
     auto start = map[{0,7}];
     if (cp["-prey_x"].present() && cp["-prey_y"].present()) {
@@ -92,7 +93,7 @@ int main(int argc, char *args[]){
     }
     else {
         cout << "[";
-        for (uint32_t iteration = 0;iteration < iterations;iteration++) {
+        for (unsigned int iteration = 0;iteration < iterations;iteration++) {
             if (iteration) cout << ",";
             if (p_seed>=0) p_seed++;
             set_seed(p_seed);

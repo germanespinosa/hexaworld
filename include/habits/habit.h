@@ -4,19 +4,19 @@
 #include <reward_config.h>
 
 struct Habit_action{
-    Habit_action (cell_world::Move, uint32_t ,double);
+    Habit_action (cell_world::Move, unsigned int ,double);
     cell_world::Move move;
-    uint32_t visits = 0;
+    unsigned int visits = 0;
     double reward = 0;
 };
 
 struct Habit_value{
     std::vector<Habit_action> actions;
     double length = 0;
-    uint32_t fails = 0;
-    uint32_t successes = 0;
-    uint32_t unknowns = 0;
-    uint32_t visits = 0;
+    unsigned int fails = 0;
+    unsigned int successes = 0;
+    unsigned int unknowns = 0;
+    unsigned int visits = 0;
     cell_world::Move policy();
 };
 
@@ -25,8 +25,8 @@ struct Habit : Option{
     std::vector<Habit_value> values;
     bool load(const std::string&);
     bool save(const std::string&);
-    void add_reward(uint32_t, uint32_t,Reward_config &, Episode_result, uint32_t);
-    void end_episode(uint32_t, Episode_result);
+    void add_reward(unsigned int, unsigned int,Reward_config &, Episode_result, unsigned int);
+    void end_episode(unsigned int, Episode_result);
     cell_world::Move policy(const cell_world::Cell &);
     static std::vector<Habit> get_habits(cell_world::Graph &, cell_world::Cell_group &);
     static std::vector<Habit> get_habits(cell_world::Graph &, cell_world::Cell_group &, const std::string &);

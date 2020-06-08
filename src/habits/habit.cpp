@@ -49,7 +49,7 @@ bool Habit::load(const std::string& world_name) {
     return true;
 }
 
-void Habit::add_reward(uint32_t cell_index, uint32_t action_index, Reward_config &rc, Episode_result result, uint32_t length) {
+void Habit::add_reward(unsigned int cell_index, unsigned int action_index, Reward_config &rc, Episode_result result, unsigned int length) {
     auto &value = values[cell_index];
     auto &action = value.actions[action_index];
     double reward = rc.value(result, length);
@@ -62,7 +62,7 @@ void Habit::add_reward(uint32_t cell_index, uint32_t action_index, Reward_config
     //cout << "reward for " << nodes[cell_index].coordinates << " action " << action.move << " : " << reward  << " " << length << endl;
 }
 
-void Habit::end_episode(uint32_t cell_index, Episode_result result) {
+void Habit::end_episode(unsigned int cell_index, Episode_result result) {
     values[cell_index].visits++;
     switch(result){
         case Unknown:
@@ -80,9 +80,9 @@ void Habit::end_episode(uint32_t cell_index, Episode_result result) {
 Habit::Habit(Option option)
 :Option(option)
 {
-    for (uint32_t i = 0; i < option.size() ; i++){
+    for (unsigned int i = 0; i < option.size() ; i++){
         Habit_value hv;
-        for (uint32_t j = 0; j < option[i].size() ; j++){
+        for (unsigned int j = 0; j < option[i].size() ; j++){
             Move a( option[i][j].coordinates - option.nodes[i].coordinates );
             hv.actions.emplace_back(a,0,0);
         }
@@ -132,17 +132,17 @@ Habit::get_habits(cell_world::Graph &world_graph, cell_world::Graph &gates_graph
 }
 
 cell_world::Move Habit::policy(const cell_world::Cell &cell) {
-    uint32_t i = nodes.find(cell);
+    unsigned int i = nodes.find(cell);
     return values[i].policy();
 }
 
 Move Habit_value::policy() {
     vector<double> values (actions.size());
-    for (uint32_t i=0;i<values.size();i++) values[i] = actions[i].reward;
+    for (unsigned int i=0;i<values.size();i++) values[i] = actions[i].reward;
     return actions[Chance::pick_best(1,values)].move;
 }
 
-Habit_action::Habit_action(Move a, uint32_t v, double r) :
+Habit_action::Habit_action(Move a, unsigned int v, double r) :
 move(a),
 visits(v),
 reward(r){}
@@ -157,8 +157,8 @@ Habit_set::Habit_set(const cell_world::World &world, const cell_world::Cell_grou
 std::vector<std::reference_wrapper<Habit>> Habit_set::operator[](const cell_world::Cell &cell) {
     std::vector<std::reference_wrapper<Habit>> r;
     auto o = options[cell];
-    for (uint32_t i = 0;i<o.size();i++){
-        uint32_t index = destinations.find(o[i]);
+    for (unsigned int i = 0;i<o.size();i++){
+        unsigned int index = destinations.find(o[i]);
         r.emplace_back(habits[index]);
     }
     return r;

@@ -2,7 +2,7 @@
 
 using namespace std;
 
-double Reward_config::value(Episode_result result, uint32_t steps) {
+double Reward_config::value(Episode_result result, unsigned int steps) {
     double reward = 0;
     switch (result){
         case Success:

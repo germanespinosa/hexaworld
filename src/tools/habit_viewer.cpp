@@ -18,18 +18,18 @@ struct Handler : Viewer_handler{
         cells_view.emplace_back(destination );
         Cell_group_view current {Cell_group(),Red,true};
         cells_view.emplace_back(current );
-        for (uint32_t i=0;i<gates.size();i++){
+        for (unsigned int i=0;i<gates.size();i++){
             world[gates[i].id].icon = Bridge_icon;
             cells_view[0].cells.add(gates[i]);
         }
-        for (uint32_t i=0;i<world.size();i++){
+        for (unsigned int i=0;i<world.size();i++){
             world[i].value = 0;
         }
         _current_habit = 0;
     }
-    void on_mouse_up(Mouse_button b, Location l, int32_t i) override {
+    void on_mouse_up(Mouse_button b, Location l, int i) override {
         if (i==Not_found) return;
-        int32_t hi= _habits[_current_habit].nodes.find(_world[i]);
+        int hi= _habits[_current_habit].nodes.find(_world[i]);
         if (hi==Not_found) return;
         cout << _world[i] << endl;
         cout << "values:" << endl;
@@ -57,10 +57,10 @@ struct Handler : Viewer_handler{
         }
         _habits[_current_habit].load(_world.name);
         double  max = 1;
-        for (uint32_t i=0;i<_world.size();i++){
+        for (unsigned int i=0;i<_world.size();i++){
             _world[i].icon = No_icon;
         }
-        for(uint32_t i=0;i<_habits[_current_habit].values.size();i++) {
+        for(unsigned int i=0;i<_habits[_current_habit].values.size();i++) {
             auto &cell = _habits[_current_habit].nodes[i];
             _world[cell.id].icon = Arrow_icon;
             _world[cell.id].direction = _habits[_current_habit].values[i].policy();
@@ -71,7 +71,7 @@ struct Handler : Viewer_handler{
         cells_view[1].cells.add(_habits[_current_habit].destination);
     }
 private:
-    int32_t _current_habit = Not_found;
+    int _current_habit = Not_found;
     World &_world;
     vector<Habit> _habits;
     Cell_group &_gates;
@@ -82,7 +82,7 @@ int main(int argc, char *args[]){
     cp[1].check_present().check_file_exist(".world");
     int64_t p_seed = cp["-seed"].default_value(-1).check_range(-1,65535).int_value();
     uint16_t steps = cp["-steps"].int_value(1000);
-    uint32_t episodes = cp["-episodes"].int_value(1);
+    unsigned int episodes = cp["-episodes"].int_value(1);
     int width = cp["-width"].int_value(1024);
     int height = cp["-height"].int_value(768);
     set_seed(p_seed);

@@ -22,7 +22,7 @@ std::vector<Option> Option::get_options(cell_world::Graph &graph, cell_world::Gr
     vector<Graph> sub_graphs = graph.get_sub_graphs(gates, options_graph);
     Graph gate_domains = !options_graph;
     vector<Option> options;
-    for (uint32_t i=0;i<gates.size();i++){
+    for (unsigned int i=0;i<gates.size();i++){
         auto &gn = gates.nodes[i];
         Graph domain(gate_domains[gn]); // all the cells connected to the destination
         domain.add(gn); // adds the destination

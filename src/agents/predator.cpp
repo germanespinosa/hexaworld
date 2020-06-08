@@ -5,9 +5,9 @@ using namespace cell_world;
 using namespace std;
 
 
-static uint32_t _randomness = 0;
+static unsigned int _randomness = 0;
 
-Predator::Predator(Graph &graph, Graph &visibility, cell_world::Paths &paths, const Reward_config &rc)
+Predator::Predator(Graph &graph, Graph &visibility, cell_world::Paths &paths, const Reward_config &rc, const cell_world::Cell &goal)
     : _reward_config(rc)
     , _fixed_start (false)
     , _graph(graph)
@@ -17,11 +17,13 @@ Predator::Predator(Graph &graph, Graph &visibility, cell_world::Paths &paths, co
     , _inverted_visibility(_visibility.invert())
     , _map(_graph.nodes)
     , _paths(paths)
+    , _goal(goal)
     , Agent({"predator", 1}) {
 }
 
-const Cell &Predator::start_episode(uint32_t) {
+const Cell &Predator::start_episode(unsigned int) {
     _prev_move = Move{0,0};
+    set_value(0);
     set_color(Blue);
     data.icon = Icon::Predator_icon;
     if (_fixed_start) {
@@ -38,13 +40,22 @@ const Cell &Predator::start_episode(uint32_t) {
 void Predator::update_state(const State &state) {
     auto &prey_cell = state.agents_data[0].cell;
     auto &predator_cell = state.agents_data[1].cell;
-    bool visible = state.visible[1];
+    bool visible = state.visible[0];
+
+    if (prey_cell==_goal) {
+        _next_move = Move{0,0};
+        set_value(0);
+        set_status(Action_ready);
+        return;
+    }
 
     if ( visible ) {
         _last_prey_cell = prey_cell;
     } else {
+        _last_prey_cell = _graph[_last_prey_cell].random_cell();
         if (_visibility[predator_cell].contains(_last_prey_cell)) {
             _last_prey_cell = _inverted_visibility[predator_cell].random_cell();
+            set_value(0);
         }
     }
     auto destination = predator_cell;
@@ -62,10 +73,14 @@ void Predator::update_state(const State &state) {
             _next_move = destination.coordinates - predator_cell.coordinates;
         } while ( _next_move == _prev_move && _graph[predator_cell].size()>1); //going backwards and there are options
     }
-    double distance = destination.location.manhattan(predator_cell.location);
-    set_value (_reward_config.success_reward / (distance>0?distance:1));
+    if (visible) {
+        double distance_to_prey = destination.coordinates.manhattan(predator_cell.coordinates);
+        double distance_prey_to_goal = prey_cell.coordinates.manhattan(_goal.coordinates);
+        set_value (_reward_config.success_reward * distance_prey_to_goal / ( distance_prey_to_goal + distance_to_prey));
+    } else {
+        set_value (value * .9);
+    }
     set_status(Action_ready);
-    _last_prey_cell = _graph[_last_prey_cell].random_cell();
 }
 
 Move Predator::get_move() {
@@ -86,6 +101,6 @@ void Predator::set_random_start() {
     _fixed_start = false;
 }
 
-void Predator::set_randomness(uint32_t randomness) {
+void Predator::set_randomness(unsigned int randomness) {
     _randomness = randomness;
 }
