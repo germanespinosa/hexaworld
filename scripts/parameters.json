@@ -1,0 +1,15 @@
+[
+  {"name": "workers", "description": "Parallel simulation execution limit" ,"type":  "integer", "lower_bound": 0, "upper_bound": 100},
+
+  {"name": "iterations", "description": "Simulation repetitions with the same parameters" ,"type":  "integer", "lower_bound": 0},
+  {"name": "steps", "description": "Simulation duration" ,"type":  "integer", "lower_bound": 0},
+
+  {"name": "predator_randomness", "description": "Percentage of random actions during aggressive pursuit" ,"type":  "integer", "lower_bound": 0, "upper_bound": 100},
+  {"name": "predator_aggressive_speed", "description": "Percentage of step taken by the predator on each turn" ,"type":  "integer", "lower_bound": 0, "upper_bound": 500},
+  {"name": "predator_passive_behavior", "description": "Predator behavior when prey is not visible" ,"type":  "choice", "options" : ["random_walk", "pick_not_visible", "pick_not_visible_commit", "expand_one", "expand_all", "expand_all_commit"] },
+
+  {"name": "planning_strategy", "description": "Strategy used to prune search trees between POIs" ,"type":  "choice", "options" : ["micro_habits", "shortest_path"] },
+  {"name": "path_solver", "description": "Path discovery strategy" ,"type":  "choice", "options" : ["mix", "shortest", "euclidean"] },
+  {"name": "particles", "description": "Number of particles in belief state" ,"type":  "integer", "lower_bound": 0 }
+
+]

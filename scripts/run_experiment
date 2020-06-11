@@ -24,7 +24,7 @@ function launch_experiment() {
 
   result_file=${set_folder}/episodes.json
   configuration="$@"
-  command="./habit $world_name $configuration"
+  command="./sim $world_name $configuration"
   worker -c "$workers" "$command" "$result_file" "$results_folder/errors.err"
 }
 
@@ -108,4 +108,7 @@ python3 ../../visualizer/process_results.py "$results_folder"
 cd ../../results
 
 echo "Updating github repository"
-git add --all; git commit --all --message "$experiment_name added"; git push > /dev/null
+git add --all
+git commit --all --message "$experiment_name added" --quiet
+git push --quiet
+echo "done"

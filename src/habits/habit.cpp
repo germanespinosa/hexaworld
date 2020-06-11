@@ -1,6 +1,6 @@
 #include <fstream>
 #include <iostream>
-#include <habits/habit.h>
+#include <habits/simulation.h>
 
 using namespace cell_world;
 using namespace std;

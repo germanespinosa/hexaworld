@@ -1,6 +1,6 @@
 #pragma once
 #include <agents/prey.h>
-#include <habits/habit.h>
+#include <habits/simulation.h>
 
 struct Habit_training_prey: Prey {
     Habit_training_prey(std::vector<Habit> &, Reward_config, double);

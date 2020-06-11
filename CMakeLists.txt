@@ -9,7 +9,7 @@ add_library( hexaworld
         include/agents/predator.h
         include/reward_config.h
         include/utils.h
-        include/habits/habit.h
+        include/habits/simulation.h
         include/agents/preys/habit_training_prey.h
         include/habits/option.h
         include/agents/preys/test_prey.h
@@ -52,10 +52,7 @@ target_link_libraries( viewer hexaworld )
 add_executable( map_creation src/tools/map_creation.cpp )
 target_link_libraries( map_creation hexaworld )
 
-add_executable( habit src/tools/habit.cpp)
-target_link_libraries( habit hexaworld )
-
-add_executable( sim src/tools/test.cpp)
+add_executable( sim src/tools/simulation.cpp)
 target_link_libraries( sim hexaworld )
 
 add_executable( map_editor src/tools/map_editor.cpp)

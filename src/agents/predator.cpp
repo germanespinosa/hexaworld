@@ -73,6 +73,11 @@ void Predator::update_state(const State &state) {
             _next_move = destination.coordinates - predator_cell.coordinates;
         } while ( _next_move == _prev_move && _graph[predator_cell].size()>1); //going backwards and there are options
     }
+    if (prey_cell==destination) {
+        set_value(_reward_config.success_reward);
+        set_status(Action_ready);
+        return;
+    }
     if (visible) {
         double distance_to_prey = destination.coordinates.manhattan(predator_cell.coordinates);
         double distance_prey_to_goal = prey_cell.coordinates.manhattan(_goal.coordinates);

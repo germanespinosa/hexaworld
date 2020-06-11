@@ -3,7 +3,7 @@
 #include <agents/predator.h>
 #include <agents/preys/planner_prey.h>
 #include <agents/preys/planner.h>
-#include <habits/habit.h>
+#include <habits/simulation.h>
 
 enum class Planning_strategy{
     micro_habits,
