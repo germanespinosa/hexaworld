@@ -17,7 +17,8 @@ int main (int argc, char *args[]) {
         vision_field.push_back(visibility[i].size());
     }
     std::vector<int> hist = histogram(vision_field);
-    cout << "{\"complexity\": " << entropy(hist) << ", \"occlusions\": [";
+    set_output_format(cell_world::Output_format::Object);
+    cout << "{\"world\": "  << world << ", \"complexity\": " << entropy(hist) << ", \"occlusions\": [";
     bool first = true;
     int smallestX = cg[0].coordinates.x, smallestY = cg[0].coordinates.y, biggestX = cg[0].coordinates.x, biggestY = cg[0].coordinates.y;
     for (unsigned int i=0;i<cg.size();i++){

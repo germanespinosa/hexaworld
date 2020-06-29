@@ -52,8 +52,9 @@ void Predator::update_state(const State &state) {
     if ( visible ) {
         _last_prey_cell = prey_cell;
     } else {
-        _last_prey_cell = _graph[_last_prey_cell].random_cell();
-        if (_visibility[predator_cell].contains(_last_prey_cell)) {
+        //_last_prey_cell = _graph[_last_prey_cell].random_cell();
+        //if (_visibility[predator_cell].contains(_last_prey_cell)) {
+        if (predator_cell == _last_prey_cell) {
             _last_prey_cell = _inverted_visibility[predator_cell].random_cell();
             set_value(0);
         }

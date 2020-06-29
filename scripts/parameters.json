@@ -7,9 +7,23 @@
   {"name": "predator_randomness", "description": "Percentage of random actions during aggressive pursuit" ,"type":  "integer", "lower_bound": 0, "upper_bound": 100},
   {"name": "predator_aggressive_speed", "description": "Percentage of step taken by the predator on each turn" ,"type":  "integer", "lower_bound": 0, "upper_bound": 500},
   {"name": "predator_passive_behavior", "description": "Predator behavior when prey is not visible" ,"type":  "choice", "options" : ["random_walk", "pick_not_visible", "pick_not_visible_commit", "expand_one", "expand_all", "expand_all_commit"] },
+  {"name": "predator_x", "description": "Predator spawn location X" ,"type":  "integer"},
+  {"name": "predator_y", "description": "Predator spawn location Y" ,"type":  "integer"},
 
   {"name": "planning_strategy", "description": "Strategy used to prune search trees between POIs" ,"type":  "choice", "options" : ["micro_habits", "shortest_path"] },
+  {"name": "planning_limit_unit", "description": "Unit used to limit planning" ,"type":  "choice", "options" : ["roll_outs", "ms"] },
+  {"name": "planning_limit", "description": "Limit to planning" ,"type":  "integer", "lower_bound": 0 },
   {"name": "path_solver", "description": "Path discovery strategy" ,"type":  "choice", "options" : ["mix", "shortest", "euclidean"] },
-  {"name": "particles", "description": "Number of particles in belief state" ,"type":  "integer", "lower_bound": 0 }
+  {"name": "particles", "description": "Number of particles in belief state" ,"type":  "integer", "lower_bound": 0 },
+  {"name": "prey_x", "description": "Prey spawn location X" ,"type":  "integer"},
+  {"name": "prey_y", "description": "Prey spawn location Y" ,"type":  "integer"},
 
+  {"name": "goal_x", "description": "Goal X" ,"type":  "integer"},
+  {"name": "goal_y", "description": "Goal Y" ,"type":  "integer"},
+
+  {"name": "success_reward", "description": "Win reward" ,"type":  "double" },
+  {"name": "failure_reward", "description": "Lose reward" ,"type":  "double" },
+  {"name": "default_reward", "description": "Tie reward" ,"type":  "double" },
+  {"name": "discount", "description": "Reward discount per step" ,"type":  "double" },
+  {"name": "step_cost", "description": "Cost per step" ,"type":  "double" }
 ]

@@ -12,6 +12,8 @@ int main (int argc, char *args[]) {
     world.load();
     Paths euclidean = world.create_paths(Paths::Path_type::euclidean);
     Paths shortest = world.create_paths(Paths::Path_type::shortest);
+    Paths mix = world.create_paths(Paths::Path_type::mix);
     euclidean.save();
     shortest.save();
+    mix.save();
 }

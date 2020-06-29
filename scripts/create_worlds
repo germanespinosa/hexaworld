@@ -1,10 +1,19 @@
 #!/bin/bash
 _dfiles="*.csv"
 
+echo "["> worlds_info.json
+first="true"
 for f in $_dfiles
 do
         NAME=`echo "$f" | cut -d'.' -f1`
-        ./from_occlussions $NAME
-        ./find_point_of_interest $NAME "(-1,0);(1,0)/(0,-1);(0,1)" "(0,7);(0,-7)"
-        ./create_paths $NAME
+#        ./from_occlussions $NAME
+#        ./find_point_of_interest $NAME "(-1,0);(1,0)/(0,-1);(0,1)" "(0,7);(0,-7)"
+#        ./create_paths $NAME
+        if [ "$first" == "false" ]; then
+          echo ",">> worlds_info.json
+        fi
+        first="false"
+        info=$(./get_world_info $NAME)
+        printf "$info" >> worlds_info.json
 done
+echo "]">> worlds_info.json

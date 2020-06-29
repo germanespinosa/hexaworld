@@ -3,7 +3,6 @@
 #include "utils.h"
 #include "agents/predator.h"
 #include "agents/preys/planners/point_planner.h"
-//11 60 90
 using namespace cell_world;
 using namespace std;
 
@@ -19,7 +18,10 @@ int main(int argc, char *args[]){
     unsigned int iterations = cp["-iterations"].int_value(1);
     cp[1].check_present().check_file_exist(".world");
     Paths::Path_type path_type = Paths::Path_type::euclidean;
-    if (cp["-Navigation_strategy"].value("shortest") == "shortest"){
+    string navigation_strategy = cp["-path_solver"].value("shortest");
+    if ( navigation_strategy == "mix"){
+        path_type=Paths::Path_type::mix;
+    } else if (navigation_strategy == "shortest"){
         path_type=Paths::Path_type::shortest;
     }
     bool show = cp["-show"].present();
@@ -29,18 +31,16 @@ int main(int argc, char *args[]){
     unsigned int k = cp["-particles"].int_value(10000);
     int width = cp["-width"].int_value(1024);
     int height = cp["-height"].int_value(768);
-    unsigned int planning_roll_outs = cp["-planning_roll_outs"].int_value(5000);
-    unsigned int planning_time = cp["-planning_time"].double_value(1);
 
+    string planning_unit = cp["-planning_limit_unit"].value("roll_outs");
+    unsigned int pa = cp["-planning_limit"].int_value(1);
     Planning_unit pu = Planning_unit::roll_outs;
-    unsigned int pa = planning_roll_outs;
-    if (cp["-planning_time"].present()) {
+    if (planning_unit=="ms") {
         pu = Planning_unit::milliseconds;
-        pa = planning_time;
     }
 
     Planning_strategy ps=Planning_strategy::micro_habits;
-    if (cp["-plan_over_shortest_path"].present()) ps = Planning_strategy::shortest_path;
+    if (cp["-planning_strategy"].value("shortest_path")=="shortest_path") ps = Planning_strategy::shortest_path;
 
     string world_name (cp[1].value());
     World world(world_name);
