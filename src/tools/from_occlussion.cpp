@@ -42,6 +42,6 @@ int main (int argc, char *args[]) {
         int8_t x = (int8_t)cx-7;
         int8_t y = -((int8_t)cy-7);
         world[map[{x,y}].id].occluded = true;
-    }L("World::load(const std::string& ) end");
+    }
     world.save();
 }

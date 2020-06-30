@@ -32,6 +32,6 @@ int main (int argc, char *args[]) {
             cout << "[" << (int)cg[i].coordinates.x << "," << (int)cg[i].coordinates.y << "]";
         }
     }
-    cout << "], \"coordinates\": [[" << smallestX << "," << smallestY << "],[" << biggestX << "," <<  biggestY << "]]}";
+    cout << "], \"visibility\": " << visibility << ", \"coordinates\": [[" << smallestX << "," << smallestY << "],[" << biggestX << "," <<  biggestY << "]]}";
 
 }
