@@ -1,0 +1,16 @@
+#!/bin/bash
+
+function update_world_file() {
+  world_folder="$results_folder/$1/$2"
+  ./get_world_info "$2" > "$world_folder/world.json"
+}
+
+
+experiment_name=$1
+results_folder="/home/german/simulation/results/$experiment_name"
+settings_file="$results_folder/settings.json"
+
+while IFS= read -r world
+do
+  update_world_file $world
+done <<< $(json -f $settings_file -l -v "value['group'] + ' ' + value['world']" | unique)
