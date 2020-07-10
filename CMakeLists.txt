@@ -1,6 +1,8 @@
 cmake_minimum_required( VERSION 3.13 )
 project( hexaworld CXX )
 
+set(CMAKE_CXX_STANDARD 17)
+
 find_package( Cellworld CONFIG QUIET )
 
 include_directories( include )
@@ -39,7 +41,7 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
     #cmake .. -DCMAKE_BUILD_TYPE=Debug
     add_definitions(-DDEBUG=ON)
     message("-- Using DEBUG configuration")
-    target_link_libraries( hexaworld PUBLIC cellworlddebug )
+    target_link_libraries( hexaworld PUBLIC cellworld )
 else()
     #cmake .. -DCMAKE_BUILD_TYPE=Release
     message("-- Using RELEASE configuration")

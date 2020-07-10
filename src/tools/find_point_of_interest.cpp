@@ -69,7 +69,7 @@ int main (int argc, char *args[]) {
         derivative[i] = v;
     }
 
-    for (auto c:extra_pois.pattern){
+    for (auto c:extra_pois){
         derivative[map[c].id] = 1;
         for (unsigned int i=0;i<world.size();i++)
             if(!world[i].occluded && graph.get_shortest_path(map[c],world[i]).size() == 0) world[i].occluded = true;
