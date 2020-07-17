@@ -7,12 +7,13 @@ struct Prey : cell_world::Agent {
     const cell_world::Cell &start_episode(unsigned int) override;
     void update_state(const cell_world::State &) override;
     void end_episode(const cell_world::State &) override;
+    cell_world::Move get_move(const cell_world::State &) override;
 
     virtual const cell_world::Cell &start(unsigned int) = 0;
     virtual void update(const cell_world::State &);
 
     virtual void end(Episode_result, unsigned int);
-
+    virtual cell_world::Move get_move() = 0;
     void set_goal(const cell_world::Cell &);
     unsigned int lenght;
 protected:

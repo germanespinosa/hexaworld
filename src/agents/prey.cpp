@@ -11,20 +11,7 @@ void Prey::update_state(const State &s) {
     if (prey_cell == _goal){
         _result = Success;
         set_status(Finished);
-        return;
     }
-    if (prey_cell == predator_cell){
-        _result = Fail;
-        set_status(Finished);
-        return;
-    }
-    if (s.iteration == s.iterations){
-        _result = Unknown;
-        set_status(Finished);
-        return;
-    }
-    update(s);
-    lenght++;
 }
 
 const Cell &Prey::start_episode(unsigned int i) {
@@ -56,4 +43,22 @@ void Prey::set_goal(const cell_world::Cell &g) {
 }
 
 void Prey::end(Episode_result, unsigned int) {
+}
+
+cell_world::Move Prey::get_move(const State &s) {
+    if (!_ready) throw logic_error("Goal not set");
+    auto &prey_cell = s.agents_data[0].cell;
+    auto &predator_cell = s.agents_data[1].cell;
+
+    if (prey_cell == predator_cell){
+        _result = Fail;
+        set_status(Finished);
+    } else if (s.iteration == s.iterations){
+        _result = Unknown;
+        set_status(Finished);
+    } else {
+        update(s);
+        lenght++;
+    }
+    return get_move();
 }

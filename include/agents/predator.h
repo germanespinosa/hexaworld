@@ -6,7 +6,7 @@ struct Predator : cell_world::Agent {
     explicit Predator(cell_world::Graph &, cell_world::Graph &, cell_world::Paths &, const Reward_config &, const cell_world::Cell &);
     const cell_world::Cell &start_episode(unsigned int) override;
     void update_state(const cell_world::State &) override;
-    cell_world::Coordinates get_move() override ;
+    cell_world::Coordinates get_move(const cell_world::State &s) override ;
     void end_episode(const cell_world::State &) override ;
     void set_fixed_start(const cell_world::Cell &);
     void set_random_start();

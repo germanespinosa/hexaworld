@@ -38,6 +38,10 @@ const Cell &Predator::start_episode(unsigned int) {
 }
 
 void Predator::update_state(const State &state) {
+    set_status(Action_ready);
+}
+
+Move Predator::get_move(const State &state) {
     auto &prey_cell = state.agents_data[0].cell;
     auto &predator_cell = state.agents_data[1].cell;
     bool visible = state.visible[0];
@@ -46,7 +50,7 @@ void Predator::update_state(const State &state) {
         _next_move = Move{0,0};
         set_value(0);
         set_status(Action_ready);
-        return;
+        return {0,0};
     }
 
     if ( visible ) {
@@ -77,7 +81,7 @@ void Predator::update_state(const State &state) {
     if (prey_cell==destination) {
         set_value(_reward_config.success_reward);
         set_status(Action_ready);
-        return;
+        return {0,0};
     }
     if (visible) {
         double distance_to_prey = destination.coordinates.manhattan(predator_cell.coordinates);
@@ -86,10 +90,6 @@ void Predator::update_state(const State &state) {
     } else {
         set_value (value * .9);
     }
-    set_status(Action_ready);
-}
-
-Move Predator::get_move() {
     _prev_move = -_next_move;
     return _next_move;
 }
