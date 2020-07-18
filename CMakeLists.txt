@@ -54,8 +54,8 @@ target_link_libraries( viewer hexaworld )
 add_executable( map_creation src/tools/map_creation.cpp )
 target_link_libraries( map_creation hexaworld )
 
-add_executable( sim src/tools/simulation.cpp)
-target_link_libraries( sim hexaworld )
+add_executable( cell_world_sim src/tools/simulation.cpp)
+target_link_libraries( cell_world_sim hexaworld )
 
 add_executable( map_editor src/tools/map_editor.cpp)
 target_link_libraries( map_editor hexaworld )
@@ -100,4 +100,11 @@ cellworld_add_custom_icon(icons/bridge.png icons/destination.png)
 
 find_package(CatchTests CONFIG QUIET)
 
-message("HERE ${CELLWORLD_RESOURCES}")
+###
+### SIMULATION INSTALLATION
+###
+
+include(GNUInstallDirs)
+
+install(TARGETS cell_world_sim
+        RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
